@@ -18,35 +18,35 @@ const routes = [
   {
     path: "/",
     name: "home",
-    component: () => import("../views/MainView.vue"),
+    component: () => import("../views/Main/MainView.vue"),
     beforeEnter: beforeAuth(true),
   },
   {
     path: "/user",
     name: "user",
     redirect: "/user/login",
-    component: () => import("../views/UserView.vue"),
+    component: () => import("../views/User/UserView.vue"),
     beforeEnter: beforeAuth(false),
     children: [
       {
         path: "login",
         name: "user.login",
-        component: () => import("../components/user/login_form.vue"),
+        component: () => import("../views/User/components/login_form.vue"),
       },
       {
         path: "register",
         name: "user.register",
-        component: () => import("../components/user/register_form.vue"),
+        component: () => import("../views/User/components/register_form.vue"),
       },
       {
         path: "findid",
         name: "user.findid",
-        component: () => import("../components/user/findId_form.vue"),
+        component: () => import("../views/User/components/findId_form.vue"),
       },
       {
         path: "findpw",
         name: "user.findpw",
-        component: () => import("../components/user/findPw_form.vue"),
+        component: () => import("../views/User/components/findPw_form.vue"),
       },
     ],
   },
