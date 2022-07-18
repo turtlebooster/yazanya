@@ -1,7 +1,7 @@
-import jwt from "../util/jwt";
-import http from "../util/http-commons";
+// import jwt from "../util/jwt";
+// import http from "../util/http-commons";
 
-const REST_PATH = "/room";
+// const REST_PATH = "/room";
 
 export const Room = {
   state: {
