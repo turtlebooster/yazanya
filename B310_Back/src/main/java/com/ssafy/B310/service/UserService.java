@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.ssafy.B310.dto.User;
+import com.ssafy.B310.entity.User;
 
 public interface UserService {
 

@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ssafy.B310.dto.User;
+import com.ssafy.B310.entity.User;
 import com.ssafy.B310.service.JwtService;
 import com.ssafy.B310.service.UserService;
 
@@ -138,6 +138,7 @@ public class UserController {
 	// 탈퇴 - Patch
 	@PatchMapping("/quit/{userId}")
 	public ResponseEntity<?> deleteUser(@PathVariable("userId") String userId) throws SQLException {
+		System.out.println(1111);
 		System.out.println(userId);
 		User user = new User();
 		user.setUserId(userId);
@@ -167,7 +168,6 @@ public class UserController {
 	// 비밀번호 찾기
 	@GetMapping("/findpw")
 	public ResponseEntity<?> getInfo(@RequestParam String userId, @RequestParam String userEmail) throws SQLException {
-		System.out.println("들어옴??");
 		
 		User user = new User();
 		user.setUserEmail(userEmail);

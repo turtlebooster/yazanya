@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.ssafy.B310.dto.User;
+import com.ssafy.B310.entity.User;
 
 @Mapper
 public interface UserMapper {
