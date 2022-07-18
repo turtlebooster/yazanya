@@ -138,7 +138,6 @@ public class UserController {
 	// 탈퇴 - Patch
 	@PatchMapping("/quit/{userId}")
 	public ResponseEntity<?> deleteUser(@PathVariable("userId") String userId) throws SQLException {
-		System.out.println(1111);
 		System.out.println(userId);
 		User user = new User();
 		user.setUserId(userId);
