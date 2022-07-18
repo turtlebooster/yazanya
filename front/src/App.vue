@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import Navi from "@/components/common/main_nav.vue";
+import Navi from "@/views/common/components/MainNav.vue";
 
 export default {
   components: {
