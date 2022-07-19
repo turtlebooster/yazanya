@@ -2,7 +2,7 @@
   <div>
     <MainBar @toggle="toggleOnOff"/>
     <section>
-    <SideBar v-if="isOn"/>
+    <SidebarLogout v-if="isOn"/>
     <HomeLogout/>
     </section>
   </div>
@@ -11,15 +11,14 @@
 
 <script>
   import MainBar from "./components/mainbar.vue"
-  import SideBar from "./components/sidebar_logout.vue"
+  import SidebarLogout from "./components/sidebar_logout.vue"
   import HomeLogout from "./components/home_logout.vue"
-
   import { ref } from 'vue'
 
   export default {
     components: {
       MainBar,
-      SideBar,
+      SidebarLogout,
       HomeLogout,
     },
 
