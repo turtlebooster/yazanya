@@ -485,10 +485,10 @@ em.remove(member); //데이터 삭제
     ```
     
 4. sockethandler를 변경한다 - **d번에서 하는 처리로 인해 방구분을 하고 해당 방에 존재하는 session값들에게만 메시지를 발송하여 구분**
-    1. 세션을 관리하던 map객체에서 list, hashmap형태로 변경. hashmap의 value자료형도 WebSocketSession에서 Object형으로 변경
-    2. 세션을 저장할때, 현재 접근한 방의 정보가 있는지 체크하고 존재하지 않으면 방의 번호를 입력 후 세션들을 담아주는 로직으로 변경
-    3. 종료시에도 list컬랙션을 순회하면서 해당 키값의 세션들을 삭제하도록 변경
-    4. 메시지를 발송하는 handleTextMessage메소드에서는 현재의 방번호를 가져오고, 방정보+세션정보를 관리하는 rls리스트 컬랙션에서 데이터를 조회한 후에 해당 Hashmap을 임시 맵에 파싱하여 roomNumber의 키값을 제외한 모든 세션키값들을 웹소켓을 통해 메시지를 보냄
+    a. 세션을 관리하던 map객체에서 list, hashmap형태로 변경. hashmap의 value자료형도 WebSocketSession에서 Object형으로 변경
+    b. 세션을 저장할때, 현재 접근한 방의 정보가 있는지 체크하고 존재하지 않으면 방의 번호를 입력 후 세션들을 담아주는 로직으로 변경
+    c. 종료시에도 list컬랙션을 순회하면서 해당 키값의 세션들을 삭제하도록 변경
+    d. 메시지를 발송하는 handleTextMessage메소드에서는 현재의 방번호를 가져오고, 방정보+세션정보를 관리하는 rls리스트 컬랙션에서 데이터를 조회한 후에 해당 Hashmap을 임시 맵에 파싱하여 roomNumber의 키값을 제외한 모든 세션키값들을 웹소켓을 통해 메시지를 보냄
     
     ```java
     package com.ssafy.chating.handler;
