@@ -13,21 +13,25 @@
   import MainBar from "./components/mainbar.vue"
   import SideBar from "./components/sidebar_logout.vue"
   import HomeLogout from "./components/home_logout.vue"
+
+  import { ref } from 'vue'
+
   export default {
-    name: "MainView",
     components: {
       MainBar,
       SideBar,
       HomeLogout,
     },
-    data() {
-      return {
-        isOn : false
+
+    setup() {
+      var isOn = ref(false)
+      function toggleOnOff() {
+        isOn.value = !isOn.value;
       }
-    },
-    methods: {
-      toggleOnOff: function() {
-        this.isOn = !this.isOn
+      
+      return {
+        isOn,
+        toggleOnOff
       }
     }
   }
