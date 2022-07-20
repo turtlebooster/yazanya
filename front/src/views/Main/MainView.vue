@@ -40,4 +40,10 @@
   section {
     display: flex;
   }
+  MainBar {
+    z-index: 2;
+  }
+  SidebarLogout {
+    z-index: 1;
+  }
 </style>

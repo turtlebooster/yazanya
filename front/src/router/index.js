@@ -5,9 +5,9 @@ import store from "../store";
 // false : 로그인을 하면 이동 불가능
 const beforeAuth = (needAuth) => (from, to, next) => {
   const isLogined = store.getters["isLogined"]; // is logined
-  if (needAuth && !isLogined) {
+  if (needAuth && isLogined) {
     next("/user");
-  } else if (!needAuth && isLogined) {
+  } else if (!needAuth && !isLogined) {
     next("/");
   }
 

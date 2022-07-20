@@ -26,13 +26,16 @@
     .sidebar {
         background-color:rgb(242,242,242);
         align-items: flex-start;
-        width: 20%;
+        width: 280px;
         height:100vh;
         margin:0;
         position: absolute;
+        left:0;top:0;
+        z-index:9;
     }
     #info {
         padding: 1rem;
+        padding-top: 3rem;
     }
     #name {
         color: gray;
@@ -40,9 +43,9 @@
     }
     #bottom {
         display: flex;
-        height:100vh;
+        /* height:100vh; */
         justify-content: space-between;
-        align-items: flex-end;
+        vertical-align: bottom;
         margin: 0 5%;
     }
     a {
