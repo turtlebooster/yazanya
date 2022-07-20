@@ -1,19 +1,22 @@
 package com.ssafy.B310.controller;
 
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.B310.entity.Room;
 import com.ssafy.B310.service.RoomService;
-import com.ssafy.B310.service.UserService;
 
 @RestController
 @RequestMapping("/room")
@@ -26,14 +29,40 @@ public class RoomController {
 	@Autowired
 	RoomService roomservice;
 	
-	@PostMapping
-	public ResponseEntity<?> registRoom(@RequestBody Room room) throws SQLException{
+	// 방 생성
+	@PostMapping("/create")
+	public ResponseEntity<?> createRoom(@RequestBody Room room) throws SQLException{
 		
-		int cnt = roomservice.registRoom(room);
+		int cnt = roomservice.createRoom(room);
 		
 		if(cnt==1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 		else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
+	// 방 조회
+	@GetMapping("/filter")
+	public ResponseEntity<?> filterRoom(@RequestBody Map<String, Integer> params) throws SQLException{
+		return new ResponseEntity<List<Room>>(roomservice.filterRoom(params), HttpStatus.OK);
+	}
 
+	// 방 삭제
+	@GetMapping("/remove")
+	public ResponseEntity<?> removeRoom(@RequestBody int roomNum) throws SQLException{
+		
+		int cnt = roomservice.removeRoom(roomNum);
+		
+		if(cnt==1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+		else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	// 방 정보 업데이트
+	@PutMapping("/update")
+	public ResponseEntity<?> removeRoom(@RequestBody Room room) throws SQLException{
+		
+		int cnt = roomservice.updateRoom(room);
+		
+		if(cnt==1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+		else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
 }
