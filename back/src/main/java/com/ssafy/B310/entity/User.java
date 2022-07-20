@@ -1,10 +1,13 @@
 package com.ssafy.B310.entity;
 
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 import lombok.Data;
 
@@ -44,4 +47,13 @@ public class User {
 	}
 	public User() {
 	}
+	
+	@OneToMany(mappedBy = "user")
+	private Set<Participation> participationList;
+//	private List<Participation> participationList = new ArrayList<>();
+	
+	@OneToMany(mappedBy = "user")
+	private Set<Todo> todo;
+//	private List<Todo> todo = new ArrayList<>();
+	
 }
