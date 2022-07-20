@@ -1,15 +1,19 @@
 <template>
     <div class="mainLogout">
         <img src="../../../assets/book.jpg" id="book">
-        <img src="../../../assets/icon_logo_blk.png" id="logo">
-        <div id="circle1" style="margin-left:20%;"></div>
-        <div id="text" style="font-weight:bold;">
-            <h4 style="color:rgb(76,205,151); font-weight:bold;">야자냐가 처음이세요?</h4>
-            지금도 0명의 유저가<br>
-            야자냐와 함께 공부중입니다.
-            <div>
-                <button id="btnLogin">로그인</button>
-                <button id="btnRegister">회원가입</button>
+        <div class="home">
+            <div><img src="../../../assets/connection_img.png" id="logo"></div>
+            <div id="text" style="font-weight:bold; text-align:left;">
+                <span style="color:rgb(76,205,151); font-weight:bold; font-size:1.5rem;">야자냐가 처음이세요?</span><br>
+                <span>지금도 0명의 유저가<br>
+                야자냐와 함께 공부중입니다.<br>
+                </span>
+                <span>
+                    
+                    <button id="btnLogin" @click="pageLogin">로그인</button>
+                    
+                    <button id="btnRegister" @click="pageRegister">회원가입</button>
+                </span>
             </div>
         </div>
     </div>
@@ -19,38 +23,51 @@
     export default {
         name: "HomeLogout",
         setup() {
+            function pageLogin() {
+                this.$router.push({path : '/user/login'})
+            }
 
+            function pageRegister() {
+                this.$router.push({path : '/user/register'})
+            }
+
+            return {
+                pageLogin,
+                pageRegister,
+            }
         }
     }
-    // const targetTop = document.getElementById('logo').offSetTop;
-    // document.getElementById('text').style.top = targetTop;
 </script>
 
 <style scoped>
+    .home {
+        text-align:center;
+        /* display: block; */
+        /* font-size:0; */
+        position:relative;
+        top: -100px;
+    }
+    .home div {
+        display: inline-block;
+        width: 400px;
+        padding: 0 5px;
+        
+        vertical-align: bottom;
+    }
+    .home span {
+        /* font-size:20px; */
+        text-align:left;
+    }
     #book {
-        width: 100vw;
-        height: 40vh;
+        width:100vw;
+        height:280px;
     }
     #logo{
-        width:200px;
-        height:200px;
-        margin-left:20%;
-        background-color:rgb(242,242,242);
-        border-radius: 100%;
-        position:relative; left:100px; bottom:100px;
-    }
-    #circle1 {
-        width:280px;
-        height:280px;
-        border-radius: 100%;
-        border: 0.5em solid rgb(131,220,183);
-        position:relative; left:60px; bottom:340px;
-    }
-    #text {
-        position:absolute; top:45vh; left: 50vw;
+        width:300px;
+        height:300px;
     }
     button {
-        border-radius: 10%;
+        border-radius: 5px;
         color: white;
         border:transparent;
         width: 100px;

@@ -18,6 +18,10 @@
 </script>
 
 <style scoped>
+  * {
+    position: relative;
+    z-index: 10;
+  }
   #logo {
     margin-left:0.5rem;
   }
