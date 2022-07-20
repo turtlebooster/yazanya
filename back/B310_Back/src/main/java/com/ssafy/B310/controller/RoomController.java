@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -46,8 +47,8 @@ public class RoomController {
 	}
 
 	// 방 삭제
-	@GetMapping("/remove")
-	public ResponseEntity<?> removeRoom(@RequestBody int roomNum) throws SQLException{
+	@GetMapping("/remove/{roomNum}")
+	public ResponseEntity<?> removeRoom(@PathVariable("roomNum") int roomNum) throws SQLException{
 		
 		int cnt = roomservice.removeRoom(roomNum);
 		

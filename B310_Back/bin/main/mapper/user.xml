@@ -1,0 +1,71 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.ssafy.B310.mapper.UserMapper">
+	<!-- 로그인 쿼리 -->
+	<select id="login" parameterType="user" resultType="user">
+		select userNum, userId, userPw, userName, userEmail, userNickname
+		from user
+		where userId=#{userId} and userPw=#{userPw}
+	</select>
+	
+	<!-- 회원가입 -->
+	<insert id="registUser" parameterType="user">
+		insert into user (userId, userPw, userName, userEmail, userNickname)
+		values (#{userId}, #{userPw}, #{userName}, #{userEmail}, #{userNickname})
+	</insert>
+	
+    <!-- 유저 정보 수정 -->
+    <update id="updateUser" parameterType="user">
+        update user
+        set userPw=#{userPw}, userEmail=#{userEmail}, userNickname=#{userNickname}
+        where userNum=#{userNum}
+    </update>
+    
+    <!-- 탈퇴 -->
+    <delete id="deleteUser" parameterType="user">
+        delete from user
+        where userId=#{userId}
+    </delete>
+     
+     <!-- 관리자 회원정보 삭제 -->
+    <delete id="adminDeleteUser" parameterType="String">
+    	delete from user
+    	where userNum=#{userNum}
+    </delete>
+    
+    <!-- 마이페이지 -->
+    <select id="myPage" parameterType="String" resultType="user">
+		select userId, userPass, userName, userEmail, userNickname
+		from user
+		where userNum=#{userNum}
+	</select>
+	
+	<!-- 유저 리스트 조회 -->
+	<select id="selectUserList" resultType="user">
+		select userId, userPw, userName, userEmail, userNickname
+		from user
+	</select>
+	
+	<!-- ID 중복검사 -->
+	<select id="checkId" parameterType="String" resultType="int">
+		select count(userId)
+		from user
+		where userId=#{userId}
+	</select>
+	
+	<!-- 아이디 찾기 -->
+	<select id="findId" parameterType="String" resultType="String">
+		select userId
+		from user
+		where userEmail=#{userEmail}
+	</select>
+	
+	<!-- 비밀번호 찾기 -->
+	<select id="findPw" parameterType="user" resultType="String">
+		select userPw
+		from user
+		where userId=#{userId} and userEmail=#{userEmail}
+	</select>
+	
+</mapper>
