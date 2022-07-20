@@ -1,7 +1,6 @@
 package com.ssafy.B310.entity;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -50,9 +49,11 @@ public class User {
 	}
 	
 	@OneToMany(mappedBy = "user")
-	private List<RoomParticipant> participationList = new ArrayList<>();
+	private Set<Participation> participationList;
+//	private List<Participation> participationList = new ArrayList<>();
 	
 	@OneToMany(mappedBy = "user")
-	private List<Todo> todo = new ArrayList<>();
+	private Set<Todo> todo;
+//	private List<Todo> todo = new ArrayList<>();
 	
 }

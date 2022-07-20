@@ -29,7 +29,7 @@ public class RoomController {
 	@PostMapping
 	public ResponseEntity<?> registRoom(@RequestBody Room room) throws SQLException{
 		
-		int cnt = RoomService.registRoom(room);
+		int cnt = roomservice.registRoom(room);
 		
 		if(cnt==1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 		else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);

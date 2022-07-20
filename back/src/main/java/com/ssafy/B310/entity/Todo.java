@@ -33,8 +33,8 @@ public class Todo {
 	private String todoName;
 	
 	@ManyToOne
-	@JoinColumn(name = "user_id")
-	private User userId;
+	@JoinColumn(name = "user_num")
+	private User user;
 	
 
 
@@ -45,7 +45,7 @@ public class Todo {
 		this.todoStartTime = todoStartTime;
 		this.todoEndTime = todoEndTime;
 		this.todoName = todoName;
-		this.userId = userId;
+		this.user = userId;
 	}
 	
 	

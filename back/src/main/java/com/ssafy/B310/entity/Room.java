@@ -2,7 +2,7 @@ package com.ssafy.B310.entity;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -60,13 +60,15 @@ public class Room {
 	}
 	
 	@OneToOne
-	@JoinColumn(name="user_id")
-	private User userId;
+	@JoinColumn(name="user_num")
+	private User manager;
 	
 	@OneToMany(mappedBy = "room")
-	private List<RoomParticipant> participationList = new ArrayList<>();
+	private Set<Participation> participationList;
+//	private Set<Participation> participationList = new ArrayList<>();
 	
 	@OneToMany(mappedBy = "room")
-	private List<RoomHashtag> roomHashtag = new ArrayList<RoomHashtag>();
+	private Set<RoomHashtag> roomHashtag;
+//	private Set<RoomHashtag> roomHashtag = new ArrayList<RoomHashtag>();
 
 }

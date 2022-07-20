@@ -14,10 +14,12 @@ public class UserHashtag {
 	@Column(name = "USERHASHTAG_ID")
 	private Long Id;
 	
+//	@Id
 	@ManyToOne
 	@JoinColumn(name = "USER_NUM")
 	private User user;
 	
+//	@Id
 	@ManyToOne
 	@JoinColumn(name = "HASHTAG_NUM")
 	private Hashtag hashtag;

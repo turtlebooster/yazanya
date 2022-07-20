@@ -3,12 +3,14 @@ package com.ssafy.B310.service;
 import java.sql.SQLException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.ssafy.B310.entity.Room;
 import com.ssafy.B310.entity.User;
 import com.ssafy.B310.repository.RoomRepository;
 
-public class RoomServiceImpl {
+@Service
+public class RoomServiceImpl implements RoomService {
 	
 	@Autowired
 	RoomRepository roomRepository;
