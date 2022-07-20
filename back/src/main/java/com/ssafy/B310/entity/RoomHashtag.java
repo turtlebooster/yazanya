@@ -14,10 +14,12 @@ public class RoomHashtag {
 	@Column(name = "USERHASHTAG_ID")
 	private Long Id;
 	
+//	@Id
 	@ManyToOne
 	@JoinColumn(name = "ROOM_NUM")
 	private Room room;
 	
+//	@Id
 	@ManyToOne
 	@JoinColumn(name = "HASHTAG_NUM")
 	private Hashtag hashtag;
