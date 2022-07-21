@@ -58,7 +58,7 @@ public class RoomController {
 	
 	// 방 정보 업데이트
 	@PutMapping("/update")
-	public ResponseEntity<?> removeRoom(@RequestBody Room room) throws SQLException{
+	public ResponseEntity<?> updateRoom(@RequestBody Room room) throws SQLException{
 		
 		int cnt = roomservice.updateRoom(room);
 		

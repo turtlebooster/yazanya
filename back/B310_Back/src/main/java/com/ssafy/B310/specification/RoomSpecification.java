@@ -6,7 +6,7 @@ import com.ssafy.B310.entity.Room;
 
 public class RoomSpecification {
 	
-	//0 - ºñµð¿À ²û. 1 - ºñµð¿À ÄÔ. 2 - »ó°ü ¾øÀ½
+	//0 - ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½. 1 - ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½. 2 - ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	public static Specification<Room> videoSetting(int status) {
 		if(status != 2) { 
 			return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("video"), status);
@@ -15,7 +15,7 @@ public class RoomSpecification {
 		}
 	}
 	
-	//0 - ¿Àµð¿À ²û. 1 - ¿Àµð¿À ÄÔ. 2 - »ó°ü ¾øÀ½
+	//0 - ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½. 1 - ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½. 2 - ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	public static Specification<Room> soundeSetting(int status) {
 		if(status != 2) {
 			return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("sound"), status);
@@ -25,7 +25,7 @@ public class RoomSpecification {
 		
 	}
 	
-	//0 - »ó°ü ¾øÀ½ . 1 - Á¤¿øÀÌ ´Ù Â÷Áö ¾ÊÀº ¹æ¸¸ º¸¿©ÁÜ
+	//0 - ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ . 1 - ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½æ¸¸ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	public static Specification<Room> isFull(int status) {		
 		return (root, query, criteriaBuilder) -> criteriaBuilder.lessThanOrEqualTo(root.get("capacity"), root.get("participationCount"));
 	}
