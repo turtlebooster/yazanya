@@ -48,6 +48,9 @@ public class Room {
 	@Column
 	private int capacity;
 	
+	@Column
+	private int participationCount;
+	
 	public Room(String roomName, boolean video, boolean sound, Date startTime, Date endTime,
 			int roomStudyTime, int roomRestTime) {
 		this.roomName = roomName;
