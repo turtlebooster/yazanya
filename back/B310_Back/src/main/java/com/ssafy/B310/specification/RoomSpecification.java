@@ -26,10 +26,7 @@ public class RoomSpecification {
 	}
 	
 	//0 - 상관 없음 . 1 - 정원이 다 차지 않은 방만 보여줌
-	public static Specification<Room> isFull(int status) {
-		
-		int participation = room.getParticipationList().size(); //현재 방의 인원 수
-		
-		return (root, query, criteriaBuilder) -> criteriaBuilder.lessThanOrEqualTo(root.get("capacity"), participation);
+	public static Specification<Room> isFull(int status) {		
+		return (root, query, criteriaBuilder) -> criteriaBuilder.lessThanOrEqualTo(root.get("capacity"), root.get("participationCount"));
 	}
 }

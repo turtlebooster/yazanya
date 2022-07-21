@@ -6,16 +6,19 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.B310.entity.Room;
 import com.ssafy.B310.repository.RoomRepository;
+import com.ssafy.B310.specification.RoomSpecification;
 
 @Service
 public class RoomServiceImpl implements RoomService {
 	
 	@Autowired
 	RoomRepository roomRepository;
+	RoomSpecification roomSpecification;
 	
 	@Override
 	public int createRoom(Room room) throws SQLException {
@@ -52,8 +55,12 @@ public class RoomServiceImpl implements RoomService {
 		int sound = params.get("sound");
 		int fullcheck = params.get("fullcheck");
 		
+		Specification<Room> spec = (root, query, ct) -> null;
 		
-		return roomRepository.findAll();
+		spec = spec.and(roomSpecification.videoSetting(video));
+		spec = spec.and(roomSpecification.soundeSetting(sound));
+		spec = spec.and(roomSpecification.isFull(fullcheck));
+		return roomRepository.findAll(spec);
 	}
 
 
