@@ -22,7 +22,7 @@ public class RoomServiceImpl implements RoomService {
 	
 	@Override
 	public int createRoom(Room room) throws SQLException {
-		// JPA saveï¿½ï¿½ ï¿½ï¿½È¯ï¿½Ç´ï¿½ ï¿½ï¿½Ã¼ï¿½ï¿½ ï¿½Ì¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ room ï¿½ï¿½ï¿½ï¿½?
+		// JPA save·Î ¹ÝÈ¯µÇ´Â °´Ã¼°¡ ÀÌ¹ø¿¡ »ý¼ºµÈ room ÀÎÁö?
 		Room newRoom = roomRepository.save(room);
 		return newRoom.getRoomNum();
 	}
@@ -32,18 +32,18 @@ public class RoomServiceImpl implements RoomService {
 	@Override
 	public int updateRoom(Room room) throws SQLException {
 		Optional<Room> oRoom = roomRepository.findById(room.getRoomNum()); 
-		// ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		// ÇØ´ç ¹æÀÌ ÀÖÀ»°æ¿ì
 		if (oRoom.isPresent()) {
 			Room r = oRoom.get();
-			// ï¿½Ø½ï¿½ï¿½Â±×´ï¿½ ï¿½ï¿½ï¿½â¼­ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
-			// ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ë¶ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+			// ÇØ½ÃÅÂ±×´Â ¿©±â¼­ ¾÷µ¥ÀÌÆ® ¸øÇÔ
+			// ¹æ Á¦¸ñ°ú ¾Ë¶÷¼³Á¤ ¼öÁ¤
 			r.setRoomName(room.getRoomName());
 			r.setRoomStudyTime(room.getRoomStudyTime());
 			r.setRoomRestTime(room.getRoomRestTime());
 			roomRepository.save(r);
 			return 1;
 		}
-		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		// ¾øÀ»°æ¿ì
 		return 0;
 	}
 
@@ -68,13 +68,13 @@ public class RoomServiceImpl implements RoomService {
 	@Override
 	public int removeRoom(int roomNum) throws SQLException {
 		Optional<Room> oRoom = roomRepository.findById(roomNum);
-		// ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		// ÇØ´ç ¹æÀÌ ÀÖÀ»°æ¿ì
 		if (oRoom.isPresent()) {
 			Room r = oRoom.get();
 			roomRepository.deleteById(roomNum);
 			return 1;
 		}
-		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		// ¾øÀ»°æ¿ì
 		return 0;
 	}
 
