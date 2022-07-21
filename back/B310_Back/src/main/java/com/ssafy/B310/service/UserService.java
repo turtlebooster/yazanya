@@ -19,4 +19,5 @@ public interface UserService {
 	int checkId(String userId) throws SQLException;
 	String findId(String userEmail) throws SQLException;
 	String findPw(User user) throws SQLException;
+	String makeTmpPw(String userId) throws SQLException;
 }

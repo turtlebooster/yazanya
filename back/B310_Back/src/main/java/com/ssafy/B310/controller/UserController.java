@@ -164,15 +164,25 @@ public class UserController {
 		return new ResponseEntity<String>(userService.findId(userEmail), HttpStatus.OK);
 	}
 	
-	// 비밀번호 찾기
+	// 비밀번호 찾기 -> 이메일로 임시 비밀번호 전송
 	@GetMapping("/findpw")
 	public ResponseEntity<?> getInfo(@RequestParam String userId, @RequestParam String userEmail) throws SQLException {
 		
-		User user = new User();
-		user.setUserEmail(userEmail);
-		user.setUserId(userId);
+//		User user = new User();
+//		user.setUserEmail(userEmail);
+//		user.setUserId(userId);
+//		
+//		return new ResponseEntity<String>(userService.findPw(user), HttpStatus.OK);
 		
-		return new ResponseEntity<String>(userService.findPw(user), HttpStatus.OK);
+		int result = userService.checkId(userId);
+		
+		if(result == 0) { //존재하지 않는 유저
+			return new ResponseEntity<String>("존재하지 않는 유저입니다.", HttpStatus.OK);
+		} else { //존재하는 유저
+//			User user = userService.myPage(userId);
+			userService.makeTmpPw(userId);
+			return new ResponseEntity<String>("임시 비밀번호를 전송했습니다. 이메일을 확인해주세요.", HttpStatus.OK);
+		}
 	}
 	
 }
