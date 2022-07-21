@@ -1,22 +1,29 @@
-// import jwt from "../util/jwt";
-// import http from "../util/http-commons";
-
-// const REST_PATH = "/room";
-
 export const Room = {
   state: {
-    
-  },
-
-  getters: {
-   
-  },
-
-  mutations: {
-    
+    ws: null,
   },
 
   actions: {
-    
+    initSocket(state) {
+      console.log("ws init");
+      state.ws = new WebSocket(
+        "ws://" + "localhost:8334" + "/groupcall"
+      );
+    },
+
+    sendMessage(state, message) {
+      if (state.ws != null) {
+        var jsonMessage = JSON.stringify(message);
+        console.log("Sending message: " + jsonMessage);
+        state.ws.send(jsonMessage);
+      }
+    },
+
+    closeSocket(state) {
+      if (state.ws != null) {
+        console.log("ws closed");
+        state.ws.close();
+      }
+    },
   },
 };
