@@ -7,13 +7,13 @@ import java.util.Map;
 import com.ssafy.B310.entity.Room;
 
 public interface RoomService {
-	// ¹æ »ý¼º
+	// ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	public int createRoom(Room room) throws SQLException;
-	// ¹æ Á¶È¸
+	// ï¿½ï¿½ ï¿½ï¿½È¸
 	public List<Room> filterRoom(Map<String, Integer> params) throws SQLException;
-	// ¹æ Á¤º¸ ¼öÁ¤
+	// ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	public int updateRoom(Room room) throws SQLException;
-	// ¹æ »èÁ¦
+	// ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	public int removeRoom(int roomNum) throws SQLException;
 	
 }
