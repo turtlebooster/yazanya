@@ -30,7 +30,7 @@ public class RoomController {
 	@Autowired
 	RoomService roomservice;
 	
-	// Î∞© ÏÉùÏÑ±
+	// πÊ ª˝º∫
 	@PostMapping("/create")
 	public ResponseEntity<?> createRoom(@RequestBody Room room) throws SQLException{
 		
@@ -40,13 +40,13 @@ public class RoomController {
 		else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	// Î∞© Ï°∞Ìöå
+	// πÊ ¡∂»∏
 	@GetMapping("/filter")
 	public ResponseEntity<?> filterRoom(@RequestBody Map<String, Integer> params) throws SQLException{
 		return new ResponseEntity<List<Room>>(roomservice.filterRoom(params), HttpStatus.OK);
 	}
 
-	// Î∞© ÏÇ≠Ï†ú
+	// πÊ ªË¡¶
 	@GetMapping("/remove/{roomNum}")
 	public ResponseEntity<?> removeRoom(@PathVariable("roomNum") int roomNum) throws SQLException{
 		
@@ -56,7 +56,7 @@ public class RoomController {
 		else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	// Î∞© Ï†ïÎ≥¥ ÏóÖÎç∞Ïù¥Ìä∏
+	// πÊ ¡§∫∏ æ˜µ•¿Ã∆Æ
 	@PutMapping("/update")
 	public ResponseEntity<?> removeRoom(@RequestBody Room room) throws SQLException{
 		

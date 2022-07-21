@@ -1,4 +1,4 @@
-package com.ssafy.hashtag.controller;
+package com.ssafy.B310.controller;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ssafy.hashtag.entity.Hashtag;
-import com.ssafy.hashtag.service.HashtagService;
+import com.ssafy.B310.entity.Hashtag;
+import com.ssafy.B310.service.HashtagService;
 
 @RestController
 @RequestMapping("/hashtag")
@@ -38,7 +38,7 @@ public class HashtagController {
 
 	}
 	
-	//해쉬태그 수정
+	//해쉬태그 생성
 	@PutMapping("/update")
 	public ResponseEntity<?> updateHashtag(@RequestBody Hashtag hashtag) throws SQLException {
 		int cnt = hashtagService.updateHashtag(hashtag);
@@ -58,6 +58,7 @@ public class HashtagController {
 //	public ResponseEntity<?> addHashtagOnUser() throws SQLException {
 //		
 //	}
+
 	
 	//해쉬태그 삭제
 	@DeleteMapping("/remove/{hashtagNum}")

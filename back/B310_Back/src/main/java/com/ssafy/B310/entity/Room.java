@@ -28,10 +28,10 @@ public class Room {
 	private String roomName;
 	
 	@Column(nullable = false, columnDefinition = "TINYINT", length=1)
-	private int video;
+	private boolean video;
 	
 	@Column(nullable = false, columnDefinition = "TINYINT", length=1)
-	private int sound;
+	private boolean sound;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date startTime;
@@ -45,7 +45,10 @@ public class Room {
 	@Column
 	private int roomRestTime;
 	
-	public Room(String roomName, int video, int sound, Date startTime, Date endTime,
+	@Column
+	private int capacity;
+	
+	public Room(String roomName, boolean video, boolean sound, Date startTime, Date endTime,
 			int roomStudyTime, int roomRestTime) {
 		this.roomName = roomName;
 		this.video = video;

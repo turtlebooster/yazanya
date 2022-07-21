@@ -1,4 +1,4 @@
-package com.ssafy.hashtag.service;
+package com.ssafy.B310.service;
 
 import java.util.List;
 import java.util.Optional;
@@ -6,8 +6,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ssafy.hashtag.entity.Hashtag;
-import com.ssafy.hashtag.repository.HashtagRepository;
+import com.ssafy.B310.entity.Hashtag;
+import com.ssafy.B310.repository.HashtagRepository;
 
 @Service
 public class HashtagService {
@@ -16,7 +16,7 @@ public class HashtagService {
 	HashtagRepository hashRepo;
 	
 	public int createHashtag(Hashtag hashtag) {
-		Optional<Hashtag> oHashtag = hashRepo.findById(hashtag.getHashtag_num());
+		Optional<Hashtag> oHashtag = hashRepo.findById(hashtag.getHashtagNum());
 		
 		int result = 0;
 		
@@ -29,7 +29,7 @@ public class HashtagService {
 	}
 	
 	public int updateHashtag(Hashtag hashtag) {
-		Optional<Hashtag> oHashtag = hashRepo.findById(hashtag.getHashtag_num());
+		Optional<Hashtag> oHashtag = hashRepo.findById(hashtag.getHashtagNum());
 		
 		int result = 0;
 		
