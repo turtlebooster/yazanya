@@ -18,8 +18,45 @@ const routes = [
   {
     path: "/",
     name: "home",
+    component: () => import("../views/Home/HomeView.vue"),
+    beforeEnter: beforeAuth(true),
+  },
+  {
+    path: "/main",
     component: () => import("../views/Main/MainView.vue"),
     beforeEnter: beforeAuth(true),
+    children: [
+      {
+        path: "",
+        name: "main.mypage", // default page
+        component: () => import("../views/Main/components/MainMypage.vue"),
+      },
+      {
+        path: "",
+        name: "main.setting", // default page
+        component: () => import("../views/Main/components/MainMypage.vue"),
+      },
+      {
+        path: "quickstart",
+        name: "main.quickstart",
+        component: () => import("../views/Main/components/MainQuickstart.vue"),
+      },
+      {
+        path: "planner",
+        name: "main.planner",
+        component: () => import("../views/Main/components/MainPlanner.vue"),
+      },
+      {
+        path: "share",
+        name: "main.share",
+        component: () => import("../views/Main/components/MainShare.vue"),
+      },
+      {
+        path: "",
+        name: "main.alarm",
+        component: () => import("../views/Main/components/MainAlarm.vue"),
+      },
+    ],
   },
   {
     path: "/user",
