@@ -1,5 +1,6 @@
 package com.ssafy.B310.entity;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Set;
@@ -12,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -33,8 +35,8 @@ public class Room {
 	@Column(nullable = false, columnDefinition = "TINYINT", length=1)
 	private boolean sound;
 	
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date startTime;
+//	@Temporal(TemporalType.TIMESTAMP)
+//	private Date startTime;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date endTime;
@@ -51,7 +53,15 @@ public class Room {
 	@Column
 	private int participationCount;
 	
-	public Room(String roomName, boolean video, boolean sound, Date startTime, Date endTime,
+	@Column
+	private LocalDateTime startTime;
+	
+	@PrePersist
+    public void startTime() {
+        this.startTime = LocalDateTime.now();
+    }
+	
+	public Room(String roomName, boolean video, boolean sound, LocalDateTime startTime, Date endTime,
 			int roomStudyTime, int roomRestTime) {
 		this.roomName = roomName;
 		this.video = video;
