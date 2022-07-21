@@ -23,47 +23,47 @@ import com.ssafy.B310.service.RoomService;
 @RequestMapping("/room")
 @CrossOrigin("*")
 public class RoomController {
-	
-	private static final String SUCCESS = "success";
-	private static final String FAIL = "fail";
-	
-	@Autowired
-	RoomService roomservice;
-	
-	// πÊ ª˝º∫
-	@PostMapping("/create")
-	public ResponseEntity<?> createRoom(@RequestBody Room room) throws SQLException{
-		
-		int cnt = roomservice.createRoom(room);
-		
-		if(cnt==1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
-		else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
-	}
-	
-	// πÊ ¡∂»∏
-	@GetMapping("/filter")
-	public ResponseEntity<?> filterRoom(@RequestBody Map<String, Integer> params) throws SQLException{
-		return new ResponseEntity<List<Room>>(roomservice.filterRoom(params), HttpStatus.OK);
-	}
 
-	// πÊ ªË¡¶
-	@GetMapping("/remove/{roomNum}")
-	public ResponseEntity<?> removeRoom(@PathVariable("roomNum") int roomNum) throws SQLException{
-		
-		int cnt = roomservice.removeRoom(roomNum);
-		
-		if(cnt==1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
-		else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
-	}
-	
-	// πÊ ¡§∫∏ æ˜µ•¿Ã∆Æ
-	@PutMapping("/update")
-	public ResponseEntity<?> removeRoom(@RequestBody Room room) throws SQLException{
-		
-		int cnt = roomservice.updateRoom(room);
-		
-		if(cnt==1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
-		else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
-	}
-	
+    private static final String SUCCESS = "success";
+    private static final String FAIL = "fail";
+
+    @Autowired
+    RoomService roomservice;
+
+    // Î∞© ÏÉùÏÑ±
+    @PostMapping("/create")
+    public ResponseEntity<?> createRoom(@RequestBody Room room) throws SQLException{
+
+        int cnt = roomservice.createRoom(room);
+
+        if(cnt!=0) return new ResponseEntity<Integer>(cnt, HttpStatus.OK);
+        else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    // Î∞© Ï°∞Ìöå
+    @GetMapping("/filter")
+    public ResponseEntity<?> filterRoom(@RequestBody Map<String, Integer> params) throws SQLException{
+        return new ResponseEntity<List<Room>>(roomservice.filterRoom(params), HttpStatus.OK);
+    }
+
+    // Î∞© ÏÇ≠Ï†ú
+    @GetMapping("/remove/{roomNum}")
+    public ResponseEntity<?> removeRoom(@PathVariable("roomNum") int roomNum) throws SQLException{
+
+        int cnt = roomservice.removeRoom(roomNum);
+
+        if(cnt==1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+        else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    // Î∞© Ï†ïÎ≥¥ ÏóÖÎç∞Ïù¥Ìä∏
+    @PutMapping("/update")
+    public ResponseEntity<?> updateRoom(@RequestBody Room room) throws SQLException{
+
+        int cnt = roomservice.updateRoom(room);
+
+        if(cnt==1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+        else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
 }
