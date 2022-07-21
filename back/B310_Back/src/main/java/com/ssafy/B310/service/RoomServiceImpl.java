@@ -19,7 +19,7 @@ public class RoomServiceImpl implements RoomService {
 	
 	@Override
 	public int createRoom(Room room) throws SQLException {
-		// JPA saveë¡œ ë°˜í™˜ë˜ëŠ” ê°ì²´ê°€ ì´ë²ˆì— ìƒì„±ëœ room ì¸ì§€?
+		// JPA save·Î ¹İÈ¯µÇ´Â °´Ã¼°¡ ÀÌ¹ø¿¡ »ı¼ºµÈ room ÀÎÁö?
 		Room newRoom = roomRepository.save(room);
 		return newRoom.getRoomNum();
 	}
@@ -29,18 +29,18 @@ public class RoomServiceImpl implements RoomService {
 	@Override
 	public int updateRoom(Room room) throws SQLException {
 		Optional<Room> oRoom = roomRepository.findById(room.getRoomNum()); 
-		// í•´ë‹¹ ë°©ì´ ìˆì„ê²½ìš°
+		// ÇØ´ç ¹æÀÌ ÀÖÀ»°æ¿ì
 		if (oRoom.isPresent()) {
 			Room r = oRoom.get();
-			// í•´ì‹œíƒœê·¸ëŠ” ì—¬ê¸°ì„œ ì—…ë°ì´íŠ¸ ëª»í•¨
-			// ë°© ì œëª©ê³¼ ì•ŒëŒì„¤ì • ìˆ˜ì •
+			// ÇØ½ÃÅÂ±×´Â ¿©±â¼­ ¾÷µ¥ÀÌÆ® ¸øÇÔ
+			// ¹æ Á¦¸ñ°ú ¾Ë¶÷¼³Á¤ ¼öÁ¤
 			r.setRoomName(room.getRoomName());
 			r.setRoomStudyTime(room.getRoomStudyTime());
 			r.setRoomRestTime(room.getRoomRestTime());
 			roomRepository.save(r);
 			return 1;
 		}
-		// ì—†ì„ê²½ìš°
+		// ¾øÀ»°æ¿ì
 		return 0;
 	}
 
@@ -52,30 +52,6 @@ public class RoomServiceImpl implements RoomService {
 		int sound = params.get("sound");
 		int fullcheck = params.get("fullcheck");
 		
-		switch (video) {
-		case 1:
-			break;
-		case 2:
-			break;
-		case 3:
-			break;
-		}
-		
-		switch (sound) {
-		case 1:
-			break;
-		case 2:
-			break;
-		case 3:
-			break;
-		}
-		
-		switch (fullcheck) {
-		case 1:
-			break;
-		case 2:
-			break;
-		}
 		
 		return roomRepository.findAll();
 	}
@@ -85,13 +61,13 @@ public class RoomServiceImpl implements RoomService {
 	@Override
 	public int removeRoom(int roomNum) throws SQLException {
 		Optional<Room> oRoom = roomRepository.findById(roomNum);
-		// í•´ë‹¹ ë°©ì´ ìˆì„ê²½ìš°
+		// ÇØ´ç ¹æÀÌ ÀÖÀ»°æ¿ì
 		if (oRoom.isPresent()) {
 			Room r = oRoom.get();
 			roomRepository.deleteById(roomNum);
 			return 1;
 		}
-		// ì—†ì„ê²½ìš°
+		// ¾øÀ»°æ¿ì
 		return 0;
 	}
 
@@ -101,3 +77,4 @@ public class RoomServiceImpl implements RoomService {
 
 
 }
+
