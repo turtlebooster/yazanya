@@ -36,16 +36,15 @@ public class Todo {
 	@JoinColumn(name = "user_num")
 	private User user;
 	
-
-
-	public Todo(int todoNum, String todoContent, Date todoStartTime, Date todoEndTime, String todoName, User userId) {
+	public Todo() {}
+	public Todo(int todoNum, String todoContent, Date todoStartTime, Date todoEndTime, String todoName, User user) {
 		super();
 		this.todoNum = todoNum;
 		this.todoContent = todoContent;
 		this.todoStartTime = todoStartTime;
 		this.todoEndTime = todoEndTime;
 		this.todoName = todoName;
-		this.user = userId;
+		this.user = user;
 	}
 	
 	
