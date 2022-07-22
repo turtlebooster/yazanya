@@ -1,11 +1,8 @@
-import { useStore } from "vuex";
+import store from "../store";
 
 export function Participant(name) {
   this.name = name;
-  // for socket access
-  var store = useStore();
 
-  // var rtcPeer
   Object.defineProperty(this, "rtcPeer", {
     writable: true,
   });
@@ -17,7 +14,7 @@ export function Participant(name) {
   video.controls = false;
 
   var rtcPeer;
-  console.log(rtcPeer);
+  console.log("avoid error " + rtcPeer);
 
   this.getVideoElement = function () {
     return video;
@@ -31,7 +28,7 @@ export function Participant(name) {
       sender: name,
       sdpOffer: offerSdp,
     };
-    store.dispatch("sendMessage", msg);
+    store.commit("sendMessage", msg);
   };
 
   this.onIceCandidate = function (candidate) {
@@ -44,11 +41,17 @@ export function Participant(name) {
       candidate: candidate,
       name: name,
     };
-    store.dispatch("sendMessage", message);
+    store.commit("sendMessage", message);
   };
 
   this.dispose = function () {
     console.log("Disposing participant " + this.name);
     this.rtcPeer.dispose();
   };
+
+  // function sendMessage(message) {
+  //   var jsonMessage = JSON.stringify(message);
+  //   console.log("Sending message: " + jsonMessage);
+  //   ws.send(jsonMessage);
+  // }
 }
