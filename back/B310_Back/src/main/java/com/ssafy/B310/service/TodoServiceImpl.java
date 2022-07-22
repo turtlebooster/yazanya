@@ -1,6 +1,7 @@
 package com.ssafy.B310.service;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,13 +34,23 @@ public class TodoServiceImpl implements TodoService {
 
 	@Override
 	public List<Todo> findTodoByUserId(String userId) throws SQLException {
-		User user = userRepository.findByUserId(userId).get();
-		return todoRepository.findByUser(user);
+		Optional<User> oUser = userRepository.findByUserId(userId);
+		
+		if (oUser.isPresent()) {
+			User u = oUser.get();			
+			return todoRepository.findByUser(u);
+		}
+		
+		return null;
 	}
 	
 	@Override
-	public Todo findTodoByTodoNum(int todoNum) throws SQLException {		
-		return todoRepository.findById(todoNum).get();
+	public Todo findTodoByTodoNum(int todoNum) throws SQLException {
+		Optional<Todo> oTodo = todoRepository.findById(todoNum);
+		if(oTodo.isPresent()) {
+			return todoRepository.findById(todoNum).get();			
+		}
+		return null;
 	}
 	
 	@Override
