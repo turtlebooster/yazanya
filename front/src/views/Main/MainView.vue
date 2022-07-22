@@ -3,7 +3,7 @@
 		<main-header-nav />
 		<div class="main-view-container">
 			<main-side-bar />
-			<div style="width: 104px;"></div>
+			<div style="min-width: 104px;"></div>
 			<router-view class="router-view" />
 		</div>
 	</div>
