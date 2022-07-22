@@ -6,7 +6,8 @@ import com.ssafy.B310.entity.Room;
 
 public class RoomSpecification {
 	
-	//0 - ���� ��. 1 - ���� ��. 2 - ��� ����
+
+	//0 - 비디오 끔. 1 - 비디오 켬. 2 - 상관 없음
 	public static Specification<Room> videoSetting(int status) {
 		if(status != 2) { 
 			return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("video"), status);
@@ -14,8 +15,9 @@ public class RoomSpecification {
 			return (root, query, criteriaBuilder) -> null;
 		}
 	}
-	
-	//0 - ����� ��. 1 - ����� ��. 2 - ��� ����
+
+
+	//0 - 오디오 끔. 1 - 오디오 켬. 2 - 상관 없음
 	public static Specification<Room> soundeSetting(int status) {
 		if(status != 2) {
 			return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("sound"), status);
@@ -25,8 +27,14 @@ public class RoomSpecification {
 		
 	}
 	
-	//0 - ��� ���� . 1 - ������ �� ���� ���� �游 ������
-	public static Specification<Room> isFull(int status) {		
-		return (root, query, criteriaBuilder) -> criteriaBuilder.lessThanOrEqualTo(root.get("capacity"), root.get("participationCount"));
+
+	//0 - 상관 없음 . 1 - 정원이 다 차지 않은 방만 보여줌
+	public static Specification<Room> isFull(int status) {	
+		if(status == 0) {
+			return (root, query, criteriaBuilder) -> null;
+		} else {
+			return (root, query, criteriaBuilder) -> criteriaBuilder.greaterThanOrEqualTo(root.get("capacity"), root.get("participationCount"));
+			
+		}
 	}
 }
