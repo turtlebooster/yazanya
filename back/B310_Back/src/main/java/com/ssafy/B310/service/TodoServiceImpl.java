@@ -11,13 +11,13 @@ import org.springframework.stereotype.Service;
 import com.ssafy.B310.entity.Todo;
 import com.ssafy.B310.entity.User;
 import com.ssafy.B310.repository.UserRepository;
-import com.ssafy.B310.repository.todoRepository;
+import com.ssafy.B310.repository.TodoRepository;
 
 @Service
 public class TodoServiceImpl implements TodoService {
 	
 	@Autowired
-	todoRepository todoRepository;
+	TodoRepository todoRepository;
 	@Autowired
 	UserRepository userRepository;
 	

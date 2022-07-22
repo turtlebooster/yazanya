@@ -9,6 +9,6 @@ import com.ssafy.B310.entity.Todo;
 import com.ssafy.B310.entity.User;
 
 @Repository
-public interface todoRepository extends JpaRepository<Todo, Integer> {
+public interface TodoRepository extends JpaRepository<Todo, Integer> {
 	List<Todo> findByUser(User user);
 }
