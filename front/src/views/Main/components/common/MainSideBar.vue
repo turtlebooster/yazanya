@@ -1,17 +1,25 @@
 <template>
   <div class="main-side-bar">
 		<router-link to="/main">
-			<span class="icon"><i class="bi bi-person-circle"></i> </span>
+			<div class="profile" style="background: red;">
+				<img src="@/assets/avatar/pjh.png" />
+			</div>
+		</router-link>
+
+		<router-link to="/main">
+			<span class="icon"><i class="bi bi-person-circle"></i></span>
 			<span class="title">&nbsp; 마이페이지(프로필 사진)</span>
 		</router-link>
 
+    <hr />
+
 		<router-link to="/main/quickstart">
-			<span class="icon"><i class="bi bi-skip-end-circle-fill"></i> </span>
+			<span class="icon"><i class="bi bi-house"></i></span>
 			<span class="title">&nbsp; 빠른시작</span>
 		</router-link>
 
 		<router-link to="/main/planner">
-			<span class="icon"><i class="bi bi-journal-bookmark-fill"></i></span>
+			<span class="icon"><i class="bi bi-layout-text-sidebar-reverse"></i></span>
 			<span class="title">&nbsp; 플래너</span>
 		</router-link>
 
@@ -21,68 +29,26 @@
 		</router-link>
 
 		<router-link to="/main/friends">
-			<span class="icon"><i class="bi bi-person-circle"></i> </span>
+			<span class="icon"><i class="bi bi-people"></i></span>
 			<span class="title">&nbsp; 친구 목록</span>
 		</router-link>
 
-		<div style="flex-grow: 1;"></div>
-
 		<router-link to="/main/alarm">
-			<span class="icon"><i class="bi bi-person-circle"></i> </span>
+			<span class="icon"><i class="bi bi-bell"></i></span>
 			<span class="title">&nbsp; 알림</span>
 		</router-link>
 
+    <div style="flex-grow: 1;"></div>
+
 		<router-link to="/main/setting">
-			<span class="icon"><i class="bi bi-person-circle"></i> </span>
-			<span class="title">&nbsp; 마이페이지(프로필 사진)</span>
+			<span class="icon"><i class="bi bi-gear"></i></span>
+			<span class="title">&nbsp; 설정</span>
 		</router-link>
 
 		<router-link to="/대충로그오프하는주소">
-			<span class="icon"><i class="bi bi-person-circle"></i> </span>
-			<span class="title">&nbsp; 마이페이지(프로필 사진)</span>
+			<span class="icon"><i class="bi bi-box-arrow-right"></i></span>
+			<span class="title">&nbsp; 로그오프</span>
 		</router-link>
-
-
-    <!-- <ul>
-			<li>
-        <router-link to="/main">
-          <span class="icon"><i class="bi bi-person-circle"></i> </span>
-					<span class="title">&nbsp; 마이페이지(프로필 사진)</span>
-        </router-link>
-			</li>
-
-			<hr />
-      <li>
-        <router-link to="/main/quickstart">
-          <span class="icon"><i class="bi bi-person-circle"></i> </span>
-					<span class="title">&nbsp; 빠른시작</span>
-        </router-link>
-			</li>
-      <li>
-        <router-link to="/main/planner">
-          <span class="icon"><i class="bi bi-person-circle"></i> </span>
-					<span class="title">&nbsp; 플래너</span>
-        </router-link>
-			</li>
-      <li>
-        <router-link to="/main/share">
-          <span class="icon"><i class="bi bi-person-circle"></i> </span>
-					<span class="title">&nbsp; 공유</span>
-        </router-link>
-			</li>
-      <li>
-        <router-link to="/main/friends">
-          <span class="icon"><i class="bi bi-person-circle"></i> </span>
-					<span class="title">&nbsp; 친구 목록</span>
-        </router-link>
-			</li>
-      <li>
-        <router-link to="/main/alarm">
-          <span class="icon"><i class="bi bi-person-circle"></i> </span>
-					<span class="title">&nbsp; 알림</span>
-        </router-link>
-			</li>
-    </ul> -->
   </div>
 </template>
 
@@ -95,38 +61,34 @@ export default {
 <style scoped>
 * {
 	margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+	padding: 0;
+	box-sizing: border-box;
 	z-index: 1;
 }
 .main-side-bar {
   position: fixed;
 	inset: 20px;
-	background: rgb(131,220,183);
+	background: #83DCB7;
 	width: 50px;
-	border-left: 12px solid rgb(131,220,183);
-	border-right: 12px solid rgb(131,220,183);
+	border-left: 4px solid #83DCB7;
+	border-right: 10px solid #83DCB7;
 	margin-top: -16px;
 	padding-top: 40px;
+	padding-left: 8px;
 	padding-bottom: 8px;
 	border-radius: 24px;
-	/* box-shadow: 15px 15px 25px rgba(0,0,0,0.1); */
 
 	display: flex;
 	flex-direction: column;
 
 	font-size: 20pt;
 
-	overflow: hidden;
-	text-overflow: ellipsis;
-  white-space: nowrap; 	
-	
 	transition: 0.2s;
 }
 .main-side-bar:hover {
-	width: 200px;
+	width: 250px;
 }
-.main-side-bar ul li{
+.main-side-bar ul li a {
 	position: relative;
 	list-style: none;
 	width: 100%;
@@ -135,5 +97,27 @@ export default {
 	font-family: 'Ubuntu', sans-serif;
 	text-decoration: none;
 	color: black;
+
+  overflow: hidden;
+	text-overflow: ellipsis;
+  white-space: nowrap; 	
+}
+
+.profile {
+	position: relative;
+	width: 28px;
+	height: 28px;
+	border-radius: 50%;
+	overflow: hidden;
+	object-fit: cover;
+}
+
+.profile img {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
 }
 </style>
