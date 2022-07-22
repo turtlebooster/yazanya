@@ -44,6 +44,8 @@ export function onExistingParticipants(
   msg.data.forEach((element) =>
     receiveVideo(element, participants)
   );
+
+  console.log(participants);
 }
 
 export function onNewParticipant(request, participants) {
@@ -85,7 +87,7 @@ export function onParticipantLeft(request, participants) {
 }
 
 export function receiveVideoResponse(result, participants) {
-  participants.value[result.name].rtcPeer.processAnswer(
+  participants[result.name].rtcPeer.processAnswer(
     result.sdpAnswer,
     function (error) {
       if (error) return console.error(error);

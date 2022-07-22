@@ -19,7 +19,7 @@ const routes = [
     path: "/",
     name: "home",
     component: () => import("../views/Main/MainView.vue"),
-    beforeEnter: beforeAuth(true),
+    // beforeEnter: beforeAuth(true),
   },
   {
     path: "/user",
