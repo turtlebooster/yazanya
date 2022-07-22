@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.ssafy.B310.entity.Todo;
 import com.ssafy.B310.service.TodoService;
+import com.ssafy.B310.service.UserService;
 
 @Controller
 @RequestMapping("/todo")
@@ -28,11 +29,14 @@ public class TodoController {
     
     @Autowired
     TodoService todoService;
+    @Autowired
+    UserService userService;
     
     // todo 생성
-    @PostMapping("/create")
-    public ResponseEntity<?> createTodo(@RequestBody Todo todo) throws SQLException{
-    	int cnt = todoService.createTodo(todo);
+    @PostMapping("/create/{userId}")
+    public ResponseEntity<?> createTodo(@RequestBody Todo todo, @PathVariable String userId) throws SQLException{
+//    	System.out.println(todo.getUser().getUserNum());
+    	int cnt = todoService.createTodo(todo, userId);
     	if (cnt == 1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
     	else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
     }
