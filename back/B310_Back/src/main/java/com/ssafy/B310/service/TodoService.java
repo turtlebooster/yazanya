@@ -7,7 +7,7 @@ import com.ssafy.B310.entity.Todo;
 
 public interface TodoService {
 	// todo 등록
-	int createTodo(Todo todo) throws SQLException;
+	int createTodo(Todo todo, String userId) throws SQLException;
 	// todo 전체 조회
 	List<Todo> findAllTodo() throws SQLException;
 	// todo userId 로 전체 조회

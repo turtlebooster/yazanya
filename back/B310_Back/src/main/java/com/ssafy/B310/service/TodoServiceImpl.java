@@ -22,9 +22,15 @@ public class TodoServiceImpl implements TodoService {
 	UserRepository userRepository;
 	
 	@Override
-	public int createTodo(Todo todo) throws SQLException {
-		todoRepository.save(todo);
-		return 1;			
+	public int createTodo(Todo todo, String userId) throws SQLException {
+		Optional<User> oUser = userRepository.findByUserId(userId);
+		
+		if (oUser.isPresent()) {
+			todo.setUser(oUser.get());
+			todoRepository.save(todo);
+			return 1;			
+		}
+		return 0;
 	}
 
 	@Override
