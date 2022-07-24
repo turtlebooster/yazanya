@@ -1,5 +1,5 @@
 //  색 변경 색맹을 위한 색감 009e73
-//  https://www.youtube.com/watch?v=P_A2kNpyQBs
+//  네비게이션 바 css 강의 https://www.youtube.com/watch?v=P_A2kNpyQBs
 
 <template>
   <div class="main-side-bar">
