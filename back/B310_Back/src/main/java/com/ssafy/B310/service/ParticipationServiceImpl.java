@@ -43,22 +43,22 @@ public class ParticipationServiceImpl implements ParticipationService {
 //    }
 
     @Override
-    public int joinRoom(User user, int roomNum) throws SQLException {
+    public int joinRoom(User user, Room room) throws SQLException {
         // 해당 방에 유저가 존재 할 경우 처리??
         Optional<User> joinUser = userRepository.findByUserId(user.getUserId());
-        Optional<Room> joinRoom = roomRepository.findById(roomNum);
+//        Optional<Room> joinRoom = roomRepository.findById(roomNum);
 
         User u = joinUser.get();
 
         u.setUserId(user.getUserId());
 
-        Room r = joinRoom.get();
+//        Room r = joinRoom.get();
+//
+//        r.setRoomNum(roomNum);
 
-        r.setRoomNum(roomNum);
-
-        Participation participation = new Participation(r, u);
+        Participation participation = new Participation(room, u);
         participation.setUser(u);
-        participation.setRoom(r);
+        participation.setRoom(room);
         participationRepository.save(participation);
 
         return 1;

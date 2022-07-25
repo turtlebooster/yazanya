@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.ssafy.B310.entity.Hashtag;
 import com.ssafy.B310.entity.Room;
 import com.ssafy.B310.repository.RoomRepository;
 import com.ssafy.B310.specification.RoomSpecification;
@@ -63,8 +64,6 @@ public class RoomServiceImpl implements RoomService {
 		return roomRepository.findAll(spec);
 	}
 
-
-
 	@Override
 	public int removeRoom(int roomNum) throws SQLException {
 		Optional<Room> oRoom = roomRepository.findById(roomNum);
@@ -77,10 +76,42 @@ public class RoomServiceImpl implements RoomService {
 		// 없을경우
 		return 0;
 	}
-
-
-
 	
+//	@Override
+//	public int checkPw(int pw) throws SQLException {
+//		roomRepository.
+//		
+//		return 0;
+//	}
+
+	@Override
+	public int addHashtag(Hashtag hashtag) throws SQLException {
+//		roomHashtag
+		
+		return 0;
+	}
+
+
+
+	@Override
+	public int removeHashtag(Hashtag hashtag) throws SQLException {
+		return 0;
+	}
+
+
+
+	@Override
+	public List<Hashtag> getListHashtag() throws SQLException {
+		
+		return null;
+	}
+
+
+
+	@Override
+	public Room getRoom(int roomNum) throws SQLException {
+		return roomRepository.findById(roomNum).get();
+	}
 
 
 }
