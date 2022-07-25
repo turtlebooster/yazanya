@@ -1,49 +1,57 @@
+import store from "../store";
 
-/**
- * WebRtc Participant
- * video DOM object name is defined as 'video-name'
- * @param {String} name
- */
-export default function Participant(name) {
-	this.name = name;
+export function Participant(name) {
+  this.name = name;
 
-	// var rtcPeer
-	Object.defineProperty(this, 'rtcPeer', { writable: true });
+  Object.defineProperty(this, "rtcPeer", {
+    writable: true,
+  });
 
-	// create video
-	var video = document.createElement('video');
-	video.id = 'video-' + name;
-	video.autoplay = true;
-	video.controls = false;
-  
-	this.getVideoElement = function () {
-	  return video;
-	};
+  // create video
+  var video = document.createElement("video");
+  video.id = "video-" + name;
+  video.autoplay = true;
+  video.controls = false;
 
-	this.offerToReceiveVideo = function(error, offerSdp, wp){
-		if (error) return console.error ("sdp offer error")
-		console.log('Invoking SDP offer callback function');
-		var msg =  { id : "receiveVideoFrom",
-				sender : name,
-				sdpOffer : offerSdp
-			};
-		sendMessage(msg);
-	}
+  var rtcPeer;
+  console.log("avoid error " + rtcPeer);
 
-	this.onIceCandidate = function (candidate, wp) {
-		  console.log("Local candidate" + JSON.stringify(candidate));
+  this.getVideoElement = function () {
+    return video;
+  };
 
-		  var message = {
-		    id: 'onIceCandidate',
-		    candidate: candidate,
-		    name: name
-		  };
-		  sendMessage(message);
-	}
+  this.offerToReceiveVideo = function (error, offerSdp) {
+    if (error) return console.error("sdp offer error");
+    console.log("Invoking SDP offer callback function");
+    var msg = {
+      id: "receiveVideoFrom",
+      sender: name,
+      sdpOffer: offerSdp,
+    };
+    store.commit("sendMessage", msg);
+  };
 
-	this.dispose = function() {
-		console.log('Disposing participant ' + this.name);
-		this.rtcPeer.dispose();
-		container.parentNode.removeChild(container);
-	};
+  this.onIceCandidate = function (candidate) {
+    console.log(
+      "Local candidate" + JSON.stringify(candidate)
+    );
+
+    var message = {
+      id: "onIceCandidate",
+      candidate: candidate,
+      name: name,
+    };
+    store.commit("sendMessage", message);
+  };
+
+  this.dispose = function () {
+    console.log("Disposing participant " + this.name);
+    this.rtcPeer.dispose();
+  };
+
+  // function sendMessage(message) {
+  //   var jsonMessage = JSON.stringify(message);
+  //   console.log("Sending message: " + jsonMessage);
+  //   ws.send(jsonMessage);
+  // }
 }
