@@ -22,10 +22,11 @@ public interface RoomRepository extends JpaRepository<Room, Integer>, JpaSpecifi
 	
 	Optional<Room> findByRoomName(String roomName);
 	
-	@Query(value = "select * \r\n" + 
-			"  from room r\r\n" + 
-			" where r.room_num in (SELECT rh.room_num \r\n" + 
-			"					    FROM room_hashtag rh \r\n" + 
-			"                       WHERE rh.room_num in (:hashtagNumList))")
-	List<Room> findByRoomByHashtagNum(@Param("hashtagNumList") List<Integer> hashtagNumList);
+////	@Query(value = "select * \r\n" + 
+////			"  from room r\r\n" + 
+////			" where r.room_num in (SELECT rh.room_num \r\n" + 
+////			"					    FROM room_hashtag rh \r\n" + 
+////			"                       WHERE rh.room_num in (:hashtagNumList))")
+//	@Query(value = "select * from room where r.room_num in (:hashtagNumList)")
+//	List<Room> findByRoomByHashtagNum(@Param("hashtagNumList") List<Integer> hashtagNumList);
 }
