@@ -7,7 +7,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import lombok.Data;
+
 @Entity
+@Data
 public class RoomHashtag {
 	@Id
 	@GeneratedValue

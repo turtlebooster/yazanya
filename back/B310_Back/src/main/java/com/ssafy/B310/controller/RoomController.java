@@ -86,5 +86,12 @@ public class RoomController {
         else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
 
     }
+    
+    // 해쉬태그로 추천 방 리스트
+    @GetMapping("/recommend")
+    public ResponseEntity<?> recommendRoom(@RequestParam(value="hashtagNum", required=false, defaultValue="") List<Integer> hashtagNumList) {
+    	return new ResponseEntity<List<Room>>(roomservice.getRecommendHashtagList(hashtagNumList), HttpStatus.OK);
+    }
+    
 
 }

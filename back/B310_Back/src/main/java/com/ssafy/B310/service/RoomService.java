@@ -16,4 +16,6 @@ public interface RoomService {
 	// 방 삭제
 	public int removeRoom(int roomNum) throws SQLException;
 	
+	///////////////////////////////
+	List<Room> getRecommendHashtagList(List<Integer> hashtagNumList);
 }
