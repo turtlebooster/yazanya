@@ -1,43 +1,46 @@
 <template>
-  <div>
-    <MainBar @toggle="toggleOnOff"/>
-    <section>
-    <SidebarLogout v-if="isOn"/>
-    <HomeLogout/>
-    </section>
+  <div class="main-view">
+    <main-header-nav />
+    <div class="main-view-container">
+      <main-side-bar />
+      <div style="min-width: 104px"></div>
+      <router-view class="router-view" />
+    </div>
   </div>
 </template>
 
-
 <script>
-  import MainBar from "./components/mainbar.vue"
-  import SidebarLogout from "./components/sidebar_logout.vue"
-  import HomeLogout from "./components/home_logout.vue"
-  import { ref } from 'vue'
+import MainHeaderNav from '@/views/Main/components/common/MainHeaderNav.vue';
+import MainSideBar from '@/views/Main/components/common/MainSideBar.vue';
 
-  export default {
-    components: {
-      MainBar,
-      SidebarLogout,
-      HomeLogout,
-    },
-
-    setup() {
-      var isOn = ref(false)
-      function toggleOnOff() {
-        isOn.value = !isOn.value;
-      }
-      
-      return {
-        isOn,
-        toggleOnOff
-      }
-    }
-  }
+export default {
+  components: {
+    MainHeaderNav,
+    MainSideBar,
+  },
+};
 </script>
 
 <style>
-  section {
-    display: flex;
-  }
+.main-view {
+  width: 100vw;
+  height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+.main-view-container {
+  flex-grow: 1;
+  display: flex;
+}
+.main-header-nav {
+  z-index: 25;
+}
+.main-side-bar {
+  z-index: 20;
+}
+.router-view {
+  flex-grow: 1;
+}
 </style>

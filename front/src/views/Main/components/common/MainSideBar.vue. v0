@@ -1,0 +1,23 @@
+<template>
+	<div class="main-side-bar">
+	</div>
+</template>
+
+<script>
+export default {
+
+}
+</script>
+
+<style scoped>
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	z-index: 1;
+}
+.main-side-bar {
+	background: red;
+}
+
+</style>
