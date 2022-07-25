@@ -61,8 +61,6 @@ public class ParticipationServiceImpl implements ParticipationService {
         participation.setRoom(r);
         participationRepository.save(participation);
 
-        System.out.println(u);
-        System.out.println(r);
         return 1;
     }
 
