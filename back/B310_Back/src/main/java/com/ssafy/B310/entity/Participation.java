@@ -1,6 +1,7 @@
 package com.ssafy.B310.entity;
 
 import lombok.Data;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -37,11 +38,22 @@ public class Participation {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date exitTime;
 
+	public Participation(){
+
+	}
 	public Participation(Room room, User user) {
 		this.room = room;
 		this.user = user;
 	}
-	public Participation(){
 
+	@Override
+	public String toString() {
+		return "Participation{" +
+				"Id=" + Id +
+				", room=" + room +
+				", user=" + user +
+				", enterTime=" + enterTime +
+				", exitTime=" + exitTime +
+				'}';
 	}
 }
