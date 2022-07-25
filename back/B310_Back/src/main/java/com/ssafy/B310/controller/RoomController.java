@@ -4,17 +4,13 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import com.ssafy.B310.entity.Participation;
+import com.ssafy.B310.entity.User;
+import com.ssafy.B310.service.ParticipationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.ssafy.B310.entity.Room;
 import com.ssafy.B310.service.RoomService;
@@ -28,6 +24,9 @@ public class RoomController {
 
     @Autowired
     RoomService roomservice;
+
+    @Autowired
+    ParticipationService participationservice;
 
     // 방 생성
     @PostMapping("/create")
@@ -63,6 +62,29 @@ public class RoomController {
 
         if(cnt==1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
         else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    // 유저 입장
+
+//    @PostMapping("/join/{roomNum}")
+//    public ResponseEntity<?> joinRoom(@PathVariable("roomNum") int roomNum) throws SQLException {
+//        User user = null;
+//        int cnt = participationservice.joinRoom(new Participation(roomNum, user.userNum));
+//
+//        if(cnt==1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+//        else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+//
+//    }
+
+    @PostMapping("/join/{roomNum}")
+    public ResponseEntity<?> joinRoom(@RequestBody  User user , @PathVariable("roomNum") int roomNum) throws SQLException {
+        int cnt = participationservice.joinRoom(user, roomNum);
+        System.out.println(roomNum);
+        System.out.println(user);
+
+        if(cnt==1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+        else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+
     }
 
 }
