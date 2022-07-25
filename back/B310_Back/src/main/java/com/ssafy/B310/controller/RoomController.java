@@ -65,17 +65,6 @@ public class RoomController {
     }
 
     // 유저 입장
-
-//    @PostMapping("/join/{roomNum}")
-//    public ResponseEntity<?> joinRoom(@PathVariable("roomNum") int roomNum) throws SQLException {
-//        User user = null;
-//        int cnt = participationservice.joinRoom(new Participation(roomNum, user.userNum));
-//
-//        if(cnt==1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
-//        else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
-//
-//    }
-
     @PostMapping("/join/{roomNum}")
     public ResponseEntity<?> joinRoom(@RequestBody  User user , @PathVariable("roomNum") int roomNum) throws SQLException {
         int cnt = participationservice.joinRoom(user, roomNum);
@@ -85,6 +74,26 @@ public class RoomController {
         if(cnt==1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
         else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
 
+    }
+
+    // 유저 퇴장
+    @DeleteMapping("/exit/{roomNum}")
+    public ResponseEntity<?> exitRoom(@RequestBody Map<String, Integer> params , @PathVariable int roomNum ) throws SQLException {
+        int userNum = params.get("userNum");
+        int cnt = participationservice.exitRoom(userNum, roomNum);
+
+
+        if(cnt==1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+        else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    // 입장 유저 리스트 반환
+    @GetMapping("/join/{roomNum}")
+    public ResponseEntity<?> joinedUser(@PathVariable int roomNum) throws SQLException {
+
+        List joinedUserList = participationservice.joinedUser(roomNum);
+
+        return new ResponseEntity<List<Participation>>(joinedUserList, HttpStatus.OK);
     }
 
 }
