@@ -14,7 +14,6 @@ import com.ssafy.B310.entity.Room;
 @Repository
 public interface RoomRepository extends JpaRepository<Room, Integer>, JpaSpecificationExecutor<Room> {
 	
-	//조건 검색용 메서드
 	Page<Room> findAll(Specification<Room> spec, Pageable pageable);
 	
 	
