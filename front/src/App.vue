@@ -6,22 +6,27 @@
 </template>
 
 <script>
-import Navi from "@/components/common/main_nav.vue";
+// import Navi from "@/views/common/components/MainNav.vue";
 
 export default {
   components: {
-    Navi,
+    // Navi,
   },
 };
 </script>
 
 <style>
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
+  /* text-align: center; */
   color: #2c3e50;
-  margin-top: 60px;
+  /* margin-top: 60px; */
 }
 </style>
