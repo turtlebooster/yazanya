@@ -93,7 +93,7 @@ public class RoomServiceImplAdd implements RoomService {
 	// 해쉬태그 추천 목록
 	public List<Room> getRecommendHashtagList(List<Integer> hashtagNumList) {
 		
-//		List<Room> list = roomHashtagRepository.findByHashtagHashtagNumIn(hashtagNumList);
+		List<Room> list = roomHashtagRepository.findByHashtagHashtagNumIn(hashtagNumList);
 //		Set<Room> roomSet = new HashSet<Room>();
 //		roomSet.add(list.get(0).getRoom());
 //		System.out.println(roomSet.toString());
@@ -115,8 +115,8 @@ public class RoomServiceImplAdd implements RoomService {
 			roomList.add(rh.getRoom());
 		}
 		*/
-//		List<Room> roomList = new ArrayList<Room>();
-		return roomRepository.findByRoomByHashtagNum(hashtagNumList);
+		List<Room> roomList = new ArrayList<Room>();
+		return roomList;
 	}
 
 }
