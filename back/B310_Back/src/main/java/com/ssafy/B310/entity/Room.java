@@ -1,7 +1,6 @@
 package com.ssafy.B310.entity;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Set;
 
@@ -17,10 +16,12 @@ import javax.persistence.PrePersist;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Data
+@Getter
+@Setter
 public class Room {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,6 +57,9 @@ public class Room {
 	@Column
 	private LocalDateTime startTime;
 	
+	@Column
+	private int roomPw;
+	
 	@PrePersist
     public void startTime() {
         this.startTime = LocalDateTime.now();
@@ -86,5 +90,7 @@ public class Room {
 	@OneToMany(mappedBy = "room")
 	private Set<RoomHashtag> roomHashtag;
 //	private Set<RoomHashtag> roomHashtag = new ArrayList<RoomHashtag>();
+	
+	
 
 }
