@@ -6,8 +6,8 @@ import lombok.Data;
 @Data
 @Builder
 public class Mail {
-	private String toAddress; //¼ö½ÅÀÎ
-	private String title; //Á¦¸ñ
-	private String message; //³»¿ë
-	private String fromAddress; //¼Û½ÅÀÎ
+	private String toAddress; //ìˆ˜ì‹ ì¸
+	private String title; //ì œëª©
+	private String message; //ë‚´ìš©
+	private String fromAddress; //ì†¡ì‹ ì¸
 }

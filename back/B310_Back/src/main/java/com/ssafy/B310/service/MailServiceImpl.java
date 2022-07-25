@@ -17,9 +17,9 @@ public class MailServiceImpl implements MailService {
 
 	private final JavaMailSender mailSender;
     
-    private static final String title = "YaZaNya ÀÓ½Ã ºñ¹Ğ¹øÈ£ ¾È³» ÀÌ¸ŞÀÏÀÔ´Ï´Ù.";
-    private static final String message = "¾È³çÇÏ¼¼¿ä. YaZaNya ÀÓ½Ã ºñ¹Ğ¹øÈ£ ¾È³» ¸ŞÀÏÀÔ´Ï´Ù. "
-            +"\n" + "È¸¿ø´ÔÀÇ ÀÓ½Ã ºñ¹Ğ¹øÈ£´Â ¾Æ·¡¿Í °°½À´Ï´Ù. ·Î±×ÀÎ ÈÄ ¹İµå½Ã ºñ¹Ğ¹øÈ£¸¦ º¯°æÇØÁÖ¼¼¿ä."+"\n";
+    private static final String title = "YaZaNya ì„ì‹œ ë¹„ë°€ë²ˆí˜¸ ì•ˆë‚´ ì´ë©”ì¼ì…ë‹ˆë‹¤.";
+    private static final String message = "ì•ˆë…•í•˜ì„¸ìš”. YaZaNya ì„ì‹œ ë¹„ë°€ë²ˆí˜¸ ì•ˆë‚´ ë©”ì¼ì…ë‹ˆë‹¤. "
+            +"\n" + "íšŒì›ë‹˜ì˜ ì„ì‹œ ë¹„ë°€ë²ˆí˜¸ëŠ” ì•„ë˜ì™€ ê°™ìŠµë‹ˆë‹¤. ë¡œê·¸ì¸ í›„ ë°˜ë“œì‹œ ë¹„ë°€ë²ˆí˜¸ë¥¼ ë³€ê²½í•´ì£¼ì„¸ìš”."+"\n";
     private static final String fromAddress = "helpYaZaNya@gmail.com";
 	
     
