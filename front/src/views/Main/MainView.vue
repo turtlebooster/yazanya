@@ -1,22 +1,23 @@
 <template>
   <div class="main-view">
-    <main-header-nav />
-    <div class="main-view-container">
-      <main-side-bar />
-      <div style="min-width: 104px"></div>
+    <header-nav />
+    <div style="main-header-blank"></div>
+    <div class="main-container">
+      <side-bar />
+      <div class="main-side-blank" style="min-width: 104px"></div>
       <router-view class="router-view" />
     </div>
   </div>
 </template>
 
 <script>
-import MainHeaderNav from '@/views/Main/components/common/MainHeaderNav.vue';
-import MainSideBar from '@/views/Main/components/common/MainSideBar.vue';
+import HeaderNav from '@/views/common/components/HeaderNav.vue';
+import SideBar from '@/views/common/components/SideBar.vue';
 
 export default {
   components: {
-    MainHeaderNav,
-    MainSideBar,
+    HeaderNav,
+    SideBar,
   },
 };
 </script>
@@ -30,16 +31,16 @@ export default {
   flex-direction: column;
   height: 100vh;
 }
-.main-view-container {
+
+.main-container {
   flex-grow: 1;
   display: flex;
 }
-.main-header-nav {
-  z-index: 25;
+
+.main-header-blank {
+  background: red;
 }
-.main-side-bar {
-  z-index: 20;
-}
+
 .router-view {
   flex-grow: 1;
 }
