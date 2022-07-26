@@ -93,7 +93,9 @@ public class RoomController {
 
         List joinedUserList = participationservice.joinedUser(roomNum);
 
-        return new ResponseEntity<List<Participation>>(joinedUserList, HttpStatus.OK);
+//        return new ResponseEntity<List<Participation>>(joinedUserList, HttpStatus.OK);
+        return new ResponseEntity<List<User>>(joinedUserList, HttpStatus.OK);
+
     }
 
 }

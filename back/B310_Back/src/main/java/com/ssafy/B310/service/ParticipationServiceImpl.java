@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,7 +32,11 @@ public class ParticipationServiceImpl implements ParticipationService {
         Optional<User> joinUser = userRepository.findByUserId(user.getUserId());
         Optional<Room> joinRoom = roomRepository.findById(roomNum);
 
-        if (joinUser.isPresent()) {
+//        if (joinUser.isPresent()) {
+//            return 2;
+//        }
+//        if (participationRepository.findByUserId(user.getUserId()).isPresent()){
+        if (participationRepository.findByuser_userId(user.getUserId()).isPresent()){
             return 2;
         }
 
@@ -68,18 +73,28 @@ public class ParticipationServiceImpl implements ParticipationService {
     }
 
     @Override
-    public List<Participation> joinedUser(int roomNum) throws SQLException {
+    public List<User> joinedUser(int roomNum) throws SQLException {
 
-        Optional<Room> joinRoom = roomRepository.findById(roomNum);
+//        Optional<Room> joinRoom = roomRepository.findById(roomNum);
+//
+//        Room room = joinRoom.get();
+//
+////        List<Participation> joinedUser = participationRepository.findByRoom(room);
+//
+//        List joinedUserList = participationRepository.findByRoom(room);
+//
+//        return joinedUserList;
+////        return participationRepository.findByRoom(room);
 
-        Room room = joinRoom.get();
+        List<Participation> participationList = participationRepository.findByroom_roomNum(roomNum);
 
-//        List<Participation> joinedUser = participationRepository.findByRoom(room);
+        List<User> participationListRes = new ArrayList<>();
 
-        List joinedUserList = participationRepository.findByRoom(room);
-
-        return joinedUserList;
-//        return participationRepository.findByRoom(room);
+        for (Participation user : participationList) {
+            User joinuser = user.getUser();
+            participationListRes.add(joinuser);
+        }
+        return participationListRes;
     }
 
 }

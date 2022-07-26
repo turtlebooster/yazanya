@@ -1,6 +1,8 @@
 package com.ssafy.B310.entity;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
@@ -9,7 +11,8 @@ import java.util.Date;
 import javax.persistence.*;
 
 @Entity
-@Data
+@Getter
+@Setter
 public class Participation {
 	@Id
 	@GeneratedValue
@@ -56,4 +59,14 @@ public class Participation {
 				", exitTime=" + exitTime +
 				'}';
 	}
+//	@Override
+//	public String toString() {
+//		return "Participation{" +
+//				"Id=" + Id +
+//				", room=" + room +
+//				", user=" + user +
+//				", enterTime=" + enterTime +
+//				", exitTime=" + exitTime +
+//				'}';
+//	}
 }
