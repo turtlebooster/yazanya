@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ParticipationRepository extends JpaRepository<Participation, Long> {
@@ -20,6 +21,10 @@ public interface ParticipationRepository extends JpaRepository<Participation, Lo
 
     @Transactional
     List<Participation> findByuser_userNum(int user_num);
+
+    @Transactional
+//    Optional<Participation> findByUserId(String userId);
+    Optional<Participation> findByuser_userId(String userId);
 
 //    List<Participation> findByroomNum(int room_num);
 //    List<Participation> findByRoomNumAndUserNum(int roomNum, int userNum);

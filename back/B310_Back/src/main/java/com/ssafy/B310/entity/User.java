@@ -9,10 +9,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Data
+@Getter
+@Setter
 public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,7 +51,7 @@ public class User {
 	}
 	public User() {
 	}
-	
+	@JsonIgnore
 	@OneToMany(mappedBy = "user")
 	private Set<Participation> participationList;
 //	private List<Participation> participationList = new ArrayList<>();
@@ -55,5 +59,19 @@ public class User {
 	@OneToMany(mappedBy = "user")
 	private Set<Todo> todo;
 //	private List<Todo> todo = new ArrayList<>();
-	
+
+	@Override
+	public String toString() {
+		return "User{" +
+				"userNum=" + userNum +
+				", userId='" + userId + '\'' +
+				", userPw='" + userPw + '\'' +
+				", userName='" + userName + '\'' +
+				", userEmail='" + userEmail + '\'' +
+				", userNickname='" + userNickname + '\'' +
+				", userStatusNum=" + userStatusNum +
+				", participationList=" + participationList +
+				", todo=" + todo +
+				'}';
+	}
 }
