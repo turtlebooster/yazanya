@@ -1,7 +1,6 @@
 package com.ssafy.B310.entity;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Set;
 
@@ -16,6 +15,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.Data;
 
@@ -79,10 +80,12 @@ public class Room {
 	@JoinColumn(name="user_num")
 	private User manager;
 	
+	@JsonManagedReference
 	@OneToMany(mappedBy = "room")
 	private Set<Participation> participationList;
 //	private Set<Participation> participationList = new ArrayList<>();
 	
+	@JsonManagedReference
 	@OneToMany(mappedBy = "room")
 	private Set<RoomHashtag> roomHashtag;
 //	private Set<RoomHashtag> roomHashtag = new ArrayList<RoomHashtag>();

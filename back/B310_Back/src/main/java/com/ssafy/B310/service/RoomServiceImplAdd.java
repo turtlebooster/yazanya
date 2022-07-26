@@ -10,10 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.B310.entity.Room;
 import com.ssafy.B310.repository.HashtagRepository;
 import com.ssafy.B310.repository.RoomHashtagRepository;
+import com.ssafy.B310.repository.RoomQueryRepository;
 import com.ssafy.B310.repository.RoomRepository;
 import com.ssafy.B310.specification.RoomSpecification;
 
@@ -27,6 +27,8 @@ public class RoomServiceImplAdd implements RoomService {
 	RoomHashtagRepository roomHashtagRepository;
 	@Autowired
 	HashtagRepository hashtagRepository;
+	@Autowired
+	RoomQueryRepository roomQueryRepository;
 	
 	@Override
 	public int createRoom(Room room) throws SQLException {
@@ -88,10 +90,10 @@ public class RoomServiceImplAdd implements RoomService {
 	
 	// 해쉬태그 추천 목록
 	public List<Room> getRecommendHashtagList(List<Integer> hashtagNumList) {
-		
+		return roomQueryRepository.findRecommendRoom(hashtagNumList);
 
-		List<Room> roomList = new ArrayList<Room>();
-		return roomList;
+//		List<Room> roomList = new ArrayList<Room>();
+//		return roomList;
 	}
 
 }
