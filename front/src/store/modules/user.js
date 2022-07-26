@@ -1,13 +1,13 @@
-import jwt from "@/util/jwt";
-import http from "@/util/http-commons";
+import jwt from '@/util/common/jwt';
+import http from '@/util/common/http-commons';
 
-const REST_PATH = "/user";
+const REST_PATH = '/user';
 
 export const User = {
   state: {
     token: {
       accessToken: jwt.getToken(),
-      // refreshToken : not added
+      // refreshToken : not added yet
     },
     isLogined: !!jwt.getToken(),
   },
@@ -23,7 +23,7 @@ export const User = {
 
   mutations: {
     logout: function (state) {
-      state.token.accessToken = "";
+      state.token.accessToken = '';
       state.isLogined = false;
       jwt.destroyToken();
     },
@@ -40,7 +40,7 @@ export const User = {
       // 비동기 처리
       return new Promise((resolve) => {
         setTimeout(function () {
-          context.commit("logout");
+          context.commit('logout');
           resolve({});
         }, 1000);
       });
@@ -57,7 +57,7 @@ export const User = {
 
       return new Promise((resolve, reject) => {
         http
-          .post(REST_PATH + "/regist", params)
+          .post(REST_PATH + '/regist', params)
           .then((response) => {
             resolve(response);
           })
@@ -75,11 +75,11 @@ export const User = {
 
       return new Promise((resolve, reject) => {
         http
-          .post(REST_PATH + "/login", params)
+          .post(REST_PATH + '/login', params)
           .then((response) => {
             const { data } = response;
-            context.commit("login", {
-              accessToken: data["access-token"],
+            context.commit('login', {
+              accessToken: data['access-token'],
             });
 
             resolve(response);
@@ -97,7 +97,7 @@ export const User = {
 
       return new Promise((resolve, reject) => {
         http
-          .post(REST_PATH + "/findid", params)
+          .post(REST_PATH + '/findid', params)
           .then((response) => {
             // TODO
             resolve(response);
@@ -116,7 +116,7 @@ export const User = {
 
       return new Promise((resolve, reject) => {
         http
-          .post(REST_PATH + "/findpw", params)
+          .post(REST_PATH + '/findpw', params)
           .then((response) => {
             // TODO
             resolve(response);
