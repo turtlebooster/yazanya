@@ -18,8 +18,12 @@ const routes = [
   {
     path: '/',
     name: 'home',
+
+    // for testing
+    //redirect: { path: '/studyroom/:roomname', roomname: 310 },
+
     component: () => import('../views/Home/HomeView.vue'),
-    beforeEnter: beforeAuth(true),
+    //beforeEnter: beforeAuth(true),
   },
   {
     path: '/main',
@@ -84,6 +88,20 @@ const routes = [
         path: 'findpw',
         name: 'user.findpw',
         component: () => import('../views/User/components/findPw_form.vue'),
+      },
+    ],
+  },
+  {
+    path: '/studyroom',
+    name: 'studyroom',
+    // beforeEnter: beforeAuth(true),
+    component: () => import('../views/Room/RoomView.vue'),
+
+    children: [
+      {
+        path: ':roomnum',
+        name: 'studyroom.inroom',
+        component: () => import('../views/Room/RoomView.vue'),
       },
     ],
   },
