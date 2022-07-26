@@ -7,6 +7,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import lombok.Data;
 
 @Entity
@@ -18,11 +20,13 @@ public class RoomHashtag {
 	private Long Id;
 	
 //	@Id
+	@JsonBackReference
 	@ManyToOne
 	@JoinColumn(name = "ROOM_NUM")
 	private Room room;
 	
 //	@Id
+	@JsonBackReference
 	@ManyToOne
 	@JoinColumn(name = "HASHTAG_NUM")
 	private Hashtag hashtag;
