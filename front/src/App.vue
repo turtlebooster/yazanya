@@ -1,22 +1,24 @@
+<!-- Comment -->
+
 <template>
   <div id="app">
-    <navi :viewname="$route"/>
+    <navi :viewname="$route" />
     <router-view />
   </div>
 </template>
 
 <script>
-import Navi from "@/views/common/components/MainNav.vue";
+import Navi from '@/views/common/components/MainNav.vue';
 
 export default {
   setup() {
     // get theme flag from local
-    let theme = JSON.parse(localStorage.getItem("yaza_theme")) || true
-    return { theme }
+    let theme = JSON.parse(localStorage.getItem('yaza_theme')) || true;
+    return { theme };
   },
 
   components: {
-     Navi,
+    Navi,
   },
 };
 </script>
@@ -38,19 +40,18 @@ export default {
 }
 
 * {
-	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
-
 
 /* ---- for light and dark mode ---- */
 .light {
-  background :#ffffff;
+  background: #ffffff;
 }
 
 .dark {
-  background : #404040;
+  background: #404040;
 }
 /* --------------------------------- */
 
