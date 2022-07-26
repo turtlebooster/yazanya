@@ -18,12 +18,8 @@ const routes = [
   {
     path: '/',
     name: 'home',
-
-    // for testing
-    //redirect: { path: '/studyroom/:roomname', roomname: 310 },
-
     component: () => import('../views/Home/HomeView.vue'),
-    //beforeEnter: beforeAuth(true),
+    beforeEnter: beforeAuth(true),
   },
   {
     path: '/main',
@@ -32,18 +28,8 @@ const routes = [
     children: [
       {
         path: '',
-        name: 'main.mypage', // default page
-        component: () => import('../views/Main/components/MainMypage.vue'),
-      },
-      {
-        path: '',
-        name: 'main.setting', // default page
-        component: () => import('../views/Main/components/MainMypage.vue'),
-      },
-      {
-        path: 'quickstart',
-        name: 'main.quickstart',
-        component: () => import('../views/Main/components/MainQuickstart.vue'),
+        name: 'main.lobby', // default page
+        component: () => import('../views/Main/components/MainLobby.vue'),
       },
       {
         path: 'planner',
@@ -51,12 +37,12 @@ const routes = [
         component: () => import('../views/Main/components/MainPlanner.vue'),
       },
       {
-        path: 'share',
+        path: 'friends',
         name: 'main.share',
-        component: () => import('../views/Main/components/MainShare.vue'),
+        component: () => import('../views/Main/components/MainFriends.vue'),
       },
       {
-        path: '',
+        path: 'alarm',
         name: 'main.alarm',
         component: () => import('../views/Main/components/MainAlarm.vue'),
       },
@@ -96,11 +82,23 @@ const routes = [
     name: 'studyroom',
     // beforeEnter: beforeAuth(true),
     component: () => import('../views/Room/RoomView.vue'),
-
     children: [
       {
         path: ':roomnum',
         name: 'studyroom.inroom',
+        component: () => import('../views/Room/RoomView.vue'),
+      },
+    ],
+  },
+  {
+    path: '/setting',
+    name: 'setting',
+    // beforeEnter: beforeAuth(true),
+    component: () => import('../views/Room/RoomView.vue'),
+    children: [
+      {
+        path: '/setting',
+        name: 'setting.inroom',
         component: () => import('../views/Room/RoomView.vue'),
       },
     ],
