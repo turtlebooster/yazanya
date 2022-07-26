@@ -1,14 +1,19 @@
 package com.ssafy.B310.entity;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.*;
 
 @Entity
-@Data
+//@Data
+@Getter
+@Setter
 public class Participation {
 	@Id
 	@GeneratedValue
