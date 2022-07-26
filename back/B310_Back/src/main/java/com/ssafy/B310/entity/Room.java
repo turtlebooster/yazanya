@@ -2,6 +2,7 @@ package com.ssafy.B310.entity;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -19,9 +20,13 @@ import javax.persistence.TemporalType;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Data
+//@Data
+@Getter
+@Setter
 public class Room {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

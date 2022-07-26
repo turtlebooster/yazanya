@@ -12,9 +12,13 @@ import javax.persistence.OneToMany;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Data
+//@Data
+@Getter
+@Setter
 public class Hashtag {
 	@Id
 	@GeneratedValue

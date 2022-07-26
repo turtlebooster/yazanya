@@ -94,6 +94,7 @@ public class RoomServiceImplAdd implements RoomService {
 
 //		List<Room> roomList = new ArrayList<Room>();
 //		return roomList;
+//		return roomRepository.findByRoomByHashtagNumCustom(hashtagNumList);
 	}
 
 }

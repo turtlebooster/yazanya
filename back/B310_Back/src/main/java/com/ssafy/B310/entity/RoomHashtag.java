@@ -1,5 +1,7 @@
 package com.ssafy.B310.entity;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,9 +12,13 @@ import javax.persistence.ManyToOne;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Data
+//@Data
+@Getter
+@Setter
 public class RoomHashtag {
 	@Id
 	@GeneratedValue
