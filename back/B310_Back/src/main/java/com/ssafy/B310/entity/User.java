@@ -51,7 +51,7 @@ public class User {
 	}
 	public User() {
 	}
-	@JsonIgnore
+	
 	@OneToMany(mappedBy = "user")
 	@JsonIgnore
 	private Set<Participation> participationList;

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.ssafy.B310.entity.Hashtag;
 import com.ssafy.B310.entity.Room;
+import com.ssafy.B310.repository.RoomQueryRepository;
 import com.ssafy.B310.repository.RoomRepository;
 import com.ssafy.B310.specification.RoomSpecification;
 
@@ -20,6 +21,9 @@ public class RoomServiceImpl implements RoomService {
 	@Autowired
 	RoomRepository roomRepository;
 	RoomSpecification roomSpecification;
+	
+	@Autowired
+	RoomQueryRepository roomQueryRepository;
 	
 	@Override
 	public int createRoom(Room room) throws SQLException {
@@ -89,10 +93,10 @@ public class RoomServiceImpl implements RoomService {
 		else return null;
 	}
 
-	@Override
+	// 해쉬태그 추천 목록
 	public List<Room> getRecommendHashtagList(List<Integer> hashtagNumList) {
-		// TODO Auto-generated method stub
-		return null;
+		return roomQueryRepository.findRecommendRoom(hashtagNumList);
+
 	}
 }
 

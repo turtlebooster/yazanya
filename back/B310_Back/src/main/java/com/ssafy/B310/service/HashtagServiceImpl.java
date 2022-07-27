@@ -59,4 +59,9 @@ public class HashtagServiceImpl implements HashtagService {
 	public List<Hashtag> getHashtagList() {
 		return hashRepo.findAll();
 	}
+	
+	public Hashtag getHashtag(int hashtagNum) {
+		return hashRepo.findById(hashtagNum).get();
+	}
+
 }

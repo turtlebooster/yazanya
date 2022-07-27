@@ -14,4 +14,6 @@ public interface HashtagService {
 	int removeHashtag(int hashtagNum);
 	// 해쉬태그 전체 목록 
 	List<Hashtag> getHashtagList();
+	
+	Hashtag getHashtag(int hashtagNum);
 }

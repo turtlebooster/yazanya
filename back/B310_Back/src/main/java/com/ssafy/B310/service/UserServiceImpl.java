@@ -150,11 +150,8 @@ public class UserServiceImpl implements UserService{
 
 		String pwd = "";
 		
-<<<<<<< Updated upstream
+
 		/* 10 자리의 랜덤 임시 비밀번호 생성 */
-=======
-		/* 10개의 랜덤 단어로 임시 비밀번호 생성 */
->>>>>>> Stashed changes
         int idx = 0;
         for(int i = 0; i < 10; i++){
             idx = (int) (charSet.length * Math.random());
