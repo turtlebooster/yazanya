@@ -83,7 +83,11 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public User myPage(String userId) throws SQLException {
-		return userRepository.findByUserId(userId).get();
+		Optional<User> oUser = userRepository.findByUserId(userId);
+		
+		if(oUser.isPresent())
+			return oUser.get();
+		else return null;
 	}
 
 	@Override

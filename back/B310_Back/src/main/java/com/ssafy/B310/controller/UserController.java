@@ -24,8 +24,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.B310.entity.Hashtag;
 import com.ssafy.B310.entity.User;
+import com.ssafy.B310.entity.UserHashtag;
+import com.ssafy.B310.service.HashtagService;
 import com.ssafy.B310.service.JwtService;
+import com.ssafy.B310.service.UserHashtagService;
 import com.ssafy.B310.service.UserService;
 
 
@@ -45,6 +49,12 @@ public class UserController {
 	
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+	UserHashtagService userHashtagService;
+	
+	@Autowired
+	HashtagService hashtagService;
 
 	// 로그인 요청 처리 - POST /user/login
 	@PostMapping("/login")
@@ -185,5 +195,50 @@ public class UserController {
 		}
 	}
 	
+	
+	//유저 해쉬태그 추가
+	@PostMapping("/hashtag")
+	public ResponseEntity<?> addUserHashtag(@RequestParam String userId, @RequestParam int hashtagNum) throws SQLException {
+		User user = userService.myPage(userId);
+		Hashtag hashtag = hashtagService.getHashtag(hashtagNum);
+		
+		UserHashtag userHashtag = new UserHashtag(user, hashtag);
+
+		int cnt = userHashtagService.addUserHashtag(userHashtag);
+		
+		if(cnt==1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+		else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	//유저 해쉬태그 삭제
+	@DeleteMapping("/hashtag")
+	public ResponseEntity<?> deleteUserHashtag(@RequestParam String userId, @RequestParam int hashtagNum) throws SQLException {
+		User user = userService.myPage(userId);
+		Hashtag hashtag = hashtagService.getHashtag(hashtagNum);
+		
+		int cnt = userHashtagService.deleteUserHashtag(user, hashtag);
+		
+		if(cnt==1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+		else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	//유저 해쉬태그 목록
+	@GetMapping("/hashtag")
+	public ResponseEntity<?> getUserHashtagList(@RequestParam String userId) throws SQLException {
+		User user = userService.myPage(userId);
+		
+		List<UserHashtag> list = userHashtagService.getUserHashtag(user);
+		
+		if(list.isEmpty()) {
+			System.out.println("해당 user는 해쉬태그가 없음");
+			return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+			
+		for(UserHashtag uht : list) {
+			System.out.println(uht.getHashtag().getHashtagName());
+		}
+		
+		return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+	}
 }
 
