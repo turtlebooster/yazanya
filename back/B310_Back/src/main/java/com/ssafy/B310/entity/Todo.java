@@ -37,6 +37,9 @@ public class Todo {
 	@Column
 	private String todoName;
 	
+	@Column
+	private int progress;
+	
 	@ManyToOne
 	@JoinColumn(name = "user_num")
 	private User user;
