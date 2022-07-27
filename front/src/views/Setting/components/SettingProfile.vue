@@ -1,7 +1,5 @@
 <template>
-  <div class="setting-view">
-    <router-view />
-  </div>
+  <div>프로필 정리</div>
 </template>
 
 <script>

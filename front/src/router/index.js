@@ -32,11 +32,6 @@ const routes = [
         component: () => import('../views/Main/components/MainLobby.vue'),
       },
       {
-        path: 'planner',
-        name: 'main.planner',
-        component: () => import('../views/Main/components/MainPlanner.vue'),
-      },
-      {
         path: 'friends',
         name: 'main.share',
         component: () => import('../views/Main/components/MainFriends.vue'),
@@ -47,6 +42,11 @@ const routes = [
         component: () => import('../views/Main/components/MainAlarm.vue'),
       },
     ],
+  },
+  {
+    path: '/Planner',
+    // beforeEnter: beforeAuth(true),
+    component: () => import('../views/Planner/PlannerView.vue'),
   },
   {
     path: '/user',
@@ -92,14 +92,19 @@ const routes = [
   },
   {
     path: '/setting',
-    name: 'setting',
     // beforeEnter: beforeAuth(true),
-    component: () => import('../views/Room/RoomView.vue'),
+    component: () => import('@/views/Setting/SettingView.vue'),
     children: [
       {
-        path: '/setting',
-        name: 'setting.inroom',
-        component: () => import('../views/Room/RoomView.vue'),
+        path: '',
+        name: 'setting.list',
+        component: () => import('@/views/Setting/components/SettingList.vue'),
+      },
+      {
+        path: 'profile',
+        name: 'setting.profile',
+        component: () =>
+          import('@/views/Setting/components/SettingProfile.vue'),
       },
     ],
   },

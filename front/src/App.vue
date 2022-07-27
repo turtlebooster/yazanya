@@ -1,7 +1,3 @@
-<!--
-  App.vue.#v0 폴더가 원본임 이 파일 지우고 해당 App.vue.#v0 에서 #v0 지우면 원상복귀
--->
-
 <template>
   <div
     id="app"
@@ -9,189 +5,26 @@
     style="height: 100vh; height: 100vh; width: 100vw; max-height: 100vh"
   >
     <!-- Header -->
-    <div
-      class="app-header"
-      style="background: var(--sub-color-r); min-height: var(--size-h-header)"
-    >
-      <!-- <header-nav style="display: none" /> -->
+    <div class="app-header" style="min-height: var(--size-h-header)">
       <header-nav />
-      <div>대충 header</div>
     </div>
 
     <!-- Container -->
     <div
       class="app-container d-flex flex-grow-1 flex-shrink-1"
-      style="background: var(--sub-color-p); overflow-y: hidden"
+      style="overflow-y: hidden"
     >
       <!-- Side -->
-      <div
-        class="app-side"
-        style="background: var(--sub-color-o); min-width: var(--size-w-side)"
-      >
+      <div class="app-side" style="min-width: var(--size-w-side)">
         <side-bar />
-        <div>대충 Side</div>
       </div>
 
       <!-- Contents -->
       <div
         class="app-contents flex-grow-1"
-        style="
-          background: var(--sub-color-b);
-          overflow-y: auto;
-          overflow-x: auto;
-        "
+        style="margin-left: 12px; overflow-y: auto; overflow-x: auto"
       >
-        <div>스크롤바 일단 안보이게 해놨음</div>
-        <div>
-          꼬울 경우, &lt;style&gt; 맨 밑에 .app-contents 영역 싹 지우면 됨
-        </div>
-        <div>&nbsp;</div>
-        <div>시작 대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>대충 Contents</div>
-        <div>마지막 대충 Contents</div>
+        <router-view />
       </div>
     </div>
   </div>
@@ -206,7 +39,7 @@ export default {
   setup() {
     onBeforeMount(() => {
       document.documentElement.style.setProperty('--size-h-header', '48px');
-      document.documentElement.style.setProperty('--size-w-side', '100px');
+      document.documentElement.style.setProperty('--size-w-side', '80px');
     });
   },
 
@@ -220,24 +53,8 @@ export default {
 <style>
 :root {
   /* 비율 */
-  /* 
-    css 내부 변수를 조작하고 싶다면 스크립트 단에
-    
-    setup() {
-      onBeforeMount(() => {
-        document.documentElement.style.setProperty('--size-h-header', '1000000px');
-        document.documentElement.style.setProperty('--size-w-side', '10000000px');
-      }); 
-    }
-
-    참고로 라이프사이클 상 mounted 여도 큰 상관은 없으나 
-    저게 하위 컴포넌트 붙어서 크기 불어나기 전에 수치 조정하는거라 좀더 안정적임
-    갑자기 뭔가 조정이 안되면 created 시점에서 에러난 것 (대충 런타임 에러 비슷한 상황)
-
-    :root 는 #app 상위 html 최상단이므로 페이지 전체가 공유함. 변경, 적용 시 주의할 것
-  */
-  --size-h-header: 1200px;
-  --size-w-side: 1200px;
+  --size-h-header: 40px;
+  --size-w-side: 80px;
 
   /* 메인 테마색 */
   --main-color: #009e73;

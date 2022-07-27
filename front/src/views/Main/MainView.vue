@@ -1,42 +1,20 @@
 <template>
   <div class="main-view">
-    <div class="main-container">
-      <side-bar />
-      <router-view class="router-view" />
-    </div>
+    <router-view />
   </div>
 </template>
 
 <script>
-import SideBar from '@/views/common/components/SideBar.vue';
+import { onBeforeMount } from 'vue';
 
 export default {
-  components: {
-    SideBar,
+  setup() {
+    onBeforeMount(() => {
+      document.documentElement.style.setProperty('--size-h-header', '40px');
+      document.documentElement.style.setProperty('--size-w-side', '80px');
+    });
   },
 };
 </script>
 
-<style>
-.main-view {
-  width: 100vw;
-  height: 100vh;
-
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-}
-
-.main-container {
-  flex-grow: 1;
-  display: flex;
-}
-
-.main-header-blank {
-  background: red;
-}
-
-.router-view {
-  flex-grow: 1;
-}
-</style>
+<style></style>
