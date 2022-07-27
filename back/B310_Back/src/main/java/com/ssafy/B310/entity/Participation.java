@@ -59,14 +59,4 @@ public class Participation {
 				", exitTime=" + exitTime +
 				'}';
 	}
-//	@Override
-//	public String toString() {
-//		return "Participation{" +
-//				"Id=" + Id +
-//				", room=" + room +
-//				", user=" + user +
-//				", enterTime=" + enterTime +
-//				", exitTime=" + exitTime +
-//				'}';
-//	}
 }
