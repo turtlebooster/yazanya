@@ -11,7 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -52,7 +51,7 @@ public class User {
 	}
 	public User() {
 	}
-	
+	@JsonIgnore
 	@OneToMany(mappedBy = "user")
 	@JsonIgnore
 	private Set<Participation> participationList;
@@ -62,5 +61,19 @@ public class User {
 	@JsonIgnore
 	private Set<Todo> todo;
 //	private List<Todo> todo = new ArrayList<>();
-	
+
+	@Override
+	public String toString() {
+		return "User{" +
+				"userNum=" + userNum +
+				", userId='" + userId + '\'' +
+				", userPw='" + userPw + '\'' +
+				", userName='" + userName + '\'' +
+				", userEmail='" + userEmail + '\'' +
+				", userNickname='" + userNickname + '\'' +
+				", userStatusNum=" + userStatusNum +
+				", participationList=" + participationList +
+				", todo=" + todo +
+				'}';
+	}
 }
