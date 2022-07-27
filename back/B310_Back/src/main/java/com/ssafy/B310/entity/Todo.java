@@ -1,6 +1,7 @@
 package com.ssafy.B310.entity;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,7 +16,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-//@Data
 @Getter
 @Setter
 public class Todo {
@@ -34,6 +34,9 @@ public class Todo {
 	
 	@Column
 	private String todoName;
+	
+	@Column
+	private int progress;
 	
 	@ManyToOne
 	@JoinColumn(name = "user_num")

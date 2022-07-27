@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.B310.entity.Hashtag;
+import com.ssafy.B310.entity.Room;
 import com.ssafy.B310.service.HashtagService;
 
 @RestController
@@ -69,9 +71,10 @@ public class HashtagController {
 		else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
 
 	}
-	
+	// 해쉬태그 전체 리스트 전달
 	@GetMapping
 	public ResponseEntity<?> getHashtagList() {
 		return new ResponseEntity<List<Hashtag>>(hashtagService.getHashtagList(), HttpStatus.OK);
 	}
+
 }

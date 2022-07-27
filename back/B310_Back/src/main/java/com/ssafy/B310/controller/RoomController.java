@@ -115,7 +115,7 @@ public class RoomController {
         else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
 
     }
-    
+
     //hashtag num을 넘겨주면 해당 번호에 맞는 hashtag를 찾아옴
     //넘겨받은 hashtag를 room의 hashtag set에 저장
     @PostMapping("/hashtag")
@@ -159,6 +159,12 @@ public class RoomController {
     	
 		if(cnt == 1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 	    else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    // 해쉬태그로 추천 방 리스트
+    @GetMapping("/recommend")
+    public ResponseEntity<?> recommendRoom(@RequestParam(value="hashtagNum", required=false, defaultValue="") List<Integer> hashtagNumList) {
+    	return new ResponseEntity<List<Room>>(roomservice.getRecommendHashtagList(hashtagNumList), HttpStatus.OK);
     }
 
 }

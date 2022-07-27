@@ -29,4 +29,6 @@ public interface RoomService {
 
 	
 	
+	///////////////////////////////
+	List<Room> getRecommendHashtagList(List<Integer> hashtagNumList);
 }

@@ -2,6 +2,7 @@ package com.ssafy.B310.entity;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -18,14 +19,15 @@ import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 @Entity
+//@Data
 @Getter
 @Setter
-@ToString
 public class Room {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -88,11 +90,13 @@ public class Room {
 //	@JsonIgnore
 	private User manager;
 	
+	@JsonManagedReference
 	@OneToMany(mappedBy = "room")
 	@JsonIgnore
 	private Set<Participation> participationList;
 //	private Set<Participation> participationList = new ArrayList<>();
 	
+	@JsonManagedReference
 	@OneToMany(mappedBy = "room")
 	@JsonIgnore
 	private Set<RoomHashtag> roomHashtag;
