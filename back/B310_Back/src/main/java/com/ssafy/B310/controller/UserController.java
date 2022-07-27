@@ -171,7 +171,13 @@ public class UserController {
 	// 아이디 찾기
 	@GetMapping("/findid")
 	public ResponseEntity<?> findId(@RequestParam String userEmail) throws SQLException {
-		return new ResponseEntity<String>(userService.findId(userEmail), HttpStatus.OK);
+		String userId = userService.findId(userEmail);
+		
+		if(userId != null) { //해당 이메일로 가입한 유저가 있음
+			return new ResponseEntity<String>(userId, HttpStatus.OK);
+		} else { //해당 이메일로 가입한 유저가 없음
+			return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 	
 	// 비밀번호 찾기 -> 이메일로 임시 비밀번호 전송
@@ -187,7 +193,7 @@ public class UserController {
 		int result = userService.checkId(userId);
 		
 		if(result == 0) { //존재하지 않는 유저
-			return new ResponseEntity<String>("존재하지 않는 유저입니다.", HttpStatus.OK);
+			return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
 		} else { //존재하는 유저
 //			User user = userService.myPage(userId);
 			userService.makeTmpPw(userId);
