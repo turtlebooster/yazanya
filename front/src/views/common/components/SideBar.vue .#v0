@@ -17,7 +17,7 @@
       <span class="title">로비</span>
     </router-link>
 
-    <router-link to="/planner">
+    <router-link to="/main/planner">
       <span class="icon"
         ><i class="bi bi-layout-text-sidebar-reverse"></i
       ></span>
@@ -36,10 +36,12 @@
 
     <div style="flex-grow: 1"></div>
 
-    <router-link to="/setting">
-      <span class="icon"><i class="bi bi-gear"></i></span>
-      <span class="title">설정</span>
-    </router-link>
+    <div class="list">
+      <router-link to="/setting">
+        <span class="icon"><i class="bi bi-gear"></i></span>
+        <span class="title">설정</span>
+      </router-link>
+    </div>
 
     <router-link to="/대충로그오프하는주소">
       <span class="icon"><i class="bi bi-box-arrow-right"></i></span>
@@ -149,7 +151,7 @@ export default {};
   padding-left: 16px;
   height: 60px;
   line-height: 60px;
-  /* font-weight: bold; */
+  font-weight: bold;
   font-size: 1.2em;
 
   z-index: 1;

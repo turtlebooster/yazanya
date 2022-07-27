@@ -1,7 +1,5 @@
 <template>
-  <div class="setting-view">
-    <router-view />
-  </div>
+  <div>세팅 리스트</div>
 </template>
 
 <script>
