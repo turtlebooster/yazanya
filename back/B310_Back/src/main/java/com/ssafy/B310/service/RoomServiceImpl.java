@@ -76,41 +76,18 @@ public class RoomServiceImpl implements RoomService {
 		// 없을경우
 		return 0;
 	}
-	
-//	@Override
-//	public int checkPw(int pw) throws SQLException {
-//		roomRepository.
-//		
-//		return 0;
-//	}
-
-	@Override
-	public int addHashtag(Hashtag hashtag) throws SQLException {
-//		roomHashtag
-		
-		return 0;
-	}
-
-
-
-	@Override
-	public int removeHashtag(Hashtag hashtag) throws SQLException {
-		return 0;
-	}
-
-
-
-	@Override
-	public List<Hashtag> getListHashtag() throws SQLException {
-		
-		return null;
-	}
-
 
 
 	@Override
 	public Room getRoom(int roomNum) throws SQLException {
-		return roomRepository.findById(roomNum).get();
+		Optional<Room> oRoom = roomRepository.findById(roomNum); 
+		// 해당 방이 있을경우
+		if (oRoom.isPresent()) {
+			Room r = oRoom.get();
+//			System.out.println(r);
+			return r;
+		}
+		else return null;
 	}
 
 
