@@ -1,11 +1,13 @@
 <template>
   <div class="side-bar">
-    <router-link to="/setting/profile">
+    <router-link to="/main">
       <span class="icon"><i class="bi bi-person-circle"></i></span>
       <span class="title">대충이름</span>
     </router-link>
 
-    <router-link to="/main">
+    <hr />
+
+    <router-link to="/main/lobby">
       <span class="icon"><i class="bi bi-house"></i></span>
       <span class="title">로비</span>
     </router-link>
@@ -29,7 +31,7 @@
 
     <div style="flex-grow: 1"></div>
 
-    <router-link to="/setting">
+    <router-link to="/main/setting">
       <span class="icon"><i class="bi bi-gear"></i></span>
       <span class="title">설정</span>
     </router-link>
@@ -38,8 +40,6 @@
       <span class="icon"><i class="bi bi-box-arrow-right"></i></span>
       <span class="title">로그오프</span>
     </router-link>
-
-    <div>&nbsp;</div>
   </div>
 </template>
 
@@ -48,6 +48,12 @@ export default {};
 </script>
 
 <style scoped>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 .side-bar {
   display: flex;
   flex-direction: column;
@@ -55,67 +61,24 @@ export default {};
   position: fixed;
   top: var(--size-h-header);
   left: 10px;
-  bottom: 100px;
+  bottom: 10px;
+  width: 150px;
 
-  border-left: 8px solid var(--main-color);
-  border-bottom-left-radius: 24px;
-  border-bottom-right-radius: 24px;
+  padding: 20px;
 
-  width: 80px;
+  background-color: #009e73;
 
-  background-color: var(--main-color);
-
-  transition: 0.2s;
-}
-
-.side-bar:hover {
-  width: 240px;
+  transition: 0.5s;
 }
 
 .side-bar a {
-  display: flex;
-  width: 100%;
-
   font-family: 'Ubuntu', sans-serif;
   text-decoration: none;
-  color: var(--light-main-color);
+  color: white;
   font-size: 15pt;
-
-  border-bottom-left-radius: 20px;
-  border-top-left-radius: 20px;
 
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.side-bar a.router-link-exact-active {
-  background: var(--light-main-color);
-  color: var(--main-color);
-}
-
-.side-bar a .icon {
-  position: relative;
-  display: block;
-
-  min-width: 60px;
-  height: 60px;
-  line-height: 60px;
-  text-align: center;
-}
-
-.side-bar a .icon i {
-  font-size: 1.5em;
-}
-
-.side-bar a .title {
-  position: relative;
-  display: block;
-
-  padding-left: 16px;
-  height: 60px;
-  line-height: 60px;
-  font-weight: bold;
-  font-size: 1.2em;
 }
 </style>
