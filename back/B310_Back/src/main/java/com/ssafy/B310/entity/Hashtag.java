@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.Getter;
@@ -36,10 +37,10 @@ public class Hashtag {
 	public Hashtag() {
 		
 	}
-	@JsonManagedReference
+	@JsonIgnore
 	@OneToMany(mappedBy = "hashtag")
 	private List<UserHashtag> userHashtag = new ArrayList<UserHashtag>();
-	@JsonManagedReference
+	@JsonIgnore
 	@OneToMany(mappedBy = "hashtag")
 	private List<RoomHashtag> roomHashtag = new ArrayList<RoomHashtag>();
 }
