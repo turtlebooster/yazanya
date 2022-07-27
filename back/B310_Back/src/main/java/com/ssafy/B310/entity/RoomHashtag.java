@@ -1,9 +1,5 @@
 package com.ssafy.B310.entity;
 
-import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,7 +7,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,11 +22,13 @@ public class RoomHashtag {
 	private Long Id;
 	
 //	@Id
+	@JsonBackReference
 	@ManyToOne
 	@JoinColumn(name = "ROOM_NUM")
 	private Room room;
 	
 //	@Id
+	@JsonBackReference
 	@ManyToOne
 	@JoinColumn(name = "HASHTAG_NUM")
 	private Hashtag hashtag;

@@ -1,5 +1,6 @@
 package com.ssafy.B310.entity;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -13,12 +14,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 @Entity
 @Getter
 @Setter
-@ToString
 public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
