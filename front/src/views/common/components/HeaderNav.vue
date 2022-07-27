@@ -1,47 +1,60 @@
-<!-- 
-  현재 mainview 에서 임포트하여 쓰고 있는 네비게이션바 
-  Merge 시, 디자인 간격 붕괴를 회피하기 위해서 분리해둠 마지막에 머지 후, 정리할 것
+<!--
+  현재 mainview 만드는 중 쓰고 있는 네비게이션바 
+  서로 충돌날까봐 분리해둠 마지막에 머지 후, 정리할 것
 -->
 
 <template>
-  <div class="header-nav">
-    <!-- Image and text -->
-    <b-navbar variant="faded" type="light">
-      <b-navbar-brand href="#">
+  <nav
+    v-if="defalut_main_nav_flag"
+    class="header-nav"
+    :class="[$root.theme ? 'dark' : 'light']"
+  >
+    <div class="h-100">
+      <router-link to="/main">
+        <!-- Main Nav -->
         <img
           src="@/assets/logo/title_logo_009e73.png"
-          height="32"
-          id="logo"
-          class="d-inline-block align-top"
-          alt="Kitten"
+          class="align-bottom h-100"
+          style="margin-left: 24px"
+          alt="logo"
         />
-      </b-navbar-brand>
-    </b-navbar>
-  </div>
+      </router-link>
+    </div>
+  </nav>
 </template>
 
 <script>
-export default {};
+import { ref } from 'vue';
+
+export default {
+  props: {
+    viewname: {
+      default: '',
+    },
+  },
+
+  setup(props) {
+    let defalut_main_nav_flag = ref(true);
+    let customed_nav_view_list = ['studyroom'];
+
+    // console.log(props.viewname);
+
+    customed_nav_view_list.forEach((viewname_item) => {
+      if (viewname_item == props.viewname) {
+        defalut_main_nav_flag.value = false;
+      }
+    });
+
+    // console.log(defalut_main_nav_flag.value);
+
+    return { defalut_main_nav_flag };
+  },
+};
 </script>
 
-<style scoped>
-* {
-  position: relative;
-}
-#logo {
-  margin-top: 4px;
-  margin-left: 10px;
-}
-button {
-  border: none;
-  background-color: transparent;
-}
-
+<style>
 .header-nav {
-  width: 100vw;
-  position: fixed;
-  padding-left: 24px;
-  border-bottom: 3px solid #009e73;
-  background-color: white;
+  border-bottom: 4px solid #009e73;
+  height: var(--size-h-header);
 }
 </style>
