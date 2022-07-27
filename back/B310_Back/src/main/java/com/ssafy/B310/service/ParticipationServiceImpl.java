@@ -28,14 +28,9 @@ public class ParticipationServiceImpl implements ParticipationService {
 
     @Override
     public int joinRoom(User user, int roomNum) throws SQLException {
-        // 해당 방에 유저가 존재 할 경우 처리??
         Optional<User> joinUser = userRepository.findByUserId(user.getUserId());
         Optional<Room> joinRoom = roomRepository.findById(roomNum);
 
-//        if (joinUser.isPresent()) {
-//            return 2;
-//        }
-//        if (participationRepository.findByUserId(user.getUserId()).isPresent()){
         if (participationRepository.findByuser_userId(user.getUserId()).isPresent()){
             return 2;
         }
@@ -60,8 +55,7 @@ public class ParticipationServiceImpl implements ParticipationService {
 
     @Override
     public int exitRoom(int userNum, int roomNum) throws SQLException {
-//        User joinedUser = userRepository.findByUserId(user.getUserId()).get();
-//        List<Participation> joinedUser = participationRepository.findByRoomNumAndUserNum(roomNum, userNum);
+
         Optional<Room> joinRoom = roomRepository.findById(roomNum);
 
         Room room = joinRoom.get();
@@ -76,17 +70,6 @@ public class ParticipationServiceImpl implements ParticipationService {
 
     @Override
     public List<User> joinedUser(int roomNum) throws SQLException {
-
-//        Optional<Room> joinRoom = roomRepository.findById(roomNum);
-//
-//        Room room = joinRoom.get();
-//
-////        List<Participation> joinedUser = participationRepository.findByRoom(room);
-//
-//        List joinedUserList = participationRepository.findByRoom(room);
-//
-//        return joinedUserList;
-////        return participationRepository.findByRoom(room);
 
         List<Participation> participationList = participationRepository.findByroom_roomNum(roomNum);
 
