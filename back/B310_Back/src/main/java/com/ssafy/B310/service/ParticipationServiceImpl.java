@@ -68,7 +68,9 @@ public class ParticipationServiceImpl implements ParticipationService {
 
         List<Participation> joinedUser = participationRepository.findByRoom(room);
         for (Participation participation : joinedUser)
-            participationRepository.delete(participation);
+            if (participation.getUser().getUserNum() == userNum) {
+                participationRepository.delete(participation);
+            }
         return 1;
     }
 
