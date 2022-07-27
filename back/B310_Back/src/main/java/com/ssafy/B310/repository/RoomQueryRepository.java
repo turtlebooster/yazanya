@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import static com.ssafy.B310.entity.QRoom.room;
 import static com.ssafy.B310.entity.QRoomHashtag.roomHashtag;
 
+
 @RequiredArgsConstructor
 @Repository
 public class RoomQueryRepository {

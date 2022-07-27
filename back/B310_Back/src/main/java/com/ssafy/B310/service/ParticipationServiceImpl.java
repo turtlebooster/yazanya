@@ -27,7 +27,7 @@ public class ParticipationServiceImpl implements ParticipationService {
     RoomRepository roomRepository;
 
     @Override
-    public int joinRoom(User user, int roomNum) throws SQLException {
+    public int joinRoom(User user, Room room) throws SQLException {
         Optional<User> joinUser = userRepository.findByUserId(user.getUserId());
 
         if (participationRepository.findByuser_userId(user.getUserId()).isPresent()){

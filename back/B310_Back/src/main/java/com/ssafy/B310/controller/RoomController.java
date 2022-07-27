@@ -165,6 +165,7 @@ public class RoomController {
     @GetMapping("/recommend")
     public ResponseEntity<?> recommendRoom(@RequestParam(value="hashtagNum", required=false, defaultValue="") List<Integer> hashtagNumList) {
     	return new ResponseEntity<List<Room>>(roomservice.getRecommendHashtagList(hashtagNumList), HttpStatus.OK);
+    }
     // 유저 퇴장
     @DeleteMapping("/exit/{roomNum}")
     public ResponseEntity<?> exitRoom(@RequestBody Map<String, Integer> params , @PathVariable int roomNum ) throws SQLException {
