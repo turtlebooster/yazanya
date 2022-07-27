@@ -15,7 +15,7 @@ import com.ssafy.B310.repository.RoomQueryRepository;
 import com.ssafy.B310.repository.RoomRepository;
 import com.ssafy.B310.specification.RoomSpecification;
 
-//@Service
+@Service
 public class RoomServiceImpl implements RoomService {
 	
 	@Autowired
