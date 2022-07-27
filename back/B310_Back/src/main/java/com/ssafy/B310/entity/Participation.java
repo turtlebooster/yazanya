@@ -48,11 +48,22 @@ public class Participation {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date exitTime;
 
+	public Participation(){
+
+	}
 	public Participation(Room room, User user) {
 		this.room = room;
 		this.user = user;
 	}
-	public Participation(){
 
+	@Override
+	public String toString() {
+		return "Participation{" +
+				"Id=" + Id +
+				", room=" + room +
+				", user=" + user +
+				", enterTime=" + enterTime +
+				", exitTime=" + exitTime +
+				'}';
 	}
 }

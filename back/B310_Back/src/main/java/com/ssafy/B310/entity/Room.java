@@ -25,7 +25,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-//@Data
 @Getter
 @Setter
 public class Room {
@@ -104,4 +103,22 @@ public class Room {
 	
 	
 
+	@Override
+	public String toString() {
+		return "Room{" +
+				"roomNum=" + roomNum +
+				", roomName='" + roomName + '\'' +
+				", video=" + video +
+				", sound=" + sound +
+				", endTime=" + endTime +
+				", roomStudyTime=" + roomStudyTime +
+				", roomRestTime=" + roomRestTime +
+				", capacity=" + capacity +
+				", participationCount=" + participationCount +
+				", startTime=" + startTime +
+				", manager=" + manager +
+				", participationList=" + participationList +
+				", roomHashtag=" + roomHashtag +
+				'}';
+	}
 }

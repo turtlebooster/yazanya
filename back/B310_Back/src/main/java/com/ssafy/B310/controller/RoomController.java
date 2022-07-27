@@ -165,6 +165,26 @@ public class RoomController {
     @GetMapping("/recommend")
     public ResponseEntity<?> recommendRoom(@RequestParam(value="hashtagNum", required=false, defaultValue="") List<Integer> hashtagNumList) {
     	return new ResponseEntity<List<Room>>(roomservice.getRecommendHashtagList(hashtagNumList), HttpStatus.OK);
+    // 유저 퇴장
+    @DeleteMapping("/exit/{roomNum}")
+    public ResponseEntity<?> exitRoom(@RequestBody Map<String, Integer> params , @PathVariable int roomNum ) throws SQLException {
+        int userNum = params.get("userNum");
+        int cnt = participationservice.exitRoom(userNum, roomNum);
+
+
+        if(cnt==1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+        else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    // 입장 유저 리스트 반환
+    @GetMapping("/join/{roomNum}")
+    public ResponseEntity<?> joinedUser(@PathVariable int roomNum) throws SQLException {
+
+        List joinedUserList = participationservice.joinedUser(roomNum);
+
+//        return new ResponseEntity<List<Participation>>(joinedUserList, HttpStatus.OK);
+        return new ResponseEntity<List<User>>(joinedUserList, HttpStatus.OK);
+
     }
 
 }
