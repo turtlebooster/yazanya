@@ -18,16 +18,7 @@ public interface RoomService {
 	public int removeRoom(int roomNum) throws SQLException;
 	// 방 하나 가져오기
 	public Room getRoom(int roomNum) throws SQLException;
+
 	
 	
-	//해쉬태그
-	//방에 해쉬태그 추가
-	public int addHashtag(Hashtag hashtag) throws SQLException;
-	//방에 해쉬태그 삭제
-	public int removeHashtag(Hashtag hashtag) throws SQLException;
-	//방 해쉬태그 목록
-	public List<Hashtag> getListHashtag() throws SQLException;
-	
-	
-	//방 해쉬태그 수정 -- 만들 이유가 없음
 }

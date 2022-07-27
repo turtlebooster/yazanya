@@ -9,10 +9,16 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
-@Data
+@Getter
+@Setter
+@ToString
 public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,10 +55,12 @@ public class User {
 	}
 	
 	@OneToMany(mappedBy = "user")
+	@JsonIgnore
 	private Set<Participation> participationList;
 //	private List<Participation> participationList = new ArrayList<>();
 	
 	@OneToMany(mappedBy = "user")
+	@JsonIgnore
 	private Set<Todo> todo;
 //	private List<Todo> todo = new ArrayList<>();
 	

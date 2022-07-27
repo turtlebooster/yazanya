@@ -16,12 +16,16 @@ import javax.persistence.PrePersist;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Getter
 @Setter
+@ToString
 public class Room {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -81,13 +85,16 @@ public class Room {
 	
 	@OneToOne
 	@JoinColumn(name="user_num")
+//	@JsonIgnore
 	private User manager;
 	
 	@OneToMany(mappedBy = "room")
+	@JsonIgnore
 	private Set<Participation> participationList;
 //	private Set<Participation> participationList = new ArrayList<>();
 	
 	@OneToMany(mappedBy = "room")
+	@JsonIgnore
 	private Set<RoomHashtag> roomHashtag;
 //	private Set<RoomHashtag> roomHashtag = new ArrayList<RoomHashtag>();
 	

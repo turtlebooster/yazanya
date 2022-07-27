@@ -1,6 +1,7 @@
 package com.ssafy.B310.controller;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -61,6 +62,23 @@ public class RoomController {
     @PostMapping("/filter")
     public ResponseEntity<?> filterRoom(@RequestBody Map<String, Integer> params) throws SQLException{
         return new ResponseEntity<List<Room>>(roomservice.filterRoom(params), HttpStatus.OK);
+    }
+    
+    // 방 하나 가져오기
+    @GetMapping("/{roomNum}")
+    public ResponseEntity<?> getRoom(@PathVariable int roomNum) throws SQLException{
+    	Room room = roomservice.getRoom(roomNum);
+    	
+		Map<String, Object> resultMap = new HashMap<>();
+		
+		resultMap.put("room", room);
+		resultMap.put("message", SUCCESS);
+    	
+//    	return null;
+    	if(room != null) {
+    		return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
+    	}
+    	else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     // 방 삭제
