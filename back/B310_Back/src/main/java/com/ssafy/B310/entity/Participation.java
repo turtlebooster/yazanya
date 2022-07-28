@@ -14,6 +14,8 @@ import javax.persistence.PrePersist;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,10 +28,12 @@ public class Participation {
 	@Column(name = "PARTICIPATION_ID")
 	private Long Id;
 	
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "room_num")
 	private Room room;
 	
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "user_num")
 	private User user;

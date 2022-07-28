@@ -2,7 +2,6 @@ package com.ssafy.B310.entity;
 
 import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -17,8 +16,8 @@ import javax.persistence.PrePersist;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.Getter;
@@ -86,7 +85,7 @@ public class Room {
 	
 	@OneToOne
 	@JoinColumn(name="user_num")
-//	@JsonIgnore
+	@JsonIgnore
 	private User manager;
 	
 	@JsonManagedReference
