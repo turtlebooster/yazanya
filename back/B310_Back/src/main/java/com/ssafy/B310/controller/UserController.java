@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.B310.annotation.NoJwt;
 import com.ssafy.B310.entity.Hashtag;
 import com.ssafy.B310.entity.User;
 import com.ssafy.B310.entity.UserHashtag;
@@ -55,7 +56,8 @@ public class UserController {
 	
 	@Autowired
 	HashtagService hashtagService;
-
+	
+	@NoJwt
 	// 로그인 요청 처리 - POST /user/login
 	@PostMapping("/login")
 	public ResponseEntity<Map<String, Object>> login(@RequestBody User user) {
@@ -123,6 +125,7 @@ public class UserController {
 		else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
+	@NoJwt
 	// ID 중복체크
 	@PostMapping("/{userId}")
 	public ResponseEntity<?> checkId(@PathVariable String userId) throws SQLException {
@@ -133,7 +136,8 @@ public class UserController {
 		if(cnt!=0) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK); //중복된 것이므로 사용 불가능
 		else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-
+	
+	@NoJwt
 	// 회원가입
 	@PostMapping("/regist")
 	public ResponseEntity<?> registUser(@RequestBody User user) throws SQLException {
@@ -168,6 +172,7 @@ public class UserController {
 		else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
+	@NoJwt
 	// 아이디 찾기
 	@GetMapping("/findid")
 	public ResponseEntity<?> findId(@RequestParam String userEmail) throws SQLException {
@@ -180,6 +185,7 @@ public class UserController {
 		}
 	}
 	
+	@NoJwt
 	// 비밀번호 찾기 -> 이메일로 임시 비밀번호 전송
 	@GetMapping("/findpw")
 	public ResponseEntity<?> getInfo(@RequestParam String userId, @RequestParam String userEmail) throws SQLException {
