@@ -24,7 +24,7 @@ public class JwtServiceImpl implements JwtService {
 	
 	public static final Logger logger = LoggerFactory.getLogger(JwtServiceImpl.class);
 
-	private static final String SALT = "happyhouseSecret";
+	private static final String SALT = "yazanyaSecret";
 	private static final int EXPIRE_MINUTES = 60;
 	
 	// 토큰 생성
@@ -80,6 +80,16 @@ public class JwtServiceImpl implements JwtService {
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			return false;	
+		}
+	}
+	
+	// JWT 갱신
+	@Override
+	public <T> String refresh(String jwt) {
+		if (isUsable(jwt)) {
+			return create("userId", getUserID(), "access-token");
+		} else {
+			return null;
 		}
 	}
 
