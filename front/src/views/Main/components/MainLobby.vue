@@ -1,68 +1,83 @@
 <template>
-  <div class="main-mypage">
-    <div class="achievement">
-      <div class="container">
-        <div class="logo">
-          <h1>achievement</h1>
-          <h2>progress</h2>
+  <div class="main-lobby">
+    <div class="container d-flex flex-column">
+      <div class="main-lobby-search d-flex justify-content-center">
+        <div class="search d-flex align-items-center">
+          <input
+            class="search_input"
+            type="text"
+            placeholder="Search here..."
+          />
+          <a href="#" class="search_icon"><i class="bi bi-search"></i></a>
         </div>
-
-        <div class="progress-container">
-          <svg class="progressbar" viewBox="0 0 64 64">
-            <circle class="progressbar-track" cx="50%" cy="50%" r="30px"></circle>
-            <circle class="progressbar-line" cx="50%" cy="50%" r="30px"></circle>
-          </svg>
-        </div>
-
-
       </div>
 
+      <div
+        class="main-lobby-history"
+        style="background: var(--sub-color-o); height: 100px"
+      ></div>
+
+      <div
+        class="main-lobby-recommend"
+        style="background: var(--sub-color-b); height: 100px"
+      ></div>
     </div>
   </div>
 </template>
 
 <script>
-export default {
-
-}
+export default {};
 </script>
 
-<style>
-/* .main-mypage {
-  background-color: red;
-} */
+<style scoped>
+.main-lobby {
+  background-color: var(--dark-main-color);
+  padding: 10px;
+  height: 100%;
+}
 
-.container {
+.search {
+  height: 48px;
+  background-color: var(--dark-main-color);
+  border-radius: 24px;
+  padding: 10px;
+  box-shadow: 6px 6px 10px -1px rgba(0, 0, 0, 0.2),
+    -6px -6px 10px -1px rgba(255, 255, 255, 0.2);
+}
+
+.search_input {
+  height: 32px;
+  color: black;
+  border: 0;
+  outline: 0;
+  background: none;
+  margin-top: 5px;
+  caret-color: transparent;
+  line-height: 40px;
+
+  padding: 0 10px;
+  flex-grow: 1;
+  caret-color: var(--main-color);
+}
+
+.search:hover > .search_icon {
+  background: var(--main-color);
+  color: white;
+}
+
+.search_icon {
+  height: 32px;
+  width: 32px;
+  float: right;
   display: flex;
   justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  color: white;
+  background-color: black;
 }
 
-.progress-container {
-  width: 140px;
-  height: 140px;
-}
-
-.progressbar-track {
-  fill: transparent;
-  stroke: #eeeeee;
-  stroke-width: 3px;
-}
-
-.progressbar-line {
-  fill: transparent;
-  stroke: #F0E442;
-  stroke-width: 3px;
-  stroke-dasharray: 0 calc(30 * 2 * 3.141593);
-  stroke-linecap: round;
-  transform: rotate(-90deg);
-  transform-origin: 50% 50%;
-
-  animation: progress 1.2s forwards;
-}
-
-@keyframes progress {
-  to {
-    stroke-dasharray: 110;
-  }
+a:link {
+  text-decoration: none;
 }
 </style>

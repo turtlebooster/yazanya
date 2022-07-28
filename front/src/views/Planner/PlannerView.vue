@@ -1,5 +1,5 @@
 <template>
-  <div class="main-mypage">
+  <div class="planner-view">
     <div class="achievement">
       <div class="container">
         <div class="logo">
@@ -33,9 +33,10 @@ export default {};
 </script>
 
 <style>
-/* .main-mypage {
+.planner-view {
   background-color: red;
-} */
+  height: 100vh;
+}
 
 .container {
   display: flex;
