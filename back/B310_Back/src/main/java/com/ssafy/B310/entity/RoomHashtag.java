@@ -1,8 +1,10 @@
 package com.ssafy.B310.entity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -18,19 +20,19 @@ import lombok.Setter;
 @Setter
 public class RoomHashtag {
 	@Id
-	@GeneratedValue
-	@Column(name = "USERHASHTAG_ID")
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name = "ROOMHASHTAG_NUM")
 	private Long Id;
 	
 //	@Id
 	@JsonIgnore
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "ROOM_NUM")
 	private Room room;
 	
 //	@Id
 	@JsonIgnore
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "HASHTAG_NUM")
 	private Hashtag hashtag;
 	
