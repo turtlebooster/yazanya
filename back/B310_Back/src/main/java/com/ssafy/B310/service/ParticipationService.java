@@ -12,7 +12,7 @@ public interface ParticipationService {
 
     public int joinRoom(User user, Room room) throws SQLException;
 
-    public int exitRoom(int userNum, int roomNum) throws SQLException;
+    public int exitRoom(String userId, int roomNum) throws SQLException;
 
 
     public List<User> joinedUser(int roomNum) throws SQLException;
