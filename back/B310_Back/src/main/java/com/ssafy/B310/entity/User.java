@@ -21,27 +21,27 @@ public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int userNum;
-	
+
 	@Column(nullable = false, unique = true)
 	private String userId;
-	
+
 	@Column(nullable = false)
 	private String userPw;
-	
+
 	@Column(nullable = false)
 	private String userName;
-	
+
 	@Column(nullable = false, unique = true)
 	private String userEmail;
-	
+
 	@Column(nullable = false)
 	private String userNickname;
-	
+
 	@Column(nullable = false)
 	private int userStatusNum;
-	
+
 	public User(String userId, String userPw, String userName, String userEmail, String userNickname,
-			int userStatusNum) {
+				int userStatusNum) {
 		this.userId = userId;
 		this.userPw = userPw;
 		this.userName = userName;
@@ -51,15 +51,22 @@ public class User {
 	}
 	public User() {
 	}
-	
+
 	@OneToMany(mappedBy = "user")
 	@JsonIgnore
 	private Set<Participation> participationList;
 //	private List<Participation> participationList = new ArrayList<>();
-	
+
 	@OneToMany(mappedBy = "user")
 	@JsonIgnore
 	private Set<Todo> todo;
+
+	public User(int userNum, String userId, String userNickname) {
+		this.userNum = userNum;
+		this.userId = userId;
+		this.userNickname = userNickname;
+	}
+
 //	private List<Todo> todo = new ArrayList<>();
 
 	@Override

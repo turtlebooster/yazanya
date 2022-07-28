@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -26,11 +27,12 @@ public class ParticipationServiceImpl implements ParticipationService {
     @Autowired
     RoomRepository roomRepository;
 
+    // 유저 입장
     @Override
     public int joinRoom(User user, Room room) throws SQLException {
         Optional<User> joinUser = userRepository.findByUserId(user.getUserId());
 
-        if (participationRepository.findByuser_userId(user.getUserId()).isPresent()){
+        if (participationRepository.findByuser_userId(user.getUserId()).isPresent()) {
             return 2;
         }
 
@@ -47,9 +49,9 @@ public class ParticipationServiceImpl implements ParticipationService {
 
 
     }
-
+    // 유저 퇴장
     @Override
-    public int exitRoom(int userNum, int roomNum) throws SQLException {
+    public int exitRoom(String userId, int roomNum) throws SQLException {
 
         Optional<Room> joinRoom = roomRepository.findById(roomNum);
 
@@ -57,12 +59,14 @@ public class ParticipationServiceImpl implements ParticipationService {
 
         List<Participation> joinedUser = participationRepository.findByRoom(room);
         for (Participation participation : joinedUser)
-            if (participation.getUser().getUserNum() == userNum) {
+            if (Objects.equals(participation.getUser().getUserId(), userId)) {
                 participationRepository.delete(participation);
+                return 1;
             }
-        return 1;
+        return 0;
     }
 
+    //입장 유저 목록 조회
     @Override
     public List<User> joinedUser(int roomNum) throws SQLException {
 
@@ -71,10 +75,13 @@ public class ParticipationServiceImpl implements ParticipationService {
         List<User> participationListRes = new ArrayList<>();
 
         for (Participation user : participationList) {
-            User joinuser = user.getUser();
-            participationListRes.add(joinuser);
+//            User joinuser = user.getUser();
+//            participationListRes.add(joinuser);
+            User u = user.getUser();
+            participationListRes.add(new User(u.getUserNum(), u.getUserId(), u.getUserNickname()));
+//            participationListRes.add(new ParticipationListRes(user.getUser().getUserNickname()));
+
         }
         return participationListRes;
     }
-
 }
