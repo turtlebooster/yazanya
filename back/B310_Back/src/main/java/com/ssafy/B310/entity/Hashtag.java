@@ -27,8 +27,8 @@ import lombok.Setter;
 @Setter
 public class Hashtag {
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private int hashtagNum = 0;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int hashtagNum;
 	
 	@Column
 	private String hashtagName;
