@@ -24,4 +24,10 @@ public interface RoomService {
 	
 	//해쉬태그 추천으로 목록 불러오기
 	List<Room> getRecommendHashtagList(List<Integer> hashtagNumList);
+	
+	//유저 입장할 때 participation 1 증가
+	public void addParticipation(Room room) throws SQLException;
+	
+	//유저 퇴장할 때 participation 1 감소
+	public void decreaseParticipation(Room room) throws SQLException;
 }
