@@ -179,7 +179,7 @@ public class RoomController {
         int cnt = participationservice.exitRoom(userId, roomNum);
 
         System.out.println(userId);
-
+        Room room = roomservice.getRoom(roomNum);
         if(cnt==1)  {
         	roomservice.decreaseParticipation(room);
         	return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
