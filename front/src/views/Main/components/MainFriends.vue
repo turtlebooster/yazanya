@@ -52,8 +52,6 @@ export default {
           userNum: 6,
         },
       ],
-
-      list: ['소갈비', '감자'],
     });
 
     return { state };

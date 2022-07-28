@@ -31,33 +31,39 @@ export default {};
 
 <style scoped>
 .main-lobby {
-  background-color: var(--dark-main-color);
-  padding: 10px;
+  background-color: var(--light-main-color);
+  padding: 16px;
   height: 100%;
 }
 
 .search {
-  height: 48px;
-  background-color: var(--dark-main-color);
+  height: 40px;
+  width: 60vw;
+  flex-wrap: nowrap;
+
+  background-color: var(--light-main-color);
   border-radius: 24px;
+  margin-bottom: 50px;
   padding: 10px;
-  box-shadow: 6px 6px 10px -1px rgba(0, 0, 0, 0.2),
-    -6px -6px 10px -1px rgba(255, 255, 255, 0.2);
+  box-shadow: 4px 4px 10px -1px rgba(0, 0, 0, 0.25),
+    -4px -4px 10px -1px rgba(255, 255, 255, 0.25);
 }
 
 .search_input {
+  width: 100px;
   height: 32px;
   color: black;
+  /* color: white; */
   border: 0;
   outline: 0;
   background: none;
-  margin-top: 5px;
-  caret-color: transparent;
-  line-height: 40px;
 
   padding: 0 10px;
   flex-grow: 1;
+  flex-shrink: 1;
   caret-color: var(--main-color);
+
+  overflow: hidden;
 }
 
 .search:hover > .search_icon {
@@ -66,8 +72,8 @@ export default {};
 }
 
 .search_icon {
-  height: 32px;
-  width: 32px;
+  min-height: 28px;
+  min-width: 28px;
   float: right;
   display: flex;
   justify-content: center;
