@@ -1,6 +1,6 @@
 <template>
   <div class="side-bar">
-    <div>&nbsp;</div>
+    <!-- <div style="height: 10px"></div> -->
 
     <router-link to="/setting/profile">
       <img
@@ -9,7 +9,7 @@
         class="image icon"
         style="padding: 8px; object-fit: cover; border-radius: 50%"
       />
-      <span class="title">대 충이름</span>
+      <span class="title">홍 길동</span>
     </router-link>
 
     <router-link to="/main">
@@ -41,12 +41,10 @@
       <span class="title">설정</span>
     </router-link>
 
-    <router-link to="/대충로그오프하는주소">
+    <router-link to="/대충로그아웃하는주소">
       <span class="icon"><i class="bi bi-box-arrow-right"></i></span>
-      <span class="title">로그오프</span>
+      <span class="title">로그아웃</span>
     </router-link>
-
-    <div>&nbsp;</div>
   </div>
 </template>
 
@@ -60,14 +58,12 @@ export default {};
   flex-direction: column;
 
   position: fixed;
-  top: var(--size-h-header);
+  /* top: var(--size-h-header); */
+  top: 56px;
   left: 10px;
-  bottom: 100px;
+  bottom: 10px;
 
-  padding-left: 8px;
-
-  border-bottom-left-radius: 32px;
-  border-bottom-right-radius: 32px;
+  border-radius: calc(var(--size-w-side) / 2);
 
   width: var(--size-w-side);
 
@@ -80,7 +76,8 @@ export default {};
 }
 
 .side-bar:hover {
-  width: 240px;
+  width: calc(var(--size-w-side) * 4);
+  box-shadow: 8px 0px 8px white;
 }
 
 .side-bar a {
@@ -91,10 +88,10 @@ export default {};
   font-family: 'Ubuntu', sans-serif;
   text-decoration: none;
   color: var(--light-main-color);
-  font-size: 15pt;
+  font-size: 12pt;
 
-  border-bottom-left-radius: 32px;
-  border-top-left-radius: 32px;
+  border-bottom-left-radius: calc(var(--size-w-side) / 2);
+  border-top-left-radius: calc(var(--size-w-side) / 2);
 }
 
 .side-bar a.router-link-exact-active {
@@ -129,10 +126,10 @@ export default {};
 .side-bar a .icon {
   position: relative;
 
-  width: 60px;
-  min-width: 60px;
-  height: 60px;
-  line-height: 60px;
+  width: var(--size-w-side);
+  min-width: var(--size-w-side);
+  height: var(--size-w-side);
+  line-height: var(--size-w-side);
   text-align: center;
 
   z-index: 1;
@@ -147,8 +144,8 @@ export default {};
   display: block;
 
   padding-left: 16px;
-  height: 60px;
-  line-height: 60px;
+  height: var(--size-w-side);
+  line-height: var(--size-w-side);
   /* font-weight: bold; */
   font-size: 1.2em;
 

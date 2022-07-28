@@ -1,29 +1,22 @@
 <template>
-  <div
-    id="app"
-    class="d-flex flex-column flex-nowrap"
-    style="height: 100vh; height: 100vh; width: 100vw; max-height: 100vh"
-  >
+  <div id="app" class="d-flex flex-column flex-nowrap">
     <!-- Header -->
-    <div class="app-header" style="min-height: var(--size-h-header)">
+    <div class="app-header">
+      <!-- <header-nav style="display: none" /> -->
       <header-nav />
     </div>
 
     <!-- Container -->
-    <div
-      class="app-container d-flex flex-grow-1 flex-shrink-1"
-      style="overflow-y: hidden"
-    >
+    <div class="app-container d-flex flex-grow-1 flex-shrink-1">
       <!-- Side -->
-      <div class="app-side" style="min-width: var(--size-w-side)">
+      <div class="app-side">
+        <!-- <side-bar style="display: none" /> -->
         <side-bar />
       </div>
 
       <!-- Contents -->
-      <div
-        class="app-contents flex-grow-1"
-        style="margin-left: 12px; overflow-y: auto; overflow-x: auto"
-      >
+      <div class="app-contents flex-grow-1">
+        <!-- <router-view style="display: none" /> -->
         <router-view />
       </div>
     </div>
@@ -39,7 +32,7 @@ export default {
   setup() {
     onBeforeMount(() => {
       document.documentElement.style.setProperty('--size-h-header', '48px');
-      document.documentElement.style.setProperty('--size-w-side', '80px');
+      document.documentElement.style.setProperty('--size-w-side', '48px');
     });
   },
 
@@ -51,10 +44,27 @@ export default {
 </script>
 
 <style>
+@font-face {
+  /* 여기어때 잘난체 */
+  font-family: 'Jalnan';
+  src: url('@/assets/font/Jalnan.ttf') format('truetype');
+  font-weight: normal;
+
+  /* 한버워치체 */
+  font-family: 'Koverwatch';
+  src: url('@/assets/font/Koverwatch.ttf') format('truetype');
+  font-weight: normal;
+
+  /* 나눔고딕 */
+  font-family: 'NanumGothic';
+  src: url('@/assets/font/NanumGothic.ttf') format('truetype');
+  font-weight: normal;
+}
+
 :root {
   /* 비율 */
   --size-h-header: 40px;
-  --size-w-side: 80px;
+  --size-w-side: 40px;
 
   /* 메인 테마색 */
   --main-color: #009e73;
@@ -82,6 +92,8 @@ export default {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+
+  font-family: NanumGothic !important;
 }
 
 /* ---- for light and dark mode ---- */
@@ -95,13 +107,37 @@ export default {
 /* --------------------------------- */
 
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  /* background: var(--sub-color-p); */
+  height: 100vh;
+  width: 100vw;
+  max-height: 100vh;
+
+  /* font-family: Jalnan, Avenir, Helvetica, Arial, sans-serif; */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
 }
 
+.app-header {
+  /* background: var(--sub-color-r); */
+  min-height: var(--size-h-header);
+}
+
+.app-container {
+  overflow-y: hidden;
+}
+
+.app-side {
+  /* background: var(--sub-color-o); */
+  min-width: var(--size-w-side);
+}
+
 .app-contents {
+  /* background: var(--sub-color-b); */
+  margin-left: 12px;
+  overflow-y: auto;
+  overflow-x: auto;
+
   -ms-overflow-style: none; /* IE, Edge 스크롤 지우는 코드 */
   scrollbar-width: none; /* Firefox 스크롤 지우는 코드 */
 }
