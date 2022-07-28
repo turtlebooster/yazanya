@@ -67,8 +67,10 @@ public class JwtServiceImpl implements JwtService {
 	}
 
 	@Override
-	public String getUserID() {
-		return (String) this.get("user").get("userid");
+	public String getUserID(String jwt) {
+		Jws<Claims> claims = Jwts.parser().setSigningKey(this.generateKey()).parseClaimsJws(jwt);
+		String userId = (String) claims.getBody().get("userId");
+		return userId;
 	}
 
 	// 전달 받은 토큰 유효성 검사
