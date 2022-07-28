@@ -114,6 +114,7 @@ public class RoomController {
         int cnt = 0;
         if(room.getRoomPw() == pw) {
         	cnt = participationservice.joinRoom(user, room);
+        	roomservice.addParticipation(room);
         }
 
         if(cnt==1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
@@ -179,8 +180,10 @@ public class RoomController {
 
         System.out.println(userId);
 
-
-        if(cnt==1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+        if(cnt==1)  {
+        	roomservice.decreaseParticipation(room);
+        	return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+        }
         else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
