@@ -32,8 +32,6 @@ public class RoomServiceImpl implements RoomService {
 		return newRoom.getRoomNum();
 	}
 
-
-
 	@Override
 	public int updateRoom(Room room) throws SQLException {
 		Optional<Room> oRoom = roomRepository.findById(room.getRoomNum()); 
@@ -54,8 +52,6 @@ public class RoomServiceImpl implements RoomService {
 		// 없을경우
 		return 0;
 	}
-
-
 
 	@Override
 	public List<Room> filterRoom(Map<String, Integer> params) throws SQLException {
@@ -101,5 +97,18 @@ public class RoomServiceImpl implements RoomService {
 		return roomQueryRepository.findRecommendRoom(hashtagNumList);
 
 	}
+	
+	//유저 입장할 때 participation 1 증가
+	@Override
+	public void addParticipation(Room room) throws SQLException {
+		roomQueryRepository.increaseParticipationCount(room);
+	}
+
+	//유저 퇴장할 때 participation 1 감소
+	@Override
+	public void decreaseParticipation(Room room) throws SQLException {
+		roomQueryRepository.decreaseParticipationCount(room);
+		
+	}	
 }
 
