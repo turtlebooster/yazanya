@@ -12,6 +12,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -38,6 +40,7 @@ public class Todo {
 	@Column
 	private int progress;
 	
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "user_num")
 	private User user;

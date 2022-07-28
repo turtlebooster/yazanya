@@ -61,7 +61,12 @@ public class RoomController {
     // 방 필터링
     @PostMapping("/filter")
     public ResponseEntity<?> filterRoom(@RequestBody Map<String, Integer> params) throws SQLException{
-        return new ResponseEntity<List<Room>>(roomservice.filterRoom(params), HttpStatus.OK);
+    	List<Room> roomList = roomservice.filterRoom(params);
+    	
+    	if(!roomList.isEmpty())
+    		return new ResponseEntity<List<Room>>(roomList, HttpStatus.OK);
+    	else
+    		return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR); 
     }
     
     // 방 하나 가져오기
