@@ -173,9 +173,11 @@ public class RoomController {
     }
     // 유저 퇴장
     @DeleteMapping("/exit/{roomNum}")
-    public ResponseEntity<?> exitRoom(@RequestBody Map<String, Integer> params , @PathVariable int roomNum ) throws SQLException {
-        int userNum = params.get("userNum");
-        int cnt = participationservice.exitRoom(userNum, roomNum);
+    public ResponseEntity<?> exitRoom(@RequestBody Map<String, String> params , @PathVariable int roomNum ) throws SQLException {
+        String userId = params.get("userId");
+        int cnt = participationservice.exitRoom(userId, roomNum);
+
+        System.out.println(userId);
 
 
         if(cnt==1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);

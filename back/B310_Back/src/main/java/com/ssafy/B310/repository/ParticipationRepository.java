@@ -20,7 +20,7 @@ public interface ParticipationRepository extends JpaRepository<Participation, Lo
     List<Participation> findByroom_roomNum(int room_num);
 
     @Transactional
-    List<Participation> findByuser_userNum(int user_num);
+    Optional<Participation> findByuser_userNum(int user_num);
 
     @Transactional
 //    Optional<Participation> findByUserId(String userId);
