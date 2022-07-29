@@ -13,7 +13,12 @@
       </div>
 
       <div
-        class="search outer d-flex flex-column"
+        class="main-lobby-history"
+        style="background: var(--sub-color-o); height: 100px"
+      ></div>
+
+      <div
+        class="outer d-flex flex-column"
         style="height: 400px; width: 400px; padding: 20px"
       >
         <div class="search outer d-flex"></div>
@@ -32,11 +37,6 @@
           "
         />
       </div>
-
-      <div
-        class="main-lobby-history"
-        style="background: var(--sub-color-o); height: 100px"
-      ></div>
 
       <div class="line"></div>
 
