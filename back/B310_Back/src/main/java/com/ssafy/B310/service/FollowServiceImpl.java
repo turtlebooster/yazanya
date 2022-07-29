@@ -11,8 +11,6 @@ import java.util.Optional;
 
 @Service
 public class FollowServiceImpl {
-    @Autowired
-    FollowService followService;
 
     @Autowired
     UserRepository userRepository;
@@ -32,15 +30,16 @@ public class FollowServiceImpl {
 
         u1.setUserId(from_userId);
         u2.setUserId(to_userId);
-        f.setFrom_user(u1);
-        f.setTo_user(u2);
+        f.setFromUser(u1);
+        f.setToUser(u2);
 
         followRepository.save(f);
     }
 
-    int judgeByFollowerAndFollowingUserId(String userId){
-        Follow f = new Follow();
-
-
-    }
+//    int judgeByFollowerAndFollowingUserId(String userId){
+//        Follow f = new Follow();
+//
+//
+//        return 0;
+//    }
 }
