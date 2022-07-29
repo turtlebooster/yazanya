@@ -142,8 +142,8 @@ export default {
       roomname.value = room_number;
 
       // ---------------- for hide header nav and side bar ------------------ //
-      document.documentElement.style.setProperty('--size-h-header', '0');
-      document.documentElement.style.setProperty('--size-w-side', '0');
+      // document.documentElement.style.setProperty('--size-h-header', '0');
+      // document.documentElement.style.setProperty('--size-w-side', '0');
     });
 
     // ---------- dynamic vedio grid for participants ↓ ------------ //
