@@ -1,46 +1,11 @@
 <template>
   <div id="app" class="d-flex flex-column flex-nowrap">
-    <!-- Header -->
-    <div class="app-header" :viewname="$route.name">
-      <!-- <header-nav style="display: none" /> -->
-      <header-nav />
-    </div>
-
-    <!-- Container -->
-    <div class="app-container d-flex flex-grow-1 flex-shrink-1">
-      <!-- Side -->
-      <div class="app-side">
-        <!-- <side-bar style="display: none" /> -->
-        <side-bar :viewname="$route.name" />
-      </div>
-
-      <!-- Contents -->
-      <div class="app-contents flex-grow-1">
-        <!-- <router-view style="display: none" /> -->
-        <router-view />
-      </div>
-    </div>
+    <router-view />
   </div>
 </template>
 
 <script>
-import HeaderNav from '@/views/common/components/HeaderNav.vue';
-import SideBar from '@/views/common/components/SideBar.vue';
-import { onBeforeMount } from 'vue';
-
-export default {
-  setup() {
-    onBeforeMount(() => {
-      document.documentElement.style.setProperty('--size-h-header', '48px');
-      document.documentElement.style.setProperty('--size-w-side', '48px');
-    });
-  },
-
-  components: {
-    HeaderNav,
-    SideBar,
-  },
-};
+export default {};
 </script>
 
 <style>
@@ -63,6 +28,7 @@ export default {
 
 :root {
   /* 비율 */
+  /* TODO remove */
   --size-h-header: 40px;
   --size-w-side: 40px;
 
