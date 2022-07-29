@@ -1,0 +1,78 @@
+<!-- Main 작업 때, 서로 겹칠까봐 잠시 HeaderNav.vue 를 사용 중 -->
+<!-- merge 후 MainNav.vue 로 변경예정, 이 쪽에 다크모드 기능있음 -->
+
+<template>
+  <div id="app">
+    <!-- <navi :viewname="$route" /> -->
+    <header-nav :viewname="$route" />
+    <router-view />
+  </div>
+</template>
+
+<script>
+// import Navi from '@/views/common/components/MainNav.vue';
+import HeaderNav from '@/views/common/components/HeaderNav.vue';
+
+export default {
+  setup() {
+    // get theme flag from local
+    let theme = JSON.parse(localStorage.getItem('yaza_theme')) || true;
+    return { theme };
+  },
+
+  components: {
+    // Navi,
+    HeaderNav,
+  },
+};
+</script>
+
+<style>
+:root {
+  /* 메인 테마색 */
+  --main-color: #009e73;
+
+  --sub-color-r: #d55e00;
+  --sub-color-o: #e69f00;
+  --sub-color-y: #f0e442;
+  --sub-color-b: #0072b2;
+  --sub-color-p: #cc79a7;
+
+  /* 다크모드 */
+  --dark-bg-color: #404040;
+
+  --dark-main-color: #404040;
+  --dark-sub-color: #000000;
+
+  /* 라이트모드 */
+  --light-bg-color: #ffffff;
+
+  --light-main-color: #ffffff;
+  --light-sub-color: #d9d9d9;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ---- for light and dark mode ---- */
+.light {
+  background: #ffffff;
+}
+
+.dark {
+  background: #404040;
+}
+/* --------------------------------- */
+
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* text-align: center; */
+  color: #2c3e50;
+  /* margin-top: 60px; */
+}
+</style>
