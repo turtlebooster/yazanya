@@ -1,14 +1,14 @@
-import { createWebHistory, createRouter } from "vue-router";
-import store from "../store";
+import { createWebHistory, createRouter } from 'vue-router';
+import store from '../store';
 
 // true : 로그인을 해야 이동 가능
 // false : 로그인을 하면 이동 불가능
 const beforeAuth = (needAuth) => (from, to, next) => {
-  const isLogined = store.getters["isLogined"]; // is logined
-  if (needAuth && !isLogined) {
-    next("/user");
-  } else if (!needAuth && isLogined) {
-    next("/");
+  const isLogined = store.getters['isLogined']; // is logined
+  if (needAuth && isLogined) {
+    next('/user');
+  } else if (!needAuth && !isLogined) {
+    next('/');
   }
 
   next();
@@ -16,37 +16,95 @@ const beforeAuth = (needAuth) => (from, to, next) => {
 
 const routes = [
   {
-    path: "/",
-    name: "home",
-    component: () => import("../views/MainView.vue"),
+    path: '/',
+    name: 'home',
+    component: () => import('../views/Home/HomeView.vue'),
     beforeEnter: beforeAuth(true),
   },
   {
-    path: "/user",
-    name: "user",
-    redirect: "/user/login",
-    component: () => import("../views/UserView.vue"),
-    beforeEnter: beforeAuth(false),
+    path: '/main',
+    component: () => import('../views/Main/MainView.vue'),
+    beforeEnter: beforeAuth(true),
     children: [
       {
-        path: "login",
-        name: "user.login",
-        component: () => import("../components/user/login_form.vue"),
+        path: '',
+        name: 'main.lobby', // default page
+        component: () => import('../views/Main/components/MainLobby.vue'),
       },
       {
-        path: "register",
-        name: "user.register",
-        component: () => import("../components/user/register_form.vue"),
+        path: 'friends',
+        name: 'main.share',
+        component: () => import('../views/Main/components/MainFriends.vue'),
       },
       {
-        path: "findid",
-        name: "user.findid",
-        component: () => import("../components/user/findId_form.vue"),
+        path: 'alarm',
+        name: 'main.alarm',
+        component: () => import('../views/Main/components/MainAlarm.vue'),
+      },
+    ],
+  },
+  {
+    path: '/Planner',
+    // beforeEnter: beforeAuth(true),
+    component: () => import('../views/Planner/PlannerView.vue'),
+  },
+  {
+    path: '/user',
+    name: 'user',
+    redirect: '/user/login',
+    component: () => import('../views/User/UserView.vue'),
+    // beforeEnter: beforeAuth(false),
+    children: [
+      {
+        path: 'login',
+        name: 'user.login',
+        component: () => import('../views/User/components/login_form.vue'),
       },
       {
-        path: "findpw",
-        name: "user.findpw",
-        component: () => import("../components/user/findPw_form.vue"),
+        path: 'register',
+        name: 'user.register',
+        component: () => import('../views/User/components/register_form.vue'),
+      },
+      {
+        path: 'findid',
+        name: 'user.findid',
+        component: () => import('../views/User/components/findId_form.vue'),
+      },
+      {
+        path: 'findpw',
+        name: 'user.findpw',
+        component: () => import('../views/User/components/findPw_form.vue'),
+      },
+    ],
+  },
+  {
+    path: '/studyroom',
+    name: 'studyroom',
+    // beforeEnter: beforeAuth(true),
+    component: () => import('../views/Room/RoomView.vue'),
+    children: [
+      {
+        path: ':roomnum',
+        name: 'studyroom.inroom',
+        component: () => import('../views/Room/RoomView.vue'),
+      },
+    ],
+  },
+  {
+    path: '/setting',
+    // beforeEnter: beforeAuth(true),
+    component: () => import('@/views/Setting/SettingView.vue'),
+    children: [
+      {
+        path: '',
+        name: 'setting.list',
+        component: () => import('@/views/Setting/components/SettingList.vue'),
+      },
+      {
+        path: 'profile',
+        name: 'setting.profile',
+        component: () =>
+          import('@/views/Setting/components/SettingProfile.vue'),
       },
     ],
   },

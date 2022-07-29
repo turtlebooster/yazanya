@@ -1,0 +1,5 @@
+package com.ssafy.chat.vo;
+
+public class Room {
+
+}
