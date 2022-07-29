@@ -1,5 +1,5 @@
 <template>
-  <div class="side-bar">
+  <div v-if="sidebar_on" class="side-bar">
     <!-- <div style="height: 10px"></div> -->
 
     <router-link to="/setting/profile">
@@ -49,7 +49,32 @@
 </template>
 
 <script>
-export default {};
+import { ref } from 'vue';
+
+export default {
+  props: {
+    viewname: {
+      default: '',
+    },
+  },
+
+  setup(props) {
+    // for erase HeaderNav for certain views
+    let hide_sidebar_view_list = [
+      // excluded paths
+      'studyroom',
+    ];
+
+    var sidebar_on = ref(true);
+    hide_sidebar_view_list.forEach((item) => {
+      if (document.URL.includes(item) || props.viewname.includes(item)) {
+        return (sidebar_on.value = false);
+      }
+    });
+
+    return { sidebar_on };
+  },
+};
 </script>
 
 <style scoped>

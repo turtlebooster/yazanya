@@ -53,7 +53,7 @@ const routes = [
     name: 'user',
     redirect: '/user/login',
     component: () => import('../views/User/UserView.vue'),
-    beforeEnter: beforeAuth(false),
+    // beforeEnter: beforeAuth(false),
     children: [
       {
         path: 'login',

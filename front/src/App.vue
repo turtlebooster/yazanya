@@ -1,7 +1,7 @@
 <template>
   <div id="app" class="d-flex flex-column flex-nowrap">
     <!-- Header -->
-    <div class="app-header">
+    <div class="app-header" :viewname="$route.name">
       <!-- <header-nav style="display: none" /> -->
       <header-nav />
     </div>
@@ -11,7 +11,7 @@
       <!-- Side -->
       <div class="app-side">
         <!-- <side-bar style="display: none" /> -->
-        <side-bar />
+        <side-bar :viewname="$route.name" />
       </div>
 
       <!-- Contents -->
