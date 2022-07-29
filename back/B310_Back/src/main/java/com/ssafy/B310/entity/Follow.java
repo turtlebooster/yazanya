@@ -17,11 +17,11 @@ public class Follow {
 
     @JoinColumn(name = "from_user")
     @ManyToOne
-    User from_user;
+    User fromUser;
 
     @JoinColumn(name = "to_user")
     @ManyToOne
-    User to_user;
+    User toUser;
 
     Timestamp followDate;
 
