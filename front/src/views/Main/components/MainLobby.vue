@@ -2,7 +2,7 @@
   <div class="main-lobby">
     <div class="container d-flex flex-column">
       <div class="main-lobby-search d-flex justify-content-center">
-        <div class="search d-flex align-items-center">
+        <div class="search outer d-flex align-items-center">
           <input
             class="search_input"
             type="text"
@@ -13,9 +13,32 @@
       </div>
 
       <div
+        class="search outer d-flex flex-column"
+        style="height: 400px; width: 400px; padding: 20px"
+      >
+        <div class="search outer d-flex"></div>
+
+        <div></div>
+
+        <img
+          :src="require(`@/assets/avatar/3.jpg`)"
+          alt="profile"
+          class="image icon"
+          style="
+            height: 40px;
+            width: 40px;
+            object-fit: cover;
+            border-radius: 50%;
+          "
+        />
+      </div>
+
+      <div
         class="main-lobby-history"
         style="background: var(--sub-color-o); height: 100px"
       ></div>
+
+      <div class="line"></div>
 
       <div
         class="main-lobby-recommend"
@@ -36,6 +59,21 @@ export default {};
   height: 100%;
 }
 
+.outer {
+  box-shadow: 4px 4px 10px -1px rgba(0, 0, 0, 0.25),
+    -4px -4px 10px -1px rgba(255, 255, 255, 0.25);
+}
+
+.inner {
+  box-shadow: inset 4px 4px 10px -1px rgba(0, 0, 0, 0.25),
+    inset -4px -4px 10px -1px rgba(255, 255, 255, 0.25);
+}
+
+.line {
+  height: 4px;
+  background: var(--main-color);
+}
+
 .search {
   height: 40px;
   width: 60vw;
@@ -45,8 +83,6 @@ export default {};
   border-radius: 24px;
   margin-bottom: 50px;
   padding: 10px;
-  box-shadow: 4px 4px 10px -1px rgba(0, 0, 0, 0.25),
-    -4px -4px 10px -1px rgba(255, 255, 255, 0.25);
 }
 
 .search_input {
