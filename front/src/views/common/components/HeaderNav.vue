@@ -1,0 +1,60 @@
+<!--
+  현재 mainview 만드는 중 쓰고 있는 네비게이션바 
+  서로 충돌날까봐 분리해둠 마지막에 머지 후, 정리할 것
+-->
+
+<template>
+  <nav
+    v-if="main_nav_on"
+    class="header-nav"
+    :class="[$root.theme ? 'dark' : 'light']"
+  >
+    <div class="h-100">
+      <router-link to="/main">
+        <!-- Main Nav -->
+        <img
+          src="@/assets/logo/title_logo_009e73.png"
+          class="align-bottom h-100"
+          style="margin-left: 24px"
+          alt="logo"
+        />
+      </router-link>
+    </div>
+  </nav>
+</template>
+
+<script>
+import { ref } from 'vue';
+
+export default {
+  props: {
+    viewname: {
+      default: '',
+    },
+  },
+
+  setup(props) {
+    // for erase HeaderNav for certain views
+    let hide_nav_view_list = [
+      // excluded paths
+      'studyroom',
+    ];
+
+    var main_nav_on = ref(true);
+    hide_nav_view_list.forEach((item) => {
+      if (document.URL.includes(item) || props.viewname.includes(item)) {
+        return (main_nav_on.value = false);
+      }
+    });
+
+    return { main_nav_on };
+  },
+};
+</script>
+
+<style>
+.header-nav {
+  border-bottom: 4px solid #009e73;
+  height: var(--size-h-header);
+}
+</style>
