@@ -5,7 +5,7 @@
 
 <template>
   <nav
-    v-if="defalut_main_nav_flag"
+    v-if="main_nav_on"
     class="header-nav"
     :class="[$root.theme ? 'dark' : 'light']"
   >
@@ -34,20 +34,20 @@ export default {
   },
 
   setup(props) {
-    let defalut_main_nav_flag = ref(true);
-    let customed_nav_view_list = ['studyroom'];
+    // for erase HeaderNav for certain views
+    let hide_nav_view_list = [
+      // excluded paths
+      'studyroom',
+    ];
 
-    // console.log(props.viewname);
-
-    customed_nav_view_list.forEach((viewname_item) => {
-      if (viewname_item == props.viewname) {
-        defalut_main_nav_flag.value = false;
+    var main_nav_on = ref(true);
+    hide_nav_view_list.forEach((item) => {
+      if (document.URL.includes(item) || props.viewname.includes(item)) {
+        return (main_nav_on.value = false);
       }
     });
 
-    // console.log(defalut_main_nav_flag.value);
-
-    return { defalut_main_nav_flag };
+    return { main_nav_on };
   },
 };
 </script>
