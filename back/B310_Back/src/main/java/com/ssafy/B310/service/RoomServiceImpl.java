@@ -43,8 +43,8 @@ public class RoomServiceImpl implements RoomService {
 			r.setRoomName(room.getRoomName());
 			r.setRoomStudyTime(room.getRoomStudyTime());
 			r.setRoomRestTime(room.getRoomRestTime());
-			r.setVideo(room.isVideo());
-			r.setSound(room.isSound());
+			r.setRoomVideo(room.isRoomVideo());
+			r.setRoomSound(room.isRoomSound());
 			r.setRoomPw(room.getRoomPw());
 			roomRepository.save(r);
 			return 1;

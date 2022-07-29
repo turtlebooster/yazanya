@@ -9,7 +9,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
@@ -40,9 +42,22 @@ public class User {
 
 	@Column(nullable = false)
 	private int userStatusNum;
+	
+	@OneToMany(mappedBy = "user")
+	@JsonIgnore
+	private Set<Participation> participationList;
 
+	@OneToMany(mappedBy = "user")
+	@JsonIgnore
+	private Set<Todo> todo;
+	
+	@OneToOne
+	@JoinColumn(name="room_num")
+	@JsonIgnore
+	private Room room;
+	
 	public User(String userId, String userPw, String userName, String userEmail, String userNickname,
-				int userStatusNum) {
+			int userStatusNum) {
 		this.userId = userId;
 		this.userPw = userPw;
 		this.userName = userName;
@@ -53,22 +68,11 @@ public class User {
 	public User() {
 	}
 
-	@OneToMany(mappedBy = "user")
-	@JsonIgnore
-	private Set<Participation> participationList;
-//	private List<Participation> participationList = new ArrayList<>();
-
-	@OneToMany(mappedBy = "user")
-	@JsonIgnore
-	private Set<Todo> todo;
-
 	public User(int userNum, String userId, String userNickname) {
 		this.userNum = userNum;
 		this.userId = userId;
 		this.userNickname = userNickname;
 	}
-
-//	private List<Todo> todo = new ArrayList<>();
 
 	@Override
 	public String toString() {

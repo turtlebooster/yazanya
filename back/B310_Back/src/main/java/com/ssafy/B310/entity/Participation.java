@@ -26,8 +26,8 @@ import lombok.Setter;
 public class Participation {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "PARTICIPATION_ID")
-	private Long Id;
+	@Column
+	private int participationNum;
 	
 	@JsonIgnore
 	@ManyToOne
@@ -39,19 +39,16 @@ public class Participation {
 	@JoinColumn(name = "user_num")
 	private User user;
 	
-//	@Temporal(TemporalType.TIMESTAMP)
-//	private Date enterTime;
-
 	@Column
-	private LocalDateTime enterTime;
+	private LocalDateTime participationEnterTime;
 
 	@PrePersist
-	public void enterTime() {
-		this.enterTime = LocalDateTime.now();
+	public void participationEnterTime() {
+		this.participationEnterTime = LocalDateTime.now();
 	}
 	
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date exitTime;
+	private Date participationExitTime;
 
 	public Participation(){
 
@@ -64,11 +61,11 @@ public class Participation {
 	@Override
 	public String toString() {
 		return "Participation{" +
-				"Id=" + Id +
+				"participationNum=" + participationNum +
 				", room=" + room +
 				", user=" + user +
-				", enterTime=" + enterTime +
-				", exitTime=" + exitTime +
+				", participationEnterTime=" + participationEnterTime +
+				", exitTime=" + participationExitTime +
 				'}';
 	}
 }
