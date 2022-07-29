@@ -1,9 +1,5 @@
 package com.ssafy.B310.entity;
 
-import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -19,29 +15,29 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class UserHashtag {
+public class ParticipationHistory {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column
-	private int userHashtagNum;
+	private int participationHistoryNum;
 	
 	@JsonIgnore
-	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(name = "USER_NUM")
+	@ManyToOne
+	@JoinColumn(name = "room_num")
+	private Room room;
+	
+	@JsonIgnore
+	@ManyToOne
+	@JoinColumn(name = "user_num")
 	private User user;
-	
-	@JsonIgnore
-	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(name = "HASHTAG_NUM")
-	private Hashtag hashtag;
-	
-	public UserHashtag(User user, Hashtag hashtag) {
+
+	public ParticipationHistory(int participationHistoryNum, Room room, User user) {
+		this.participationHistoryNum = participationHistoryNum;
+		this.room = room;
 		this.user = user;
-		this.hashtag = hashtag;
-	}
-	
-	public UserHashtag() {
-		
 	}
 
+	public ParticipationHistory() {
+	}
+	
+	
 }

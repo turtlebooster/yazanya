@@ -21,16 +21,14 @@ import lombok.Setter;
 public class RoomHashtag {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name = "ROOMHASHTAG_NUM")
-	private Long Id;
+	@Column
+	private int roomHashtagNum;
 	
-//	@Id
 	@JsonIgnore
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "ROOM_NUM")
 	private Room room;
 	
-//	@Id
 	@JsonIgnore
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "HASHTAG_NUM")

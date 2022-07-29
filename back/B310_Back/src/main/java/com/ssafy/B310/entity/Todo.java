@@ -40,7 +40,7 @@ public class Todo {
 	private String todoName;
 	
 	@Column
-	private int progress;
+	private int todoProgress;
 	
 	@JsonIgnore
 	@ManyToOne(cascade = CascadeType.PERSIST)
@@ -48,13 +48,15 @@ public class Todo {
 	private User user;
 	
 	public Todo() {}
-	public Todo(int todoNum, String todoContent, Date todoStartTime, Date todoEndTime, String todoName, User user) {
+	public Todo(int todoNum, String todoContent, Date todoStartTime, Date todoEndTime, String todoName,
+			int todoProgress, User user) {
 		super();
 		this.todoNum = todoNum;
 		this.todoContent = todoContent;
 		this.todoStartTime = todoStartTime;
 		this.todoEndTime = todoEndTime;
 		this.todoName = todoName;
+		this.todoProgress = todoProgress;
 		this.user = user;
 	}
 	

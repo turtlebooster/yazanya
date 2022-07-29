@@ -17,6 +17,8 @@ import javax.persistence.PrePersist;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -36,16 +38,13 @@ public class Room {
 	private String roomName;
 	
 	@Column(nullable = false, columnDefinition = "TINYINT", length=1)
-	private boolean video;
+	private boolean roomVideo;
 	
 	@Column(nullable = false, columnDefinition = "TINYINT", length=1)
-	private boolean sound;
-	
-//	@Temporal(TemporalType.TIMESTAMP)
-//	private Date startTime;
+	private boolean roomSound;
 	
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date endTime;
+	private Date roomEndTime;
 	
 	@Column
 	private int roomStudyTime;
@@ -54,32 +53,26 @@ public class Room {
 	private int roomRestTime;
 	
 	@Column
-	private int capacity;
+	private int roomCapacity;
 	
 	@Column
-	private int participationCount;
+	private int roomParticipationCount;
 	
 	@Column
-	private LocalDateTime startTime;
+	private LocalDateTime roomStartTime;
 	
 	@Column
 	private int roomPw;
 	
+	@Column(columnDefinition = "TINYINT", length=1)
+	@ColumnDefault("true")
+	private boolean roomActive;
+	
 	@PrePersist
-    public void startTime() {
-        this.startTime = LocalDateTime.now();
+    public void roomStartTime() {
+        this.roomStartTime = LocalDateTime.now();
     }
 	
-	public Room(String roomName, boolean video, boolean sound, LocalDateTime startTime, Date endTime,
-			int roomStudyTime, int roomRestTime) {
-		this.roomName = roomName;
-		this.video = video;
-		this.sound = sound;
-		this.startTime = startTime;
-		this.endTime = endTime;
-		this.roomStudyTime = roomStudyTime;
-		this.roomRestTime = roomRestTime;
-	}
 	public Room() {
 		
 	}
@@ -89,36 +82,42 @@ public class Room {
 	@JsonIgnore
 	private User manager;
 	
-	@JsonManagedReference
 	@OneToMany(mappedBy = "room")
 	@JsonIgnore
 	private Set<Participation> participationList;
-//	private Set<Participation> participationList = new ArrayList<>();
 	
-	@JsonManagedReference
 	@OneToMany(mappedBy = "room")
 	@JsonIgnore
 	private Set<RoomHashtag> roomHashtag;
-//	private Set<RoomHashtag> roomHashtag = new ArrayList<RoomHashtag>();
-	
-	
 
 	@Override
 	public String toString() {
-		return "Room{" +
-				"roomNum=" + roomNum +
-				", roomName='" + roomName + '\'' +
-				", video=" + video +
-				", sound=" + sound +
-				", endTime=" + endTime +
-				", roomStudyTime=" + roomStudyTime +
-				", roomRestTime=" + roomRestTime +
-				", capacity=" + capacity +
-				", participationCount=" + participationCount +
-				", startTime=" + startTime +
-				", manager=" + manager +
-				", participationList=" + participationList +
-				", roomHashtag=" + roomHashtag +
-				'}';
+		return "Room [roomNum=" + roomNum + ", roomName=" + roomName + ", roomVideo=" + roomVideo + ", roomSound="
+				+ roomSound + ", roomEndTime=" + roomEndTime + ", roomStudyTime=" + roomStudyTime + ", roomRestTime="
+				+ roomRestTime + ", roomCapacity=" + roomCapacity + ", roomParticipationCount=" + roomParticipationCount
+				+ ", roomStartTime=" + roomStartTime + ", roomPw=" + roomPw + ", roomActive=" + roomActive
+				+ ", manager=" + manager + ", participationList=" + participationList + ", roomHashtag=" + roomHashtag
+				+ "]";
+	}
+
+	public Room(int roomNum, String roomName, boolean roomVideo, boolean roomSound, Date roomEndTime, int roomStudyTime,
+			int roomRestTime, int roomCapacity, int roomParticipationCount, LocalDateTime roomStartTime, int roomPw,
+			boolean roomActive, User manager, Set<Participation> participationList, Set<RoomHashtag> roomHashtag) {
+		super();
+		this.roomNum = roomNum;
+		this.roomName = roomName;
+		this.roomVideo = roomVideo;
+		this.roomSound = roomSound;
+		this.roomEndTime = roomEndTime;
+		this.roomStudyTime = roomStudyTime;
+		this.roomRestTime = roomRestTime;
+		this.roomCapacity = roomCapacity;
+		this.roomParticipationCount = roomParticipationCount;
+		this.roomStartTime = roomStartTime;
+		this.roomPw = roomPw;
+		this.roomActive = roomActive;
+		this.manager = manager;
+		this.participationList = participationList;
+		this.roomHashtag = roomHashtag;
 	}
 }
