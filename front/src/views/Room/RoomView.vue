@@ -7,7 +7,11 @@
     <room-nav @toggle-planner="togglePlanner()" @toggle-chat="toggleChat()" />
   </div>
 
-  <div class="room-main d-flex justify-content-center w-100 h-100">
+  <div
+    class="room-main d-flex justify-content-center w-100 h-100"
+    :class="[$root.theme ? 'light-content' : 'dark-content']"
+  >
+    <!-- Planner Side bar -->
     <div
       class="planner-sidebar h-100 me-auto"
       :style="{
@@ -21,8 +25,9 @@
       <button @click="test()" class="m-2">increase member</button>
     </div>
 
+    <!-- Video Content -->
     <div
-      class="video-plane d-flex flex-column w-100 h-100"
+      class="video-plane d-flex flex-column w-100 m-3 rounded-3 shadow"
       :class="[$root.theme ? 'light-content' : 'dark-content']"
     >
       <div
@@ -32,7 +37,7 @@
         <i
           class="ms-2 mt-1 me-auto"
           :class="[isRoomPrivate ? 'bi bi-lock-fill' : '']"
-          style="font-size: 1.2em"
+          style="font-size: 1.5em"
           >&nbsp;&nbsp;{{ roomname }}
         </i>
 
@@ -46,7 +51,7 @@
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
-            <i class="bi bi-list text-center" style="font-size: 1.5em"></i>
+            <i class="bi bi-list text-center" style="font-size: 2em"></i>
           </a>
           <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
             <li><a class="dropdown-item" href="#">Action</a></li>
@@ -67,7 +72,7 @@
           <div
             v-for="j in cols_cnt"
             :key="j"
-            class="col justify-content-center py-1"
+            class="col justify-content-center py-1 w-100"
           >
             <img
               class="w-100 h-100"
@@ -78,12 +83,45 @@
         </div>
       </div>
 
+      <!-- Videoroom bottombar for control -->
+      <hr class="border-top border-dark border-3 rounded-3 mx-4 my-2 p-0" />
       <div
-        class="video-setting-bottombar w-100 mt-auto"
+        class="video-setting-bottombar d-flex justify-content-center align-items-center w-100 mt-auto p-3 pt-2"
         style="height: 12%; min-height: 56px"
-      ></div>
+      >
+        <b-button
+          class="rounded-circle mx-2 shadow"
+          :class="[$root.theme ? 'dark-content' : 'light-content']"
+        >
+          <i class="bi bi-mic-fill" style="font-size: 1.3em"></i>
+          <!-- <i class="bi bi-mic-mute-fill"></i> -->
+        </b-button>
+        <b-button
+          class="rounded-circle mx-2"
+          :class="[$root.theme ? 'dark-content' : 'light-content']"
+        >
+          <i class="bi bi-camera-video-fill" style="font-size: 1.3em"></i>
+          <!-- <i class="bi bi-camera-video-off-fill"></i> -->
+        </b-button>
+        <b-button
+          class="rounded-circle mx-2"
+          :class="[$root.theme ? 'dark-content' : 'light-content']"
+        >
+          <i class="bi bi-camera-video-fill" style="font-size: 1.3em"></i>
+          <!-- <i class="bi bi-camera-video-off-fill"></i> -->
+        </b-button>
+
+        <b-button
+          class="rounded-circle mx-2"
+          :class="[$root.theme ? 'dark-content' : 'light-content']"
+        >
+          <i class="bi bi-camera-video-fill" style="font-size: 1.3em"></i>
+          <!-- <i class="bi bi-camera-video-off-fill"></i> -->
+        </b-button>
+      </div>
     </div>
 
+    <!-- Chat Sidebar -->
     <div
       class="chat-sidebar h-100 ms-auto"
       :style="{ width: chat_width + '%', transition: '750ms' }"
@@ -132,7 +170,7 @@ export default {
 
       // check room number NaN
       let room_number = url.slice(idx);
-      if (Number.isInteger(room_number)) {
+      if (isNaN(room_number)) {
         alert('방 번호가 형식에 맞지 않습니다');
         router.replace('/');
         return;
@@ -197,10 +235,10 @@ export default {
   color: #f3f3f3;
 }
 
-.light-content {
+.light-content-color {
   color: #545664;
 }
-.dark-content {
+.dark-content-color {
   color: #f3f3f3;
 }
 
@@ -215,9 +253,5 @@ export default {
 
 .chat-sidebar {
   background-color: azure;
-}
-
-.video-setting-bottombar {
-  background-color: brown;
 }
 </style>
