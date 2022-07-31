@@ -79,6 +79,8 @@ export default {
 
 <style scoped>
 .side-bar {
+  z-index: 20;
+
   display: flex;
   flex-direction: column;
 
@@ -134,6 +136,7 @@ export default {
   background: var(--main-color);
   border-radius: 50%;
   box-shadow: 15px 15px 0 var(--light-main-color);
+  z-index: -1;
 }
 
 .side-bar a.router-link-exact-active::after {
@@ -146,6 +149,7 @@ export default {
   background: var(--main-color);
   border-radius: 50%;
   box-shadow: 15px -15px 0 var(--light-main-color);
+  z-index: -1;
 }
 
 .side-bar a .icon {
@@ -156,8 +160,6 @@ export default {
   height: var(--size-w-side);
   line-height: var(--size-w-side);
   text-align: center;
-
-  z-index: 1;
 }
 
 .side-bar a .icon i {
@@ -173,7 +175,5 @@ export default {
   line-height: var(--size-w-side);
   /* font-weight: bold; */
   font-size: 1.2em;
-
-  z-index: 1;
 }
 </style>
