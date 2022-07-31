@@ -15,7 +15,7 @@
         <img
           src="@/assets/logo/title_logo_009e73.png"
           class="align-bottom h-100"
-          style="margin-left: 24px"
+          style="margin-left: 16px"
           alt="logo"
         />
       </router-link>
@@ -54,6 +54,9 @@ export default {
 
 <style>
 .header-nav {
+  z-index: 20;
+  position: fixed;
+  width: 100vw;
   border-bottom: 4px solid #009e73;
   height: var(--size-h-header);
 }

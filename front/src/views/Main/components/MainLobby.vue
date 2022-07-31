@@ -1,61 +1,141 @@
 <template>
   <div class="main-lobby">
-    <div class="container d-flex flex-column">
-      <div class="main-lobby-search d-flex justify-content-center">
-        <div class="search outer d-flex align-items-center">
-          <input
-            class="search_input"
-            type="text"
-            placeholder="Search here..."
-          />
-          <a href="#" class="search_icon"><i class="bi bi-search"></i></a>
+    <div class="d-flex flex-column align-items-center" style="padding: 8px">
+      <div class="spacer"></div>
+
+      <!-- search -->
+      <div class="search outer d-flex align-items-center">
+        <input class="search_input" type="text" placeholder="Search here..." />
+        <a href="#" class="search_icon"><i class="bi bi-search"></i></a>
+      </div>
+      <div class="spacer"></div>
+      <div class="spacer"></div>
+
+      <!-- room history -->
+      <div style="width: 80%">이전에 참여했던 방</div>
+      <div class="spacer"></div>
+
+      <div
+        class="main-lobby-history container-fluid"
+        style="border-radius: 24px; width: 80%"
+      >
+        <div class="row">
+          <div
+            v-for="room in state.roomHistory"
+            :key="room.userNum"
+            class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2"
+          >
+            <div
+              class="main-room outer d-flex flex-column"
+              style="margin: auto; margin-top: 16px"
+            >
+              <router-link
+                :to="room.codeNum"
+                class="main-room-component"
+                style="text-decoration: none"
+              >
+                <!-- thumbnail -->
+                <img
+                  :src="require(`@/assets/thumbnail/${room.thumbnailNum}.jpg`)"
+                  alt="main-room-thumbnail"
+                  style="
+                    padding: 8px;
+                    height: 60%;
+                    width: 100%;
+                    object-fit: cover;
+                    border-radius: 24px;
+                  "
+                />
+
+                <div class="d-flex">
+                  <!-- profile -->
+                  <img
+                    :src="require(`@/assets/avatar/${room.userNum}.jpg`)"
+                    alt="main-room-profile"
+                    style="
+                      height: 40px;
+                      width: 40px;
+                      object-fit: cover;
+                      border-radius: 50%;
+                      border: 4px solid white;
+                    "
+                  />
+
+                  <div class="d-flex flex-column">
+                    <!-- title -->
+                    <div>{{ room.title }}</div>
+                    <div style="font-size: 2pt">{{ room.detail }}</div>
+                  </div>
+                </div>
+              </router-link>
+            </div>
+          </div>
+
+          <!-- new room -->
+          <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">
+            <div
+              class="main-room inner d-flex flex-column"
+              style="margin: auto; margin-top: 16px"
+            >
+              <router-link to="newroom" class="main-room-component text-center">
+                <div
+                  style="padding-top: 40%; font-size: 30px; font-weight: bold"
+                >
+                  +
+                </div>
+              </router-link>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div
-        class="main-lobby-history"
-        style="background: var(--sub-color-o); height: 100px"
-      ></div>
+      <div class="spacer"></div>
+      <div class="liner"></div>
+      <div class="spacer"></div>
+      <div class="spacer"></div>
 
-      <div
-        class="outer d-flex flex-column"
-        style="height: 400px; width: 400px; padding: 20px"
-      >
-        <div class="search outer d-flex"></div>
-
-        <div></div>
-
-        <img
-          :src="require(`@/assets/avatar/3.jpg`)"
-          alt="profile"
-          class="image icon"
-          style="
-            height: 40px;
-            width: 40px;
-            object-fit: cover;
-            border-radius: 50%;
-          "
-        />
-      </div>
-
-      <div class="line"></div>
-
-      <div
-        class="main-lobby-recommend"
-        style="background: var(--sub-color-b); height: 100px"
-      ></div>
+      <!-- room recommend -->
+      <div style="width: 80%">추천하는 공부방</div>
+      <div class="spacer"></div>
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+import { reactive } from 'vue';
+
+export default {
+  setup() {
+    const state = reactive({
+      testNum: 1,
+      roomHistory: [
+        {
+          thumbnailNum: 1,
+          userNum: 3,
+          codeNum: '/studyroom/b310',
+          title: '공부 1대1 고수만',
+          detail: '쉬는 시간 세팅 0으로 해놨습니다. 쫄?',
+          hashTag: ['#1', '#2', '#3'],
+        },
+        {
+          thumbnailNum: 0,
+          userNum: 2,
+          codeNum: '/studyroom/b311',
+          title: 'ASMR',
+          detail: '카페 분위기에서 공부하실 분?',
+          hashTag: ['#1', '#2', '#3'],
+        },
+      ],
+    });
+
+    return { state };
+  },
+};
 </script>
 
 <style scoped>
 .main-lobby {
   background-color: var(--light-main-color);
-  padding: 16px;
   height: 100%;
 }
 
@@ -69,19 +149,24 @@ export default {};
     inset -4px -4px 10px -1px rgba(255, 255, 255, 0.25);
 }
 
-.line {
-  height: 4px;
-  background: var(--main-color);
+.liner {
+  height: 2px;
+  width: 80%;
+  border-radius: 1px;
+  background: var(--light-sub-color);
+}
+
+.spacer {
+  height: 24px;
 }
 
 .search {
   height: 40px;
-  width: 60vw;
+  width: 80%;
   flex-wrap: nowrap;
 
   background-color: var(--light-main-color);
   border-radius: 24px;
-  margin-bottom: 50px;
   padding: 10px;
 }
 
@@ -121,5 +206,34 @@ export default {};
 
 a:link {
   text-decoration: none;
+}
+
+.main-room * {
+  text-decoration: none;
+  color: #000000;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.main-room {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+}
+
+.main-room:after {
+  content: '';
+  display: block;
+  padding-bottom: 100%;
+}
+
+.main-room-component {
+  position: absolute;
+  z-index: 10;
+  width: 100%;
+  height: 100%;
 }
 </style>

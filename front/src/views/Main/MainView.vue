@@ -34,4 +34,17 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.main-view {
+  /* background: var(--sub-color-b); */
+  overflow-y: auto;
+  overflow-x: auto;
+
+  -ms-overflow-style: none; /* IE, Edge 스크롤 지우는 코드 */
+  scrollbar-width: none; /* Firefox 스크롤 지우는 코드 */
+}
+
+.main-view::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera 스크롤 지우는 코드 */
+}
+</style>

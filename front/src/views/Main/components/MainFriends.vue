@@ -59,7 +59,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .main-friends {
   margin: 10px;
 }
@@ -71,10 +71,5 @@ export default {
   width: 100px;
   border-radius: 10%;
   box-shadow: 1px 1px 8px gray;
-}
-
-.container {
-  display: flex;
-  justify-content: center;
 }
 </style>
