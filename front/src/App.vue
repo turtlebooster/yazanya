@@ -28,12 +28,11 @@ export default {};
 
 :root {
   /* 비율 */
-  /* TODO remove */
-  --size-h-header: 40px;
-  --size-w-side: 40px;
+  --size-h-header: 48px;
+  --size-w-side: 80px;
 
   /* 메인 테마색 */
-  --main-color: #009e73;
+  --theme-color: #009e73;
 
   --sub-color-r: #d55e00;
   --sub-color-o: #e69f00;
@@ -42,14 +41,10 @@ export default {};
   --sub-color-p: #cc79a7;
 
   /* 다크모드 */
-  --dark-bg-color: #404040;
-
   --dark-main-color: #404040;
   --dark-sub-color: #000000;
 
   /* 라이트모드 */
-  --light-bg-color: #ffffff;
-
   --light-main-color: #ffffff;
   --light-sub-color: #d9d9d9;
 }

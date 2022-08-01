@@ -1,15 +1,17 @@
 <template>
-  <div class="main-view d-flex flex-column">
-    <!-- Navbar -->
+  <div class="main-view">
+    <!-- Header -->
     <div class="main-header">
-      <main-navbar />
+      <!-- <header-nav style="display: none" /> -->
+      <header-nav />
     </div>
 
     <!-- Container -->
     <div class="main-container d-flex flex-grow-1 flex-shrink-1">
       <!-- Side -->
       <div class="main-side">
-        <main-sidebar />
+        <!-- <side-bar style="display: none" /> -->
+        <side-bar />
       </div>
 
       <!-- Contents -->
@@ -21,31 +23,19 @@
 </template>
 
 <script>
-import MainNavbar from './components/MainNavbar.vue';
-import MainSidebar from './components/MainSidebar.vue';
-import { onBeforeMount } from 'vue';
+import HeaderNav from './components/MainNavbar.vue';
+import SideBar from './components/MainSidebar.vue';
 
 export default {
-  setup() {
-    onBeforeMount(() => {
-      // setting
-      document.documentElement.style.setProperty('--size-h-header', '48px');
-      document.documentElement.style.setProperty('--size-w-side', '80px');
-    });
-  },
-
   components: {
-    MainNavbar,
-    MainSidebar,
+    HeaderNav,
+    SideBar,
   },
 };
 </script>
 
 <style>
 .main-view {
-  height: 100vh;
-  width: 100vw;
-
   /* background: var(--sub-color-b); */
   overflow-y: auto;
   overflow-x: auto;
@@ -73,6 +63,16 @@ export default {
 }
 
 .main-contents {
-  background: var(--sub-color-o);
+  /* background: var(--sub-color-b); */
+  margin-left: 12px;
+  overflow-y: auto;
+  overflow-x: auto;
+
+  -ms-overflow-style: none; /* IE, Edge 스크롤 지우는 코드 */
+  scrollbar-width: none; /* Firefox 스크롤 지우는 코드 */
+}
+
+.main-contents::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera 스크롤 지우는 코드 */
 }
 </style>
