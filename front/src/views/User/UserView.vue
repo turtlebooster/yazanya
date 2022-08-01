@@ -1,5 +1,5 @@
 <template>
-  <div class="user">
+  <div class="d-flex justify-content-center align-items-center vw-100 vh-100 user-view">
     <router-view/>
   </div>
 </template>
@@ -14,12 +14,12 @@ export default {
 </script>
 
 <style scoped>
-  .user {
-    display:flex;
+  .user-view {
+    /* display:flex;
     justify-content:center;
     align-items: center;
     width: 100vw;
-    height: 100vh;
+    height: 100vh; */
     background-image: url("../../assets/book_user.jpg");
   }
 </style>

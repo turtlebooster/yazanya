@@ -35,14 +35,14 @@
               <div>비밀번호</div>
               <form action="">
                 <input type="password" id="inputPw"/>
-                <i class="bi bi-eye-fill" id="iconPw" @click="togglePw"></i>
+                <i class="bi bi-eye-slash-fill" id="iconPw" @click="togglePw"></i>
               </form>
             </div>
             <div class="col" id="confirmpassword">
               <div>비밀번호 확인</div>
               <form action="">
                 <input type="password" id="inputConfirm"/>
-                <i class="bi bi-eye-fill" id="iconConfirm" @click="toggleConfirm"></i>
+                <i class="bi bi-eye-slash-fill" id="iconConfirm" @click="toggleConfirm"></i>
               </form>
             </div>
           </div>
@@ -84,11 +84,11 @@ export default {
       var inputPw = document.getElementById("inputPw")
       if (iconPw.className === "bi bi-eye-fill") {
         iconPw.className = "bi bi-eye-slash-fill"
-        inputPw.type = "text"
+        inputPw.type = "password"
       }
       else {
         iconPw.className = "bi bi-eye-fill"
-        inputPw.type = "password"
+        inputPw.type = "text"
       }
     }
     
@@ -97,11 +97,11 @@ export default {
       var inputConfirm = document.getElementById("inputConfirm")
       if (iconConfirm.className === "bi bi-eye-fill") {
         iconConfirm.className = "bi bi-eye-slash-fill"
-        inputConfirm.type = "text'"
+        inputConfirm.type = "password"
       }
       else {
         iconConfirm.className = "bi bi-eye-fill"
-        inputConfirm.type = "password"
+        inputConfirm.type = "text"
       }
     }
     return {
