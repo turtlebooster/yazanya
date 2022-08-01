@@ -7,6 +7,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.ssafy.B310.entity.Profile;
+import com.ssafy.B310.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +29,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ssafy.B310.entity.Hashtag;
 import com.ssafy.B310.entity.User;
 import com.ssafy.B310.entity.UserHashtag;
-import com.ssafy.B310.service.HashtagService;
-import com.ssafy.B310.service.JwtService;
-import com.ssafy.B310.service.UserHashtagService;
-import com.ssafy.B310.service.UserService;
 
 
 @RestController
@@ -55,6 +53,9 @@ public class UserController {
 	
 	@Autowired
 	HashtagService hashtagService;
+
+	@Autowired
+	ProfileService profileService;
 
 	// 로그인 요청 처리 - POST /user/login
 	@PostMapping("/login")
@@ -139,6 +140,8 @@ public class UserController {
 	public ResponseEntity<?> registUser(@RequestBody User user) throws SQLException {
 		// User 회원가입
 		int cnt = userService.registUser(user);
+
+		profileService.createProfile();
 		
 		// 상태 코드만으로 구분
 		if(cnt==1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
@@ -246,5 +249,36 @@ public class UserController {
 		
 		return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 	}
+
+	// 유저 프로필 페이지
+
+	// 프로필 작성
+	@PostMapping("/profile/{userId}")
+	public ResponseEntity<?> createProfile (@RequestBody Profile profile) throws SQLException {
+
+		int cnt = profileService.createProfile(profile);
+
+		// 상태 코드만으로 구분
+		if(cnt==1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+		else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+
+	// 프로필 수정
+
+	@PutMapping("/profile/{userId}")
+	public ResponseEntity<?> updateProfile (@RequestBody Profile profile) throws SQLException {
+
+		int cnt = profileService.updateProfile(profile);
+
+		if(cnt==1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+		else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+	// 프로필 조회
+//	@GetMapping("/profile/{userId}")
+//	public ResponseEntity<?> getProfileList (@PathVariable ("userId") String userId) {
+//		User user =
+//	}
 }
 
