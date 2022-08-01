@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class FollowServiceImpl {
+public class FollowServiceImpl implements FollowService {
     @Autowired
     FollowService followService;
 
@@ -32,15 +32,24 @@ public class FollowServiceImpl {
 
         u1.setUserId(from_userId);
         u2.setUserId(to_userId);
-        f.setFrom_user(u1);
-        f.setTo_user(u2);
+        f.setFollowFromUser(u1);
+        f.setFollowToUser(u2);
 
         followRepository.save(f);
     }
 
-    int judgeByFollowerAndFollowingUserId(String userId){
-        Follow f = new Follow();
-
+    public void deleteFollowFromUserAndFollowToTuser() {
 
     }
+
+    @Override
+    public int judgeByFollowerAndFollowingUserId(String userId) {
+        return 0;
+    }
+
+//    int judgeByFollowerAndFollowingUserId(String userId){
+//        Follow f = new Follow();
+//
+//
+//    }
 }
