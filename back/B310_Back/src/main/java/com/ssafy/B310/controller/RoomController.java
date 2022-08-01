@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +28,8 @@ import com.ssafy.B310.entity.Room;
 import com.ssafy.B310.entity.RoomHashtag;
 import com.ssafy.B310.entity.User;
 import com.ssafy.B310.service.HashtagService;
+import com.ssafy.B310.service.JwtService;
+import com.ssafy.B310.service.ParticipationHistoryService;
 import com.ssafy.B310.service.ParticipationService;
 import com.ssafy.B310.service.RoomHashtagService;
 import com.ssafy.B310.service.RoomService;
@@ -44,11 +48,17 @@ public class RoomController {
     ParticipationService participationservice;
     
     @Autowired
+    ParticipationHistoryService participationHistoryService; 
+    
+    @Autowired
     HashtagService hashtagService;
     
     @Autowired
     RoomHashtagService roomHashtagService;
-
+    
+    @Autowired
+    JwtService jwtService;
+    
     // 방 생성
     @PostMapping
     public ResponseEntity<?> createRoom(@RequestBody Room room) throws SQLException{
@@ -211,5 +221,12 @@ public class RoomController {
         return new ResponseEntity<List<User>>(joinedUserList, HttpStatus.OK);
 
     }
-
+    
+    // 전에 방문했던 방 목록 반환
+    @GetMapping("/history")
+    public ResponseEntity<?> getRoomHistory(HttpServletRequest request) throws SQLException {
+    	String userId = jwtService.getUserID(request.getHeader("access-token"));
+    	
+    	return new ResponseEntity<List<Room>>(participationHistoryService.getRoomHistoryList(userId), HttpStatus.OK);
+    }
 }

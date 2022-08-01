@@ -51,8 +51,8 @@ public class ParticipationHistoryServiceImpl implements ParticipationHistoryServ
 
 	// 유저별 방문했던 방 조회
 	@Override
-	public List<Room> getRoomHistoryList(String userId) throws SQLException {
-		return null;
+	public List<Room> getRoomHistoryList(String userId) throws SQLException {		
+		return participationHistoryQueryRepository.findParticipationHistoryByUserId(userId);
 	}
 
 }
