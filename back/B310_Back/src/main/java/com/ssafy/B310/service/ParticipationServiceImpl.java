@@ -1,19 +1,25 @@
 package com.ssafy.B310.service;
 
-import com.ssafy.B310.entity.Participation;
-import com.ssafy.B310.entity.Room;
-import com.ssafy.B310.entity.User;
-import com.ssafy.B310.repository.ParticipationRepository;
-import com.ssafy.B310.repository.RoomRepository;
-import com.ssafy.B310.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.ssafy.B310.entity.Participation;
+import com.ssafy.B310.entity.ParticipationHistory;
+import com.ssafy.B310.entity.Room;
+import com.ssafy.B310.entity.User;
+import com.ssafy.B310.repository.ParticipationHistoryQueryRepository;
+import com.ssafy.B310.repository.ParticipationHistoryRepository;
+import com.ssafy.B310.repository.ParticipationRepository;
+import com.ssafy.B310.repository.RoomRepository;
+import com.ssafy.B310.repository.UserRepository;
 
 @Service
 public class ParticipationServiceImpl implements ParticipationService {
@@ -27,7 +33,11 @@ public class ParticipationServiceImpl implements ParticipationService {
     @Autowired
     RoomRepository roomRepository;
 
+    @Autowired
+    ParticipationHistoryService participationHistoryService;
+    
     // 유저 입장
+    @Transactional
     @Override
     public int joinRoom(User user, Room room) throws SQLException {
         Optional<User> joinUser = userRepository.findByUserId(user.getUserId());
@@ -39,13 +49,18 @@ public class ParticipationServiceImpl implements ParticipationService {
         User u = joinUser.get();
 
         u.setUserId(user.getUserId());
+        u.setRoom(room);
 
         Participation participation = new Participation(room, u);
-        participation.setUser(u);
-        participation.setRoom(room);
+//        participation.setUser(u);
+//        participation.setRoom(room);
         participationRepository.save(participation);
-
-        return 1;
+        
+        // history에 기록
+        // 잘 기록됐으면 1 아니면 0 반환
+        return participationHistoryService.createRoomHistory(u, room);
+        
+//        return 1;
 
 
     }
