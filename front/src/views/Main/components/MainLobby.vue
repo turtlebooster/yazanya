@@ -12,12 +12,12 @@
       <div class="spacer"></div>
 
       <!-- room history -->
-      <div style="width: 80%">이전에 참여했던 방</div>
+      <div style="width: 100%">이전에 참여했던 방</div>
       <div class="spacer"></div>
 
       <div
         class="main-lobby-history container-fluid"
-        style="border-radius: 24px; width: 80%"
+        style="border-radius: 24px; width: 100%"
       >
         <div class="row">
           <div
@@ -25,49 +25,30 @@
             :key="room.userNum"
             class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2"
           >
-            <div
-              class="main-room outer d-flex flex-column"
-              style="margin: auto; margin-top: 16px"
-            >
+            <div class="main-room outer" style="margin: auto">
               <router-link
                 :to="room.codeNum"
-                class="main-room-component"
-                style="text-decoration: none"
+                class="main-room-component d-flex flex-column"
               >
                 <!-- thumbnail -->
                 <img
                   :src="require(`@/assets/thumbnail/${room.thumbnailNum}.jpg`)"
                   alt="main-room-thumbnail"
-                  style="
-                    padding: 8px;
-                    height: 60%;
-                    width: 100%;
-                    object-fit: cover;
-                    border-radius: 24px;
-                  "
+                  class="main-room-thumbnail"
                 />
 
                 <div class="d-flex">
                   <!-- profile -->
                   <b-avatar
-                    src="https://placekitten.com/300/300"
+                    :src="require(`@/assets/avatar/${room.userNum}.jpg`)"
                     size="2.4em"
                   ></b-avatar>
-                  <!-- <img
-                    :src="require(`@/assets/avatar/${room.userNum}.jpg`)"
-                    alt="main-room-profile"
-                    style="
-                      height: 40px;
-                      width: 40px;
-                      object-fit: cover;
-                      border-radius: 50%;
-                      border: 4px solid white;
-                    "
-                  /> -->
 
                   <div class="d-flex flex-column">
                     <!-- title -->
                     <div>{{ room.title }}</div>
+
+                    <!-- detail -->
                     <div style="font-size: 2pt">{{ room.detail }}</div>
                   </div>
                 </div>
@@ -77,16 +58,15 @@
 
           <!-- new room -->
           <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">
-            <div
-              class="main-room inner d-flex flex-column"
-              style="margin: auto; margin-top: 16px"
-            >
-              <router-link to="newroom" class="main-room-component text-center">
-                <div
-                  style="padding-top: 40%; font-size: 30px; font-weight: bold"
-                >
-                  +
-                </div>
+            <div class="main-room outer" style="margin: auto">
+              <router-link
+                to="newRoom"
+                class="main-room-component d-flex flex-column"
+              >
+                <i
+                  class="bi bi-plus-circle-fill"
+                  style="height: 100%; text-align: center"
+                ></i>
               </router-link>
             </div>
           </div>
@@ -235,9 +215,17 @@ a:link {
 }
 
 .main-room-component {
+  padding: 8px;
   position: absolute;
   z-index: 10;
   width: 100%;
   height: 100%;
+}
+
+.main-room-thumbnail {
+  flex-grow: 1;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 8px;
 }
 </style>

@@ -63,10 +63,6 @@ export default {
   min-height: var(--size-h-header);
 }
 
-.main-container {
-  overflow-y: hidden;
-}
-
 .main-side {
   /* background: var(--sub-color-o); */
   min-width: var(--size-w-side);
