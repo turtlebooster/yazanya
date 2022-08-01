@@ -1,19 +1,20 @@
 <template>
+<div class="d-flex flex-column" style="max-height: 100%; height:100%">
   <div
     class="room-navbar"
     :class="[$root.theme ? 'light' : 'dark']"
-    style="height: 48px"
+    style="height: 52px"
   >
     <room-nav @toggle-planner="togglePlanner()" @toggle-chat="toggleChat()" />
   </div>
 
   <div
-    class="room-main d-flex justify-content-center w-100 h-100"
+    class="room-main d-flex justify-content-center flex-grow-1 w-100"
     :class="[$root.theme ? 'light-content' : 'dark-content']"
   >
     <!-- Planner Side bar -->
     <div
-      class="planner-sidebar h-100 me-auto"
+      class="planner-sidebar me-auto"
       :style="{
         width: planner_width + '%',
         transition: '750ms',
@@ -23,6 +24,8 @@
       <!-- TODO planner components -->
       <p>TODO planner components</p>
       <button @click="test()" class="m-2">increase member</button>
+      <button @click="register()" class="m-2">add member </button>
+      <button @click="leaveRoom()" class="m-2">leave member </button>
     </div>
 
     <!-- Video Content -->
@@ -31,7 +34,7 @@
       :class="[$root.theme ? 'light-content' : 'dark-content']"
     >
       <div
-        class="video-room-info-topbar d-flex justify-content-center w-100 mb-auto p-1 pt-2"
+        class="video-room-info-topbar d-flex justify-content-center  mb-auto p-1 pt-2"
         style="height: 8%; min-height: 52px"
       >
         <i
@@ -63,9 +66,16 @@
       </div>
 
       <div
-        class="video-components-plane justify-content-center d-flex flex-column w-100 h-100 px-4 pt-4 pb-3"
+        class="video-components-plane d-flex justify-content-center flex-grow-1 flex-wrap px-4 pt-4 pb-3"
+        ref="video_plane"
       >
-        <div
+        <div v-for="(value, name) in participants" :key="name" :ref="(el) => { members[name] = el }"
+          class="d-flex justify-content-center m-2"
+          >
+        </div>
+
+
+        <!-- <div
           v-for="i in rows_cnt"
           :key="i"
           class="row d-flex justify-content-center flex-grow-1"
@@ -75,13 +85,8 @@
             :key="j"
             class="col justify-content-center py-1 w-100"
           >
-            <img
-              class="w-100 h-100"
-              src="@/assets/logo/title_logo_009e73.png"
-              style="background-color: #fafafa"
-            />
           </div>
-        </div>
+        </div> -->
       </div>
 
       <!-- Videoroom bottombar for control -->
@@ -130,13 +135,15 @@
       <!-- TODO chat components -->
     </div>
   </div>
+  </div>
 </template>
 
 <script>
 import RoomNav from './components/RoomNavbar.vue';
 // import VideoComp from  './components/RoomVideo.vue';
-import { ref, computed, onBeforeMount } from 'vue';
+import { ref, computed, onBeforeMount, onUpdated } from 'vue';
 import { useRouter } from 'vue-router';
+import { useStore } from 'vuex'
 
 export default {
   components: {
@@ -148,7 +155,7 @@ export default {
     // --------- sidebar sizing event handling  ↓ ----------- //
     const SIDEBAR_WIDTH = 28;
     const planner_width = ref(0);
-    const chat_width = ref(SIDEBAR_WIDTH);
+    const chat_width = ref(0);
 
     function togglePlanner() {
       planner_width.value = planner_width.value === 0 ? SIDEBAR_WIDTH : 0;
@@ -183,6 +190,9 @@ export default {
       // ---------------- for hide header nav and side bar ------------------ //
       // document.documentElement.style.setProperty('--size-h-header', '0');
       // document.documentElement.style.setProperty('--size-w-side', '0');
+
+      // start socket connection
+      store.commit("initSocket");
     });
 
     // ---------- dynamic vedio grid for participants ↓ ------------ //
@@ -196,11 +206,54 @@ export default {
       return Math.ceil(member_cnt.value / cols_cnt.value);
     });
 
+
+    // for debugging
     function test() {
       console.log(member_cnt);
       member_cnt.value++;
     }
 
+    // -------------------- video utility -------------------- //
+    var store = useStore();
+
+    function register() {
+      store.dispatch("register", { username: prompt("이름은?", "그래") || 'asdf', roomname: '310' });
+    }
+    function leaveRoom() {
+      store.dispatch("leaveRoom");
+    }
+
+    // add video on updated participants
+    var members = ref({});
+    var video_plane = ref("");
+
+    onUpdated(() => {
+      // add video of newly participants 
+      Object.keys(members.value).forEach((key) => {
+        console.log(key + " : " + members.value[key]);
+        if(members.value[key].children.length > 0) {
+          return;
+        }
+          
+        let video = store.state.Room.participants[key].getVideoElement();
+        members.value[key].appendChild(video);
+      })
+
+      // calculate width and height
+      let width = video_plane.value.clientWidth;
+      let height = video_plane.value.clientHeight;
+      let nMember = Object.keys(members.value).length;
+
+      console.log(width + height + nMember);
+
+
+      // resize width and height
+      Object.keys(members.value).forEach((key) => {
+        console.log(key);
+      })
+    })
+
+    // --------------------- room information ----------------------- //
     let isRoomPrivate = ref(true);
 
     return {
@@ -208,11 +261,20 @@ export default {
       toggleChat,
       planner_width,
       chat_width,
-      test,
       cols_cnt,
       rows_cnt,
       roomname,
       isRoomPrivate,
+
+      test,
+      register,
+      leaveRoom,
+      members,
+
+      video_plane,
+
+      participants: computed(() => store.state.Room.participants),
+      isConnected: computed(() => store.state.Room.isSocketConnected)
     };
   },
 };
@@ -255,4 +317,10 @@ export default {
 .chat-sidebar {
   background-color: azure;
 }
+
+
+/* for video */
+/* video {
+  object-fit: cover;
+} */
 </style>
