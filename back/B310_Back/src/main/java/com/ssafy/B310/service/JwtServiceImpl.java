@@ -24,7 +24,7 @@ public class JwtServiceImpl implements JwtService {
 	
 	public static final Logger logger = LoggerFactory.getLogger(JwtServiceImpl.class);
 
-	private static final String SALT = "happyhouseSecret";
+	private static final String SALT = "yazanyaSecret";
 	private static final int EXPIRE_MINUTES = 60;
 	
 	// 토큰 생성
@@ -67,8 +67,10 @@ public class JwtServiceImpl implements JwtService {
 	}
 
 	@Override
-	public String getUserID() {
-		return (String) this.get("user").get("userid");
+	public String getUserID(String jwt) {
+		Jws<Claims> claims = Jwts.parser().setSigningKey(this.generateKey()).parseClaimsJws(jwt);
+		String userId = (String) claims.getBody().get("userId");
+		return userId;
 	}
 
 	// 전달 받은 토큰 유효성 검사
@@ -80,6 +82,20 @@ public class JwtServiceImpl implements JwtService {
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			return false;	
+		}
+	}
+	
+	// JWT 갱신
+	@Override
+	public <T> String refresh(String jwt) {
+		try {
+			Jws<Claims> claims = Jwts.parser().setSigningKey(this.generateKey()).parseClaimsJws(jwt);
+			String userId = (String) claims.getBody().get("userId");
+			System.out.println(userId + " 유저가 토큰을 갱신했습니다.");
+			return create("userId", userId, "access-token");
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return null;	
 		}
 	}
 
