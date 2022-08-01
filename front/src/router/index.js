@@ -61,8 +61,8 @@ const routes = [
         component: () => import('../views/User/components/login_form.vue'),
       },
       {
-        path: 'register',
-        name: 'user.register',
+        path: 'signup',
+        name: 'user.signup',
         component: () => import('../views/User/components/register_form.vue'),
       },
       {

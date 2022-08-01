@@ -46,7 +46,7 @@ export const User = {
       });
     },
 
-    register: function (context, payload) {
+    signup: function (context, payload) {
       let params = {
         userId: payload.id,
         userEmail: payload.email,
