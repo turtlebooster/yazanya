@@ -30,4 +30,7 @@ public interface RoomService {
 	
 	//유저 퇴장할 때 participation 1 감소
 	public void decreaseParticipation(Room room) throws SQLException;
+	
+	//방에 입장할 수 있는지 없는지를 반환
+	public boolean enableJoinRoom(int roomNum) throws SQLException;
 }
