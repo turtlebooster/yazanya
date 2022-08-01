@@ -49,7 +49,11 @@
 
                 <div class="d-flex">
                   <!-- profile -->
-                  <img
+                  <b-avatar
+                    src="https://placekitten.com/300/300"
+                    size="2.4em"
+                  ></b-avatar>
+                  <!-- <img
                     :src="require(`@/assets/avatar/${room.userNum}.jpg`)"
                     alt="main-room-profile"
                     style="
@@ -59,7 +63,7 @@
                       border-radius: 50%;
                       border: 4px solid white;
                     "
-                  />
+                  /> -->
 
                   <div class="d-flex flex-column">
                     <!-- title -->
