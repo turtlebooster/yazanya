@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +32,7 @@ public class UserServiceImpl implements UserService{
 		// 해당 id의 user가 있으면
 		if (oUser.isPresent()) {
 			User u = oUser.get();
-			if (u.getUserPw().equals(user.getUserPw())) {
+			if(BCrypt.checkpw(user.getUserPw(), u.getUserPw())) {
 				return u;
 			}
 		}
@@ -49,8 +50,17 @@ public class UserServiceImpl implements UserService{
 		}
 		
 		// 없을 경우
+		//비밀번호 암호화
+		String hashPw = hashPw(user.getUserPw());
+		user.setUserPw(hashPw);
 		userRepository.save(user);
+		
 		return 1;
+	}
+	
+	@Override
+	public String hashPw(String userPw) {
+		return BCrypt.hashpw(userPw, BCrypt.gensalt());
 	}
 
 	@Override
@@ -59,8 +69,13 @@ public class UserServiceImpl implements UserService{
 		
 		if (oUser.isPresent()) {
 			User u = oUser.get();
-			u.setUserPw(user.getUserPw());
+			
+			String hashPw = hashPw(user.getUserPw());
+			u.setUserPw(hashPw);
 			u.setUserNickname(user.getUserNickname());
+			
+			userRepository.save(u);
+			
 			return 1;
 		}
 		
@@ -70,7 +85,6 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public int deleteUser(User user) throws SQLException {
 		Optional<User> oUser = userRepository.findByUserId(user.getUserId());
-		
 		
 		if (oUser.isPresent()) {
 			userRepository.delete(oUser.get());
@@ -110,6 +124,17 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public int checkId(String userId) throws SQLException {
 		Optional<User> oUser = userRepository.findByUserId(userId);
+		
+		if (oUser.isPresent()) {
+			return 1;
+		}
+		
+		return 0;
+	}
+	
+	@Override
+	public int checkNickname(String userNickname) throws SQLException {
+		Optional<User> oUser = userRepository.findByUserNickname(userNickname);
 		
 		if (oUser.isPresent()) {
 			return 1;
@@ -162,7 +187,9 @@ public class UserServiceImpl implements UserService{
         
         System.out.println(user);
         
-        user.setUserPw(pwd);
+		String hashPw = hashPw(pwd);
+		
+        user.setUserPw(hashPw);
         updateUser(user);
         
         //메일 생성

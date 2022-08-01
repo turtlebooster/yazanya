@@ -17,7 +17,9 @@ public interface UserService {
 	int adminDeleteUser(String userId) throws SQLException;
 	User myPage(String userId) throws SQLException;
 	int checkId(String userId) throws SQLException;
+	int checkNickname(String userNickname) throws SQLException;
 	String findId(String userEmail) throws SQLException;
 	String findPw(User user) throws SQLException;
 	String makeTmpPw(String userId) throws SQLException;
+	String hashPw(String userPw);
 }

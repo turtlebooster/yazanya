@@ -124,11 +124,22 @@ public class UserController {
 	}
 	
 	// ID 중복체크
-	@PostMapping("/{userId}")
-	public ResponseEntity<?> checkId(@PathVariable String userId) throws SQLException {
+	@GetMapping("/checkId")
+	public ResponseEntity<?> checkId(@RequestParam String userId) throws SQLException {
 		// User 회원가입
 		int cnt = userService.checkId(userId);
-		System.out.println("cnt는 " + cnt);
+		
+		// 상태 코드만으로 구분
+		if(cnt!=0) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK); //중복된 것이므로 사용 불가능
+		else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	// 닉네임 중복체크
+	@GetMapping("/checkNick")
+	public ResponseEntity<?> checkNickname(@RequestParam String userNickname) throws SQLException {
+		// User 회원가입
+		int cnt = userService.checkNickname(userNickname);
+		
 		// 상태 코드만으로 구분
 		if(cnt!=0) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK); //중복된 것이므로 사용 불가능
 		else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -138,6 +149,8 @@ public class UserController {
 	@PostMapping("/regist")
 	public ResponseEntity<?> registUser(@RequestBody User user) throws SQLException {
 		// User 회원가입
+		
+		
 		int cnt = userService.registUser(user);
 		
 		// 상태 코드만으로 구분
@@ -182,22 +195,22 @@ public class UserController {
 	
 	// 비밀번호 찾기 -> 이메일로 임시 비밀번호 전송
 	@GetMapping("/findpw")
-	public ResponseEntity<?> getInfo(@RequestParam String userId, @RequestParam String userEmail) throws SQLException {
-		
-//		User user = new User();
-//		user.setUserEmail(userEmail);
-//		user.setUserId(userId);
-//		
-//		return new ResponseEntity<String>(userService.findPw(user), HttpStatus.OK);
+	public ResponseEntity<?> getTmpPw(@RequestParam String userId, @RequestParam String userEmail) throws SQLException {
 		
 		int result = userService.checkId(userId);
 		
 		if(result == 0) { //존재하지 않는 유저
-			return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<String>("해당 ID로 가입된 유저가 없습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
 		} else { //존재하는 유저
-//			User user = userService.myPage(userId);
-			userService.makeTmpPw(userId);
-			return new ResponseEntity<String>("임시 비밀번호를 전송했습니다. 이메일을 확인해주세요.", HttpStatus.OK);
+			User user = userService.myPage(userId);
+			
+			if(userEmail.equals(user.getUserEmail())) {
+				userService.makeTmpPw(userId);
+				return new ResponseEntity<String>("임시 비밀번호를 전송했습니다. 이메일을 확인해주세요.", HttpStatus.OK);
+			} else {
+				return new ResponseEntity<String>("가입 Email과 일치하지 않습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+			
 		}
 	}
 	
