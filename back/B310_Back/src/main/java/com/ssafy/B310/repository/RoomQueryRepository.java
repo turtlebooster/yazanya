@@ -40,7 +40,7 @@ public class RoomQueryRepository {
 		queryFactory
 			.update(room)
 			.where(room.roomNum.eq(roomUpdate.getRoomNum()))
-			.set(room.participationCount, room.participationCount.add(1))
+			.set(room.roomParticipationCount, room.roomParticipationCount.add(1))
 			.execute();
 	}
 	
@@ -51,7 +51,7 @@ public class RoomQueryRepository {
 		queryFactory
 			.update(room)
 			.where(room.roomNum.eq(roomUpdate.getRoomNum()))
-			.set(room.participationCount, room.participationCount.subtract(1))
+			.set(room.roomParticipationCount, room.roomParticipationCount.subtract(1))
 			.execute();
 	}
 }

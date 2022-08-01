@@ -109,6 +109,15 @@ public class RoomServiceImpl implements RoomService {
 	public void decreaseParticipation(Room room) throws SQLException {
 		roomQueryRepository.decreaseParticipationCount(room);
 		
+	}
+
+	@Override
+	public boolean enableJoinRoom(int roomNum) throws SQLException {
+		Room room = roomRepository.findById(roomNum).get();
+		
+		if(room.isRoomActive() && (room.getRoomCapacity() > room.getRoomParticipationCount()))
+			return true;
+		else return false;
 	}	
 }
 

@@ -33,7 +33,7 @@ public class ParticipationServiceImpl implements ParticipationService {
         Optional<User> joinUser = userRepository.findByUserId(user.getUserId());
 
         if (participationRepository.findByuser_userId(user.getUserId()).isPresent()) {
-            return 2;
+            return 0;
         }
 
         User u = joinUser.get();

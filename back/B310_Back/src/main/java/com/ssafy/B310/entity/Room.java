@@ -37,6 +37,9 @@ public class Room {
 	@Column(nullable = false, unique = true)
 	private String roomName;
 	
+	@Column
+	private String roomDescription;
+	
 	@Column(nullable = false, columnDefinition = "TINYINT", length=1)
 	private boolean roomVideo;
 	

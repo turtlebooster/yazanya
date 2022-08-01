@@ -105,6 +105,16 @@ public class RoomController {
         if(cnt==1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
         else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+    
+    //방에 입장할 수 있다면 success / 인원이 다 차서or방장이 방을 잠궈서 입장할 수 없다면 fail
+    @GetMapping("/active")
+    public ResponseEntity<?> enableJoinRoom(@RequestParam int roomNum) throws SQLException {
+    	boolean result = roomservice.enableJoinRoom(roomNum);
+    	
+    	if(result) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+        else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    
 
     //방에 비밀번호 쳐서 맞으면 입장
     @PostMapping("/{roomNum}/{pw}")
@@ -112,12 +122,14 @@ public class RoomController {
         Room room = roomservice.getRoom(roomNum);
         
         int cnt = 0;
-        if(room.getRoomPw() == pw) {
+        if((room.getRoomPw() == pw) && roomservice.enableJoinRoom(roomNum)) {
         	cnt = participationservice.joinRoom(user, room);
-        	roomservice.addParticipation(room);
         }
 
-        if(cnt==1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+        if(cnt==1) {
+        	roomservice.addParticipation(room);
+        	return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+        }
         else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
 
     }
