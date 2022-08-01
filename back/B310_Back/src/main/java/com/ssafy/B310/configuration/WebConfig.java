@@ -20,12 +20,12 @@ public class WebConfig implements WebMvcConfigurer {
 				.allowedMethods("GET", "POST", "PUT", "DELETE");		
 	}
 
-//	@Override
-//	public void addInterceptors(InterceptorRegistry registry) {
-//		registry.addInterceptor(new JwtInterceptor())
-//				.order(1)
-//				.addPathPatterns("/**");
-//	}
+	@Override
+	public void addInterceptors(InterceptorRegistry registry) {
+		registry.addInterceptor(new JwtInterceptor())
+				.order(1)
+				.addPathPatterns("/**");
+	}
 	
 	
 }
