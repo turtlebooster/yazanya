@@ -32,7 +32,7 @@
     >
       <div
         class="video-room-info-topbar d-flex justify-content-center w-100 mb-auto p-1 pt-2"
-        style="height: 8%; min-height: 36px"
+        style="height: 8%; min-height: 52px"
       >
         <i
           class="ms-2 mt-1 me-auto"
@@ -41,6 +41,7 @@
           >&nbsp;&nbsp;{{ roomname }}
         </i>
 
+    
         <div class="drowdown ms-auto me-3">
           <a
             class="dropdown-toggle"
@@ -62,7 +63,7 @@
       </div>
 
       <div
-        class="video-components-plane justify-content-center d-flex flex-column w-100 h-100 p-5"
+        class="video-components-plane justify-content-center d-flex flex-column w-100 h-100 px-4 pt-4 pb-3"
       >
         <div
           v-for="i in rows_cnt"
@@ -90,7 +91,7 @@
         style="height: 12%; min-height: 56px"
       >
         <b-button
-          class="rounded-circle mx-2 shadow"
+          class="rounded-circle mx-2"
           :class="[$root.theme ? 'dark-content' : 'light-content']"
         >
           <i class="bi bi-mic-fill" style="font-size: 1.3em"></i>
@@ -107,15 +108,15 @@
           class="rounded-circle mx-2"
           :class="[$root.theme ? 'dark-content' : 'light-content']"
         >
-          <i class="bi bi-camera-video-fill" style="font-size: 1.3em"></i>
+          <i class="bi bi-display" style="font-size: 1.3em"></i>
           <!-- <i class="bi bi-camera-video-off-fill"></i> -->
         </b-button>
 
-        <b-button
-          class="rounded-circle mx-2"
-          :class="[$root.theme ? 'dark-content' : 'light-content']"
+        <b-button pill
+          class="mx-4 m-1 px-sm-4"
+          variant="danger"
         >
-          <i class="bi bi-camera-video-fill" style="font-size: 1.3em"></i>
+          <i class="bi bi-power" style="font-size: 1.3em"></i>
           <!-- <i class="bi bi-camera-video-off-fill"></i> -->
         </b-button>
       </div>
@@ -123,8 +124,8 @@
 
     <!-- Chat Sidebar -->
     <div
-      class="chat-sidebar h-100 ms-auto"
-      :style="{ width: chat_width + '%', transition: '750ms' }"
+      class="chat-sidebar ms-auto my-auto rounded-3"
+      :style="{ width: chat_width + '%', height: '95%', transition: '750ms' }"
     >
       <!-- TODO chat components -->
     </div>
