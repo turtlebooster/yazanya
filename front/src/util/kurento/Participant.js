@@ -20,6 +20,14 @@ export function Participant(name) {
     return video;
   };
 
+  this.setWidth = function (width) {
+    video.setAttribute('width', width);
+  };
+
+  this.setHeight = function (height) {
+    video.setAttribute('width', height);
+  };
+
   this.offerToReceiveVideo = function (error, offerSdp) {
     if (error) return console.error('sdp offer error');
     console.log('Invoking SDP offer callback function');
