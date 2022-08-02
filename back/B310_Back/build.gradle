@@ -83,3 +83,4 @@ compileQuerydsl {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+

@@ -117,13 +117,15 @@ public class RoomController {
     
 
     //방에 비밀번호 쳐서 맞으면 입장
-    @PostMapping("/{roomNum}/{pw}")
-    public ResponseEntity<?> joinRoom(@RequestBody User user , @PathVariable("roomNum") int roomNum, @PathVariable("pw") int pw) throws SQLException {
-        Room room = roomservice.getRoom(roomNum);
+    @PostMapping("/{roomNum}/{userId}")
+    public ResponseEntity<?> joinRoom(@RequestBody Map<String, Integer> pw , @PathVariable("roomNum") int roomNum, @PathVariable("userId") String userId) throws SQLException {
+    	Room room = roomservice.getRoom(roomNum);
+    	
+        int roomPw = pw.get("roomPw");
         
         int cnt = 0;
-        if((room.getRoomPw() == pw) && roomservice.enableJoinRoom(roomNum)) {
-        	cnt = participationservice.joinRoom(user, room);
+        if((room.getRoomPw() == roomPw) && roomservice.enableJoinRoom(roomNum)) {
+        	cnt = participationservice.joinRoom(userId, room);
         }
 
         if(cnt==1) {
