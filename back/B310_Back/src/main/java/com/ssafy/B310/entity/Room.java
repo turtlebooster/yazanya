@@ -91,6 +91,10 @@ public class Room {
 	
 	@OneToMany(mappedBy = "room")
 	@JsonIgnore
+	private Set<ParticipationHistory> participationHistoryList;
+	
+	@OneToMany(mappedBy = "room")
+	@JsonIgnore
 	private Set<RoomHashtag> roomHashtag;
 
 	@Override

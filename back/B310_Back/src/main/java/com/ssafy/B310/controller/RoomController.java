@@ -226,7 +226,7 @@ public class RoomController {
     @GetMapping("/history")
     public ResponseEntity<?> getRoomHistory(HttpServletRequest request) throws SQLException {
     	String userId = jwtService.getUserID(request.getHeader("access-token"));
-    	
+    	System.out.println(userId);
     	return new ResponseEntity<List<Room>>(participationHistoryService.getRoomHistoryList(userId), HttpStatus.OK);
     }
 }
