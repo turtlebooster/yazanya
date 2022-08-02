@@ -1,7 +1,7 @@
 package com.ssafy.B310.service;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,14 +10,17 @@ import org.springframework.stereotype.Service;
 
 import com.ssafy.B310.entity.Todo;
 import com.ssafy.B310.entity.User;
-import com.ssafy.B310.repository.UserRepository;
+import com.ssafy.B310.repository.TodoQueryRepository;
 import com.ssafy.B310.repository.TodoRepository;
+import com.ssafy.B310.repository.UserRepository;
 
 @Service
 public class TodoServiceImpl implements TodoService {
 	
 	@Autowired
 	TodoRepository todoRepository;
+	@Autowired
+	TodoQueryRepository todoQueryRepository;
 	@Autowired
 	UserRepository userRepository;
 	
@@ -94,7 +97,11 @@ public class TodoServiceImpl implements TodoService {
 				doneCnt++;
 			}
 		}
-		
 		return (doneCnt * 100.0) / todoList.size();
+	}
+
+	@Override
+	public List<Todo> findTodoByDateRange(String userId, Date startDate, Date endDate) throws SQLException {
+		return todoQueryRepository.findTodoByDateRange(userId, startDate, endDate);
 	}
 }
