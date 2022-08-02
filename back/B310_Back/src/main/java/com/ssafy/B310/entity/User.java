@@ -13,10 +13,13 @@ import javax.persistence.OneToMany;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 
 @Entity
 @Getter
 @Setter
+@DynamicInsert
 public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,6 +42,31 @@ public class User {
 
 	@Column(nullable = false)
 	private int userStatusNum;
+
+	// 자기소개
+
+	@Column
+	private String profileSelfIntroduce;
+
+	// 프로필 사진(링크)
+	@Column
+	private String profilePictureLink;
+
+	// 총 공부 시간(분 기준)
+//    @Temporal(TemporalType.TIMESTAMP)
+//    private Date profileTotalStudyTime;
+	// date로 넘기는 방법 아직 못찾아서 일단 int로 설정
+	@Column
+//	@ColumnDefault("/img/profile_default.jpg")
+	private int profileTotalStudyTime;
+
+	// 랭크
+	@Column
+	private int profileRank;
+
+	// 소속
+	@Column
+	private String profileBelongTo;
 
 	public User(String userId, String userPw, String userName, String userEmail, String userNickname,
 				int userStatusNum) {
