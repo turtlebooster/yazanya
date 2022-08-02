@@ -18,4 +18,6 @@ public interface TodoService {
 	int updateTodo(Todo todo) throws SQLException;
 	// todo 삭제
 	int removeTodo(int todoNum) throws SQLException;
+	// todoList 로 부터 달성도 계산 (% 단위)
+	double calAchievement(List<Todo> todoList);
 }

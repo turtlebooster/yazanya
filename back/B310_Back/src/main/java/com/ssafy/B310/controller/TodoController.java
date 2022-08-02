@@ -1,7 +1,9 @@
 package com.ssafy.B310.controller;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -51,10 +53,14 @@ public class TodoController {
     public ResponseEntity<?> findTodoByUserId(@PathVariable("userId") String userId) throws SQLException{
     	List<Todo> todoList = todoService.findTodoByUserId(userId);
     	if (todoList != null) {
-    		return new ResponseEntity<List<Todo>>(todoList, HttpStatus.OK);    		
+    		Map<String, Object> map = new HashMap<String, Object>();
+    		map.put("todoList", todoList);
+    		map.put("achievement", todoService.calAchievement(todoList));
+    		return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);    		
+//    		return new ResponseEntity<List<Todo>>(todoList, HttpStatus.OK);    		
     	} else {
-//    		return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
-    		return new ResponseEntity<List<Todo>>(todoList, HttpStatus.INTERNAL_SERVER_ERROR);
+    		return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+//    		return new ResponseEntity<List<Todo>>(todoList, HttpStatus.INTERNAL_SERVER_ERROR);
     	}
     }
     
