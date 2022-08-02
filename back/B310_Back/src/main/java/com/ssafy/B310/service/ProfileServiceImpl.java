@@ -20,12 +20,20 @@ public class ProfileServiceImpl implements ProfileService{
     UserRepository userRepository;
 
     @Override
-    public int updateProfile(User user) {
-
-        profileRepository.save(user);
+    public int updateProfile(String userId, User user) {
+        Optional<User> oUser = userRepository.findByUserId(userId);
+        if (oUser.isPresent()) {
+            User u = oUser.get();
+            u.setProfileSelfIntroduce(user.getProfileSelfIntroduce());
+            System.out.println(u);
+            System.out.println("is?");
+//            u.setUserNickname(user.getUserNickname());
+            userRepository.save(u);
+            return 1;
+        }
+        System.out.println("else?");
         return 0;
     }
-
     @Override
     public User getProfile(String userId) {
         Optional<User> oUser = userRepository.findByUserId(userId);
