@@ -4,12 +4,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import com.ssafy.B310.annotation.NoJwt;
 import com.ssafy.B310.service.JwtService;
 
+@Component
 public class JwtInterceptor implements HandlerInterceptor {
 	
 	@Autowired
