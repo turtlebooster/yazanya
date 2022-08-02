@@ -25,8 +25,11 @@ public class Profile {
     private String profilePictureLink;
 
     // 총 공부 시간(분 기준)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date profileTotalStudyTime;
+//    @Temporal(TemporalType.TIMESTAMP)
+//    private Date profileTotalStudyTime;
+
+    @Column
+    private int profileTotalStudyTime;
 
     // 랭크
     @Column
@@ -43,7 +46,7 @@ public class Profile {
     public Profile() {
     }
 
-    public Profile(int profileNum, String profileSelfIntroduce, String profilePictureLink, Date profileTotalStudyTime, int profileRank, String profileBelongTo, User user) {
+    public Profile(int profileNum, String profileSelfIntroduce, String profilePictureLink, int profileTotalStudyTime, int profileRank, String profileBelongTo, User user) {
         this.profileNum = profileNum;
         this.profileSelfIntroduce = profileSelfIntroduce;
         this.profilePictureLink = profilePictureLink;

@@ -7,6 +7,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.ssafy.B310.entity.Profile;
+import com.ssafy.B310.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +29,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ssafy.B310.entity.Hashtag;
 import com.ssafy.B310.entity.User;
 import com.ssafy.B310.entity.UserHashtag;
-import com.ssafy.B310.service.HashtagService;
-import com.ssafy.B310.service.JwtService;
-import com.ssafy.B310.service.UserHashtagService;
-import com.ssafy.B310.service.UserService;
 
 
 @RestController
@@ -55,6 +53,9 @@ public class UserController {
 	
 	@Autowired
 	HashtagService hashtagService;
+
+	@Autowired
+	ProfileService profileService;
 
 	// 로그인 요청 처리 - POST /user/login
 	@PostMapping("/login")
@@ -246,5 +247,33 @@ public class UserController {
 		
 		return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 	}
+
+	// 유저 프로필 페이지
+	// 프로필 수정
+	@PutMapping("/profile/{userId}")
+	public ResponseEntity<?> updateProfile (HttpServletRequest request, @RequestBody User user, @PathVariable("userId") String userId) throws SQLException {
+		String requestUserId = jwtService.getUserID(request.getHeader("access-token"));
+		if (requestUserId.equals(userId)) {
+			int cnt = profileService.updateProfile(user);
+
+			if (cnt == 1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+
+			else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+	@GetMapping("/profile/{userId}")
+	public ResponseEntity<?> getProfile (@PathVariable("userId") String userId) throws SQLException {
+
+		User userProfile = profileService.getProfile(userId);
+
+		return new ResponseEntity<User>(userProfile, HttpStatus.OK);
+	}
+
+//	@GetMapping
+//	public ResponseEntity<List<User>> selectUserList() throws Exception {
+//		return new ResponseEntity<List<User>>(userService.selectUserList(), HttpStatus.OK);
+//	}
 }
 

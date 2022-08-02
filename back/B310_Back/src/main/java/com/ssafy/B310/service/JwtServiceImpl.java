@@ -21,12 +21,12 @@ import io.jsonwebtoken.SignatureAlgorithm;
 
 @Service
 public class JwtServiceImpl implements JwtService {
-	
+
 	public static final Logger logger = LoggerFactory.getLogger(JwtServiceImpl.class);
 
-	private static final String SALT = "happyhouseSecret";
+	private static final String SALT = "yazanyaSecret";
 	private static final int EXPIRE_MINUTES = 60;
-	
+
 	// 토큰 생성
 	@Override
 	public <T> String create(String key, T data, String subject) {
@@ -35,7 +35,7 @@ public class JwtServiceImpl implements JwtService {
 				.claim(key, data).signWith(SignatureAlgorithm.HS256, this.generateKey()).compact();
 		return jwt;
 	}
-	
+
 	private byte[] generateKey() {
 		byte[] key = null;
 		try {
@@ -67,8 +67,10 @@ public class JwtServiceImpl implements JwtService {
 	}
 
 	@Override
-	public String getUserID() {
-		return (String) this.get("user").get("userid");
+	public String getUserID(String jwt) {
+		Jws<Claims> claims = Jwts.parser().setSigningKey(this.generateKey()).parseClaimsJws(jwt);
+		String userId = (String) claims.getBody().get("userId");
+		return userId;
 	}
 
 	// 전달 받은 토큰 유효성 검사
@@ -79,7 +81,21 @@ public class JwtServiceImpl implements JwtService {
 			return true;
 		} catch (Exception e) {
 			logger.error(e.getMessage());
-			return false;	
+			return false;
+		}
+	}
+
+	// JWT 갱신
+	@Override
+	public <T> String refresh(String jwt) {
+		try {
+			Jws<Claims> claims = Jwts.parser().setSigningKey(this.generateKey()).parseClaimsJws(jwt);
+			String userId = (String) claims.getBody().get("userId");
+			System.out.println(userId + " 유저가 토큰을 갱신했습니다.");
+			return create("userId", userId, "access-token");
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return null;
 		}
 	}
 

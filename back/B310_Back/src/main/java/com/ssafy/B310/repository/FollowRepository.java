@@ -7,8 +7,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface FollowRepository extends JpaRepository<Follow, Integer> {
 
-    int judgeByFollowerAndFollowingUserId(String userId);
-
-
-    void deleteByFollowingIdAndFollowerId(String userId1, String userId2);
 }

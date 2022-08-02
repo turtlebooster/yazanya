@@ -15,13 +15,15 @@ public class Follow {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int followNum;
 
+    String followUserMemo;
+
     @JoinColumn(name = "from_user")
     @ManyToOne
-    User fromUser;
+    User followFromUser;
 
     @JoinColumn(name = "to_user")
     @ManyToOne
-    User toUser;
+    User followToUser;
 
     Timestamp followDate;
 
