@@ -38,6 +38,9 @@ public class Room {
 	private String roomName;
 	
 	@Column
+	private String roomThumbnail;
+	
+	@Column
 	private String roomDescription;
 	
 	@Column(nullable = false, columnDefinition = "TINYINT", length=1)
