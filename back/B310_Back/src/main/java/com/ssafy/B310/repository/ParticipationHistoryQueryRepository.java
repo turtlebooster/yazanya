@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.B310.entity.ParticipationHistory;
 import com.ssafy.B310.entity.Room;
@@ -30,8 +31,14 @@ public class ParticipationHistoryQueryRepository {
 	public List<Room> findParticipationHistoryByUserId(String userId) {
 		return queryFactory
 				.selectFrom(room)
-				.where(participationHistory.user.userId.eq(userId))
-				.orderBy(participationHistory.participationHistoryUpdateTime.desc())
+				.where(room.roomNum.in(
+						JPAExpressions
+							.select(participationHistory.room.roomNum)
+							.from(participationHistory)
+							.where(participationHistory.user.userId.eq(userId))
+							.orderBy(participationHistory.participationHistoryUpdateTime.desc())
+							)
+						)
 				.fetch();
 	}
 }
