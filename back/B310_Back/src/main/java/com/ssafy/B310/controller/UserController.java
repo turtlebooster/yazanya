@@ -253,12 +253,20 @@ public class UserController {
 	@PutMapping("/profile/{userId}")
 	public ResponseEntity<?> updateProfile (HttpServletRequest request, @RequestBody User user, @PathVariable("userId") String userId) throws SQLException {
 		String requestUserId = jwtService.getUserID(request.getHeader("access-token"));
+		System.out.println(requestUserId);
+		System.out.println("what is requestUserId");
+		System.out.println(userId);
 		if (requestUserId.equals(userId)) {
-			int cnt = profileService.updateProfile(user);
+			int cnt = profileService.updateProfile(userId, user);
 
-			if (cnt == 1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+			if (cnt == 1) {
+				System.out.println(user);
+				return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+			}
 
-			else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+			else
+			{System.out.println("update fail");
+				return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);}
 		}
 		else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -274,6 +282,15 @@ public class UserController {
 //	@GetMapping
 //	public ResponseEntity<List<User>> selectUserList() throws Exception {
 //		return new ResponseEntity<List<User>>(userService.selectUserList(), HttpStatus.OK);
+//	}
+
+//	@PutMapping("/update")
+//	public ResponseEntity<?> updateUser(@RequestBody User user) throws SQLException {
+//		int cnt = userService.updateUser(user);
+//
+//		// 상태 코드만으로 구분
+//		if(cnt==1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+//		else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
 //	}
 }
 

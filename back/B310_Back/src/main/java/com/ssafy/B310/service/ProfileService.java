@@ -9,7 +9,7 @@ import java.sql.SQLException;
 
 public interface ProfileService {
 
-    int updateProfile(User user) throws SQLException;
+    int updateProfile(String userId, User user) throws SQLException;
 
     User getProfile(String userId) throws SQLException;
 }

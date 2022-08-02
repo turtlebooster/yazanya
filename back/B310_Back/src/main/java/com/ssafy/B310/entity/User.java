@@ -97,6 +97,23 @@ public class User {
 
 //	private List<Todo> todo = new ArrayList<>();
 
+	public User(int userNum, String userId, String userPw, String userName, String userEmail, String userNickname, int userStatusNum, String profileSelfIntroduce, String profilePictureLink, int profileTotalStudyTime, int profileRank, String profileBelongTo, Set<Participation> participationList, Set<Todo> todo) {
+		this.userNum = userNum;
+		this.userId = userId;
+		this.userPw = userPw;
+		this.userName = userName;
+		this.userEmail = userEmail;
+		this.userNickname = userNickname;
+		this.userStatusNum = userStatusNum;
+		this.profileSelfIntroduce = profileSelfIntroduce;
+		this.profilePictureLink = profilePictureLink;
+		this.profileTotalStudyTime = profileTotalStudyTime;
+		this.profileRank = profileRank;
+		this.profileBelongTo = profileBelongTo;
+		this.participationList = participationList;
+		this.todo = todo;
+	}
+
 	@Override
 	public String toString() {
 		return "User{" +
@@ -107,6 +124,11 @@ public class User {
 				", userEmail='" + userEmail + '\'' +
 				", userNickname='" + userNickname + '\'' +
 				", userStatusNum=" + userStatusNum +
+				", profileSelfIntroduce='" + profileSelfIntroduce + '\'' +
+				", profilePictureLink='" + profilePictureLink + '\'' +
+				", profileTotalStudyTime=" + profileTotalStudyTime +
+				", profileRank=" + profileRank +
+				", profileBelongTo='" + profileBelongTo + '\'' +
 				", participationList=" + participationList +
 				", todo=" + todo +
 				'}';
