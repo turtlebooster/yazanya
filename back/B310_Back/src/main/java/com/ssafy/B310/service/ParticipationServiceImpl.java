@@ -39,31 +39,27 @@ public class ParticipationServiceImpl implements ParticipationService {
     // 유저 입장
     @Transactional
     @Override
-    public int joinRoom(User user, Room room) throws SQLException {
-        Optional<User> joinUser = userRepository.findByUserId(user.getUserId());
+    public int joinRoom(String userId, Room room) throws SQLException {
+        Optional<User> joinUser = userRepository.findByUserId(userId);
 
-        if (participationRepository.findByuser_userId(user.getUserId()).isPresent()) {
+        if (participationRepository.findByuser_userId(userId).isPresent()) {
             return 0;
         }
 
         User u = joinUser.get();
 
-        u.setUserId(user.getUserId());
+        u.setUserId(userId);
         u.setRoom(room);
 
         Participation participation = new Participation(room, u);
-//        participation.setUser(u);
-//        participation.setRoom(room);
         participationRepository.save(participation);
         
         // history에 기록
         // 잘 기록됐으면 1 아니면 0 반환
         return participationHistoryService.createRoomHistory(u, room);
-        
 //        return 1;
-
-
     }
+    
     // 유저 퇴장
     @Override
     public int exitRoom(String userId, int roomNum) throws SQLException {
