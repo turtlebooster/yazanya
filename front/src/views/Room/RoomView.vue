@@ -66,11 +66,13 @@
       </div>
 
       <div
-        class="video-components-plane d-flex justify-content-center flex-grow-1 flex-wrap px-4 pt-4 pb-3"
+        class="video-components-plane d-flex justify-content-center flex-grow-1 flex-wrap"
+        style="overflow: hidden"
         ref="video_plane"
       >
         <div v-for="(value, name) in participants" :key="name" :ref="(el) => { members[name] = el }"
-          class="d-flex justify-content-center m-2"
+          class="d-flex justify-content-center m-0 p-0"
+          style="height: 100vh; flex-grow: 1;"
           >
         </div>
 
@@ -195,22 +197,10 @@ export default {
       store.commit("initSocket");
     });
 
-    // ---------- dynamic vedio grid for participants ↓ ------------ //
-    var member_cnt = ref(1);
-    let cols_cnt = computed(() => {
-      return member_cnt.value < 4
-        ? member_cnt.value
-        : Math.ceil(Math.sqrt(member_cnt.value));
-    });
-    let rows_cnt = computed(() => {
-      return Math.ceil(member_cnt.value / cols_cnt.value);
-    });
-
 
     // for debugging
     function test() {
-      console.log(member_cnt);
-      member_cnt.value++;
+      console.log();
     }
 
     // -------------------- video utility -------------------- //
@@ -226,6 +216,7 @@ export default {
     // add video on updated participants
     var members = ref({});
     var video_plane = ref("");
+    
 
     onUpdated(() => {
       // add video of newly participants 
@@ -242,14 +233,27 @@ export default {
       // calculate width and height
       let width = video_plane.value.clientWidth;
       let height = video_plane.value.clientHeight;
-      let nMember = Object.keys(members.value).length;
+      let nMembers = Object.keys(members.value).length;
 
-      console.log(width + height + nMember);
+      // ---------- dynamic video grid for participants ↓ ------------ //
+      let nCols = nMembers < 4
+          ? nMembers
+          : Math.ceil(Math.sqrt(nMembers));
+      let nRows =  Math.ceil(nMembers / nCols);
 
+      console.log(nCols);
+      console.log(nRows);
+
+      let video_width = width / nCols;
+      let video_height = height / nRows;
 
       // resize width and height
       Object.keys(members.value).forEach((key) => {
-        console.log(key);
+        console.log(key, video_width);
+        console.log(key, video_height);
+
+        // members.value[key].firstChild.setAttribute('width', video_width);
+        // members.value[key].firstChild.setAttribute('height', video_height);
       })
     })
 
@@ -261,8 +265,6 @@ export default {
       toggleChat,
       planner_width,
       chat_width,
-      cols_cnt,
-      rows_cnt,
       roomname,
       isRoomPrivate,
 
@@ -320,7 +322,9 @@ export default {
 
 
 /* for video */
-/* video {
-  object-fit: cover;
-} */
+video {
+  max-height: 100%;
+  min-width: 100%;
+  object-fit: contain;
+}
 </style>
