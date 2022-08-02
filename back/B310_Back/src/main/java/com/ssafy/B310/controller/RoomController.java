@@ -4,7 +4,6 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -33,6 +32,7 @@ import com.ssafy.B310.service.ParticipationHistoryService;
 import com.ssafy.B310.service.ParticipationService;
 import com.ssafy.B310.service.RoomHashtagService;
 import com.ssafy.B310.service.RoomService;
+import com.ssafy.B310.service.UserService;
 
 @RestController
 @RequestMapping("/room")
@@ -49,6 +49,9 @@ public class RoomController {
     
     @Autowired
     ParticipationHistoryService participationHistoryService; 
+    
+    @Autowired
+    UserService userService;
     
     @Autowired
     HashtagService hashtagService;
@@ -129,17 +132,18 @@ public class RoomController {
 
     //방에 비밀번호 쳐서 맞으면 입장
     @Transactional
-    @PostMapping("/{roomNum}/{pw}")
-    public ResponseEntity<?> joinRoom(@RequestBody User user , @PathVariable("roomNum") int roomNum, @PathVariable("pw") int pw) throws SQLException {
-        Room room = roomservice.getRoom(roomNum);
-        
+    @PostMapping("/{roomNum}")
+    public ResponseEntity<?> joinRoom(@RequestBody Room room, @RequestParam int roomNum, HttpServletRequest request) throws SQLException {
+    	String userId = jwtService.getUserID(request.getHeader("access-token"));
+    	Room r = roomservice.getRoom(roomNum);    	
+    	
         int cnt = 0;
-        if((room.getRoomPw() == pw) && roomservice.enableJoinRoom(roomNum)) {
-        	cnt = participationservice.joinRoom(user, room);
+        if((r.getRoomPw() == room.getRoomPw()) && roomservice.enableJoinRoom(roomNum)) {
+        	cnt = participationservice.joinRoom(userId, r);
         }
 
         if(cnt==1) {
-        	roomservice.addParticipation(room);
+        	roomservice.addParticipation(r);
         	return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
         }
         else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
