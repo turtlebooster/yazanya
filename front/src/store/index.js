@@ -1,11 +1,11 @@
 import { createStore } from 'vuex';
 
-import { User } from '@/store/modules/user';
-import { Room } from '@/store/modules/room';
+import { Account } from '@/store/modules/account';
+import { Room } from '@/store/modules/kurento_room';
 
 export default createStore({
   modules: {
-    User,
+    Account,
     Room,
   },
 });
