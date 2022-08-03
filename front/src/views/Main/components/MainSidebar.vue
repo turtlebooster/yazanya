@@ -1,6 +1,6 @@
 <template>
   <div class="main-sidebar">
-    <router-link to="/setting/profile">
+    <router-link to="/main/setting/profile">
       <img
         src="@/assets/avatar/3.jpg"
         alt="profile"
@@ -15,7 +15,7 @@
       <span class="title">로비</span>
     </router-link>
 
-    <router-link to="/planner">
+    <router-link to="/main/planner">
       <span class="icon"
         ><i class="bi bi-layout-text-sidebar-reverse"></i
       ></span>
@@ -39,7 +39,7 @@
       <span class="title">설정</span>
     </router-link>
 
-    <router-link to="/대충로그아웃하는주소">
+    <router-link to="/">
       <span class="icon"><i class="bi bi-box-arrow-right"></i></span>
       <span class="title">로그아웃</span>
     </router-link>
@@ -74,7 +74,7 @@
 }
 
 .main-sidebar:hover {
-  width: calc(var(--size-w-side) * 2);
+  width: calc(var(--size-w-side) * 2.5);
   box-shadow: 8px 0px 8px white;
 }
 
@@ -103,7 +103,7 @@
   right: 0;
   width: 30px;
   height: 30px;
-  background: var(--main-color);
+  background: var(--theme-color);
   border-radius: 50%;
   box-shadow: 15px 15px 0 var(--light-main-color);
   z-index: -1;
@@ -116,7 +116,7 @@
   right: 0;
   width: 30px;
   height: 30px;
-  background: var(--main-color);
+  background: var(--theme-color);
   border-radius: 50%;
   box-shadow: 15px -15px 0 var(--light-main-color);
   z-index: -1;
