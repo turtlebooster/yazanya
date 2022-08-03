@@ -6,7 +6,7 @@ export function onExistingParticipants(msg, participants, userName, roomName) {
     audio: true,
     video: {
       mandatory: {
-        maxWidth: 320,
+        minWidth: 200,
         maxFrameRate: 15,
         minFrameRate: 15,
       },

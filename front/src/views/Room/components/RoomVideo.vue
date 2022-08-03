@@ -1,5 +1,7 @@
 <template>
-    <p>비디오</p>    
+    <div class="participants_video">
+        
+    </div>  
 </template>
 
 <script>
