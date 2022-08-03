@@ -1,4 +1,4 @@
-import store from '../../store';
+import store from '@/store';
 
 export function Participant(name) {
   this.name = name;
@@ -18,6 +18,14 @@ export function Participant(name) {
 
   this.getVideoElement = function () {
     return video;
+  };
+
+  this.setWidth = function (width) {
+    video.setAttribute('width', width);
+  };
+
+  this.setHeight = function (height) {
+    video.setAttribute('width', height);
   };
 
   this.offerToReceiveVideo = function (error, offerSdp) {
