@@ -29,7 +29,7 @@ export default {
   setup() {
     onBeforeMount(() => {
       // setting
-      document.documentElement.style.setProperty('--size-h-header', '48px');
+      document.documentElement.style.setProperty('--size-h-header', '40px');
       document.documentElement.style.setProperty('--size-w-side', '64px');
     });
   },
