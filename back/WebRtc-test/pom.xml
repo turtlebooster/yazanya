@@ -20,7 +20,7 @@
 
 	<properties>
 		<demo.port>8443</demo.port>
-		<start-class>com.ssafy.webrtc.GroupCallApp</start-class>
+		<start-class>org.kurento.tutorial.groupcall.GroupCallApp</start-class>
 	</properties>
 
 	<dependencies>
@@ -68,6 +68,11 @@
 		<dependency>
 			<groupId>org.kurento</groupId>
 			<artifactId>kurento-utils-js</artifactId>
+		</dependency>
+		<!-- detectting face -->
+		<dependency>
+			<groupId>org.kurento.module</groupId>
+			<artifactId>datachannelexample</artifactId>
 		</dependency>
 	</dependencies>
 
