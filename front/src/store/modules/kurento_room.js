@@ -17,6 +17,12 @@ export const Room = {
     };
   },
 
+  getters: {
+    getParticipants(state) {
+      return state.participants;
+    },
+  },
+
   mutations: {
     initSocket(state) {
       console.log('Web Socekt Init');
