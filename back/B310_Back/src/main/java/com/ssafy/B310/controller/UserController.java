@@ -7,7 +7,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.ssafy.B310.entity.Profile;
+import com.ssafy.B310.entity.*;
 import com.ssafy.B310.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,10 +25,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.ssafy.B310.entity.Hashtag;
-import com.ssafy.B310.entity.User;
-import com.ssafy.B310.entity.UserHashtag;
 
 
 @RestController
@@ -56,6 +52,9 @@ public class UserController {
 
 	@Autowired
 	ProfileService profileService;
+
+	@Autowired
+	FollowService followService;
 
 	// 로그인 요청 처리 - POST /user/login
 	@PostMapping("/login")
@@ -279,18 +278,24 @@ public class UserController {
 		return new ResponseEntity<User>(userProfile, HttpStatus.OK);
 	}
 
-//	@GetMapping
-//	public ResponseEntity<List<User>> selectUserList() throws Exception {
-//		return new ResponseEntity<List<User>>(userService.selectUserList(), HttpStatus.OK);
-//	}
+	// 팔로우
+	// 팔로우 기능
+	@PostMapping("/profile/{userId}")
+	public ResponseEntity<?> userFollow (HttpServletRequest request, @PathVariable("userId") String followToUserId) throws SQLException {
+		String followFromUserId = jwtService.getUserID(request.getHeader("access-token"));
 
-//	@PutMapping("/update")
-//	public ResponseEntity<?> updateUser(@RequestBody User user) throws SQLException {
-//		int cnt = userService.updateUser(user);
-//
-//		// 상태 코드만으로 구분
-//		if(cnt==1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
-//		else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
-//	}
+		Follow follow = followService.follow(followToUserId, followFromUserId);
+
+		return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+	}
+
+	// 팔로우 취소
+	@DeleteMapping("/profile/{userId}")
+	public ResponseEntity<?> userUnFollow (HttpServletRequest request, @PathVariable("userId") String followToUserId) throws SQLException {
+		String followFromUserId = jwtService.getUserID(request.getHeader("access-token"));
+
+		followService.deleteByFollowToUserAndFollowFromUser(followToUserId, followFromUserId);
+		return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+	}
 }
 

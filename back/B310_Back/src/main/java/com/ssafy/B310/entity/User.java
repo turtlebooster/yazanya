@@ -57,7 +57,7 @@ public class User {
 //    private Date profileTotalStudyTime;
 	// date로 넘기는 방법 아직 못찾아서 일단 int로 설정
 	@Column
-//	@ColumnDefault("/img/profile_default.jpg")
+	@ColumnDefault("/img/profile_default.jpg")
 	private int profileTotalStudyTime;
 
 	// 랭크
