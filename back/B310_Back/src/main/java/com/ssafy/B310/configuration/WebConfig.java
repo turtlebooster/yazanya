@@ -18,4 +18,18 @@ public class WebConfig implements WebMvcConfigurer {
 				.allowedMethods("GET", "POST", "PUT", "DELETE");		
 	}
 	
+	@Value("${resource.path}")
+	private String resourcePath;
+
+	@Value("${upload.path}")
+	private String uploadPath;
+	
+	@Override
+	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+		WebMvcConfigurer.super.addResourceHandlers(registry);
+		
+		registry.addResourceHandler(uploadPath)
+				.addResourceLocations(resourcePath);
+	}
+	
 }

@@ -1,11 +1,16 @@
 package com.ssafy.B310.controller;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.UUID;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +23,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.ssafy.B310.dto.RoomThumbnailDto;
 import com.ssafy.B310.entity.Hashtag;
 import com.ssafy.B310.entity.Room;
 import com.ssafy.B310.entity.RoomHashtag;
@@ -79,7 +87,6 @@ public class RoomController {
 		resultMap.put("room", room);
 		resultMap.put("message", SUCCESS);
     	
-//    	return null;
     	if(room != null) {
     		return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
     	}
@@ -161,7 +168,6 @@ public class RoomController {
     		return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
     	}
     	
-//    	System.out.println(set.size());
     	for(RoomHashtag tag : set) {
     		System.out.println(tag.getHashtag().getHashtagName());
     	}
@@ -204,12 +210,41 @@ public class RoomController {
     // 입장 유저 리스트 반환
     @GetMapping("/join/{roomNum}")
     public ResponseEntity<?> joinedUser(@PathVariable int roomNum) throws SQLException {
-
         List joinedUserList = participationservice.joinedUser(roomNum);
 
-//        return new ResponseEntity<List<Participation>>(joinedUserList, HttpStatus.OK);
         return new ResponseEntity<List<User>>(joinedUserList, HttpStatus.OK);
 
     }
-
+    
+    //방 썸네일 추가
+    @PostMapping("/addThumbnail/{roomNum}")
+    public ResponseEntity<?> addThumbnail(@PathVariable int roomNum, @RequestPart MultipartFile thumbnail) throws Exception {
+    	
+    	UUID uuid = UUID.randomUUID();
+    	
+    	String fileName = uuid + "_" + thumbnail.getOriginalFilename();
+    	
+    	String path = "C:/ssafy/Works_2/S07P12B310/back/B310_Back/src/main/resources/static/img/";
+    	
+    	Path imagePath = Paths.get(path + fileName);
+    	
+    	Path p = Files.write(imagePath, thumbnail.getBytes());
+    	
+//    	여기서 db에 파일 경로를 저장한다. post entity
+//    	게시글에 사진을 포함시킨다고 하면
+//    	post에 이미지 경로 필드 하나 더 해주면 되는 것이다.
+//    	그럼 jsp에서 image에 src에 post엔티티에 있는 이미지 경로를 저장하면 되는 것이다.
+//    	그렇다면 path를 db에 저장했을 시에 서버를 이전한다고 한다면 경로가 다 틀어질 수 박에 없다
+    	
+//    	그렇기 때문에 그냥 경로는 서버가 들고 db에는 경로가 저장돼선 안된다.
+//    	그래서 위 상황에서 디비에 저장한다고 치면 fileName를 저장하는 것이다.
+    	
+//    	근데 이미지 파일 이름을 저장하게 하면 파일 이름이 겹칠 수 있다
+//    	그래서 UUID uuid = UUID.randomUUID();를 사용하면 중복되면 난수를 발생시킨다.
+    	long result = roomservice.addThumbnail(roomNum, fileName);
+    	
+    	if(result != 0) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+    	else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+    	
+    }
 }
