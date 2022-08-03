@@ -30,7 +30,7 @@ export default {
     onBeforeMount(() => {
       // setting
       document.documentElement.style.setProperty('--size-h-header', '48px');
-      document.documentElement.style.setProperty('--size-w-side', '80px');
+      document.documentElement.style.setProperty('--size-w-side', '64px');
     });
   },
 
@@ -41,7 +41,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .main-view {
   height: 100vh;
   width: 100vw;
@@ -69,6 +69,6 @@ export default {
 }
 
 .main-contents {
-  background: var(--sub-color-o);
+  /* background: var(--sub-color-o); */
 }
 </style>

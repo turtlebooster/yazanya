@@ -4,13 +4,13 @@
     class="main-nav"
     :class="[$root.theme ? 'dark' : 'light']"
   >
-    <div class="h-100">
+    <div>
       <router-link to="/main">
         <!-- Main Nav -->
         <img
           src="@/assets/logo/title_logo_009e73.png"
-          class="align-bottom h-100"
-          style="margin-left: 16px"
+          class="align-bottom"
+          style="margin-left: 16px; height: var(--size-h-header)"
           alt="logo"
         />
       </router-link>
