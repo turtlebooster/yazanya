@@ -28,6 +28,13 @@ export function Participant(name) {
     video.setAttribute('width', height);
   };
 
+  // managing peer
+  this.pauseVideo = function () {
+    // if (rtcPeer) {
+    //   rtcPeer.stream.
+    // }
+  };
+
   this.offerToReceiveVideo = function (error, offerSdp) {
     if (error) return console.error('sdp offer error');
     console.log('Invoking SDP offer callback function');
