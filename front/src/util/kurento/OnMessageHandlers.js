@@ -6,7 +6,6 @@ export function onExistingParticipants(msg, participants, userName, roomName) {
     audio: true,
     video: {
       mandatory: {
-        maxWidth: 320,
         maxFrameRate: 15,
         minFrameRate: 15,
       },
@@ -21,6 +20,13 @@ export function onExistingParticipants(msg, participants, userName, roomName) {
   var options = {
     localVideo: video,
     mediaConstraints: constraints,
+
+    dataChannels: true,
+    dataChannelConfig: {
+      // onmessage: onMessage,
+      // onerror: onDataChanelError,
+    },
+
     onicecandidate: participant.onIceCandidate.bind(participant),
   };
   participant.rtcPeer = new WebRtcPeer.WebRtcPeerSendonly(options, function (
@@ -66,7 +72,7 @@ export function onParticipantLeft(request, participants) {
   console.log('Participant ' + request.name + ' left');
   var participant = participants[request.name];
   participant.dispose();
-  delete participants.value[request.name];
+  delete participants[request.name];
 }
 
 export function receiveVideoResponse(result, participants) {
