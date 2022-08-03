@@ -54,4 +54,14 @@ public class RoomQueryRepository {
 			.set(room.roomParticipationCount, room.roomParticipationCount.subtract(1))
 			.execute();
 	}
+	
+	@Transactional
+	@Modifying
+	public long addThumbnail(int roomNum, String filename) {
+		return queryFactory
+			.update(room)
+			.where(room.roomNum.eq(roomNum))
+			.set(room.roomThumbnail, filename)
+			.execute();
+	}
 }

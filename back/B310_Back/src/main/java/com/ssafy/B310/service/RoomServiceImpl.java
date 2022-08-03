@@ -46,6 +46,7 @@ public class RoomServiceImpl implements RoomService {
 			r.setRoomVideo(room.isRoomVideo());
 			r.setRoomSound(room.isRoomSound());
 			r.setRoomPw(room.getRoomPw());
+			r.setRoomThumbnail(room.getRoomThumbnail());
 			roomRepository.save(r);
 			return 1;
 		}
@@ -118,6 +119,11 @@ public class RoomServiceImpl implements RoomService {
 		if(room.isRoomActive() && (room.getRoomCapacity() > room.getRoomParticipationCount()))
 			return true;
 		else return false;
+	}
+
+	@Override
+	public long addThumbnail(int roomNum, String filename) throws SQLException {
+		return roomQueryRepository.addThumbnail(roomNum, filename);
 	}	
 }
 
