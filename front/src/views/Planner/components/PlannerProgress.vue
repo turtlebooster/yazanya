@@ -1,30 +1,44 @@
 <template>
-  <div class="planner-view">
-    <div class="achievement">
-      <div class="container">
-        <div class="logo">
-          <h1>achievement</h1>
-          <h2>progress</h2>
-        </div>
+  <div>
+    <div class="planner-progress d-flex flex-column">
+      <button
+        type="button"
+        class="btn-close align-self-end"
+        aria-label="Close"
+      ></button>
 
-        <div class="progress-container">
-          <svg class="progressbar" viewBox="0 0 64 64">
-            <circle
-              class="progressbar-track"
-              cx="50%"
-              cy="50%"
-              r="30px"
-            ></circle>
-            <circle
-              class="progressbar-line"
-              cx="50%"
-              cy="50%"
-              r="30px"
-            ></circle>
-          </svg>
+      <div>달성도</div>
+      <div class="achievement">
+        <div class="container">
+          <div class="logo">
+            <h1>achievement</h1>
+            <h2>75%</h2>
+          </div>
+
+          <div class="progress-container">
+            <svg class="progressbar" viewBox="0 0 64 64">
+              <circle
+                class="progressbar-track"
+                cx="50%"
+                cy="50%"
+                r="30px"
+              ></circle>
+              <circle
+                class="progressbar-line"
+                cx="50%"
+                cy="50%"
+                r="30px"
+              ></circle>
+            </svg>
+          </div>
         </div>
       </div>
     </div>
+
+    <!-- modal -->
+    <b-modal id="modal-1" centered title="달성도">
+      <p class="my-4">달성도 상세사항</p>
+    </b-modal>
   </div>
 </template>
 

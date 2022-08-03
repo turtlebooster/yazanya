@@ -3,7 +3,7 @@
     <div class="accordion" role="tablist">
       <b-card>
         <b-card-header header-tag="header" class="p-1" role="tab">
-          <div v-b-toggle.accordion-1 variant="info">프로필 설정</div>
+          <div v-b-toggle.accordion-1 variant="info">Accordion 1</div>
         </b-card-header>
 
         <b-collapse
