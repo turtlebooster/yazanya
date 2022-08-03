@@ -64,7 +64,7 @@ public class CallHandler extends TextWebSocketHandler {
     } else {
       log.debug("Incoming message from new user: {}", jsonMessage);
     }
-
+    Room room;
     switch (jsonMessage.get("id").getAsString()) {
       case "joinRoom":
         joinRoom(jsonMessage, session);
@@ -79,10 +79,15 @@ public class CallHandler extends TextWebSocketHandler {
         leaveRoom(user);
         break;
       case "filterOn":
-    	Room room = roomManager.getRoom(user.getRoomName());
+    	room = roomManager.getRoom(user.getRoomName());
     	filterOn(user , room);
-    	log.info("'{}' filter on", user.getName());
+    	log.info("room '{}' user '{}' filter on", user.getRoomName(), user.getName());
     	break;
+      case "filterOff":
+    	room = roomManager.getRoom(user.getRoomName());
+	    filterOff(user , room);
+	    log.info("room '{}' user '{}' filter off", user.getRoomName(), user.getName());
+    	  break;
       case "onIceCandidate":
         JsonObject candidate = jsonMessage.get("candidate").getAsJsonObject();
 
@@ -97,8 +102,12 @@ public class CallHandler extends TextWebSocketHandler {
     }
   }
 
+  private void filterOff(UserSession user, Room room) {
+	  filterService.FilterOff(user, room);
+  }
+
   private void filterOn(UserSession user, Room room) {
-	  filterService.useFilter(user, room);
+	  filterService.FilterOn(user, room);
   }
 
 @Override

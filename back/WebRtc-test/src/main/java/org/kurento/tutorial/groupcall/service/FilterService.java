@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class FilterService {
 	
-	public void useFilter(UserSession sender, Room room) {
+	public void FilterOn(UserSession sender, Room room) {
 	    MediaPipeline pipeline = sender.getPipeline();
 		// Media logic
 	    FaceOverlayFilter faceOverlayFilter = new FaceOverlayFilter.Builder(pipeline).build();
@@ -24,8 +24,7 @@ public class FilterService {
 	        1.6F, 1.6F);
 	    
 	    sender.getOutgoingWebRtcPeer().connect(faceOverlayFilter);
-//	    faceOverlayFilter.connect(sender.getOutgoingWebRtcPeer());
-	    ConcurrentMap<String, WebRtcEndpoint> incomingMedia = sender.getIncomingMedia();
+	    ConcurrentMap<String, WebRtcEndpoint> incomingMedia;
 	    
 	    String userName = sender.getName();
 	    for (UserSession session : room.getParticipants()) {
@@ -33,5 +32,19 @@ public class FilterService {
 	    	incomingMedia = session.getIncomingMedia();
 	    	faceOverlayFilter.connect(incomingMedia.get(userName));
 	    }
+	    sender.setFilter(true);
 	}
+	
+	public void FilterOff(UserSession sender, Room room) {
+		ConcurrentMap<String, WebRtcEndpoint> incomingMedia;
+		
+		String userName = sender.getName();
+		for (UserSession session : room.getParticipants()) {
+			if (session.getName().equals(userName)) continue;
+			incomingMedia = session.getIncomingMedia();
+			sender.getOutgoingWebRtcPeer().connect(incomingMedia.get(userName));
+		}
+		sender.setFilter(false);
+	}
+	
 }

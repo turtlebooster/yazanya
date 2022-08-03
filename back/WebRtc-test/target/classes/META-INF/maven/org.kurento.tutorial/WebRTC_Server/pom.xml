@@ -9,11 +9,11 @@
 		<artifactId>kurento-tutorial</artifactId>
 		<version>6.15.0</version>
 	</parent>
-	<artifactId>kurento-group-call</artifactId>
+	<artifactId>WebRTC_Server</artifactId>
 	<packaging>jar</packaging>
 
 	<!-- Project-level information -->
-	<name>Kurento Java Tutorial - Group Call</name>
+	<name>WebRTC_Server</name>
 	<description>WebRTC many to many video call</description>
 
 	<!-- Project configuration -->
