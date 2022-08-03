@@ -129,6 +129,11 @@ function filterOn() {
 		id : 'filterOn'
 	});
 }
+function filterOff() {
+	sendMessage({
+		id : 'filterOff'
+	});
+}
 
 function leaveRoom() {
 	sendMessage({

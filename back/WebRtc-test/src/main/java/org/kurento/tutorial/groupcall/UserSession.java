@@ -57,7 +57,9 @@ public class UserSession implements Closeable {
   private final String roomName;
   private final WebRtcEndpoint outgoingMedia;
   private final ConcurrentMap<String, WebRtcEndpoint> incomingMedia = new ConcurrentHashMap<>();
-
+  
+  private boolean filter = false;
+  
   public UserSession(final String name, String roomName, final WebSocketSession session,
       MediaPipeline pipeline) {
 
@@ -68,7 +70,6 @@ public class UserSession implements Closeable {
     this.outgoingMedia = new WebRtcEndpoint.Builder(pipeline).build();
 
     this.outgoingMedia.addIceCandidateFoundListener(new EventListener<IceCandidateFoundEvent>() {
-
       @Override
       public void onEvent(IceCandidateFoundEvent event) {
         JsonObject response = new JsonObject();
@@ -104,6 +105,14 @@ public class UserSession implements Closeable {
 
   public ConcurrentMap<String, WebRtcEndpoint> getIncomingMedia() {
 	return incomingMedia;
+  }
+  
+  public boolean isFilter() {
+	return filter;
+  }
+
+  public void setFilter(boolean filter) {
+	this.filter = filter;
   }
 
 /**
@@ -167,11 +176,30 @@ public class UserSession implements Closeable {
     }
 
     log.debug("PARTICIPANT {}: obtained endpoint for {}", this.name, sender.getName());
-    sender.getOutgoingWebRtcPeer().connect(incoming);
+    
+    // 필터 사용한 유저
+    if (sender.filter) {
+    	// Media logic
+	    FaceOverlayFilter faceOverlayFilter = new FaceOverlayFilter.Builder(pipeline).build();
+
+	    //String appServerUrl = System.getProperty("app.server.url",
+	    //    MagicMirrorApp.DEFAULT_APP_SERVER_URL);
+	    String appServerUrl = "http://files.openvidu.io";
+	    faceOverlayFilter.setOverlayedImage(appServerUrl + "/img/mario-wings.png", -0.35F, -1.2F,
+	        1.6F, 1.6F);
+	    
+	    sender.getOutgoingWebRtcPeer().connect(faceOverlayFilter);
+	    
+	    String userName = sender.getName();
+	    faceOverlayFilter.connect(incomingMedia.get(userName));
+    } else {
+    	sender.getOutgoingWebRtcPeer().connect(incoming);    	
+    }
 
     return incoming;
   }
-
+  
+  
   public void cancelVideoFrom(final UserSession sender) {
     this.cancelVideoFrom(sender.getName());
   }
