@@ -14,12 +14,18 @@ export const Room = {
 
       username: '',
       roomname: '',
+
+      chat_list: [],
     };
   },
 
   getters: {
     getParticipants(state) {
       return state.participants;
+    },
+
+    getChatList(state) {
+      return state.chat_list;
     },
   },
 
@@ -107,6 +113,16 @@ export const Room = {
     setRoomName(state, data) {
       state.roomname = data;
     },
+
+    addChat(state, data) {
+      state.chat_list.push(data);
+    },
+
+    sendChat(state, data) {
+      for (var key in state.participants) {
+        state.participants[key].rtcPeer.send(data.sender + ':' + data.message);
+      }
+    },
   },
 
   actions: {
@@ -128,6 +144,11 @@ export const Room = {
         room: payload.roomname,
       };
       commit('sendMessage', message);
+    },
+
+    sendChat({ commit }, payload) {
+      commit('addChat', payload);
+      commit('sendChat', payload);
     },
   },
 };
