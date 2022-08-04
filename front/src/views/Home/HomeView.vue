@@ -13,7 +13,7 @@
         <span>지금도 0명의 유저가</span>
         <span>야자냐와 함께 공부중입니다.</span>
         <span>
-          <button style="background-color:var(--main-color);" @click="pageLogin">로그인</button>
+          <button style="background-color:var(--theme-color);" @click="pageLogin">로그인</button>
           <button style="background-color:var(--light-sub-color);" @click="pageSignup">회원가입</button>
         </span>
         </div>
@@ -31,10 +31,10 @@ export default {
   setup() {
     let router = useRouter();
     function pageLogin() {
-      router.push({ path: '/user/login' });
+      router.push({ path: '/account/login' });
     }
     function pageSignup() {
-      router.push({ path: '/user/signup' });
+      router.push({ path: '/account/signup' });
     }
 
     return {

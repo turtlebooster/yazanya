@@ -5,7 +5,13 @@
 </template>
 
 <script>
-export default {};
+export default {
+    setup() {
+    // get theme flag from local
+    let theme = JSON.parse(localStorage.getItem('yaza_theme')) || true;
+    return { theme };
+  }
+};
 </script>
 
 <style>
