@@ -33,4 +33,7 @@ public interface RoomService {
 	
 	//방에 입장할 수 있는지 없는지를 반환
 	public boolean enableJoinRoom(int roomNum) throws SQLException;
+	
+	//방 썸네일 등록하기
+	public long addThumbnail(int roomNum, String filename) throws SQLException;
 }
