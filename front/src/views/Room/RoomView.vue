@@ -208,7 +208,7 @@ export default {
     // for debugging
     // let nMember = ref(0);
     function test() {
-      // console.log(nMember.value++);
+      console.log(store.state.Room.chat_list);
     }
 
     // ---------- dynamic video grid for participants ↓ ------------ //
@@ -237,9 +237,7 @@ export default {
     var each_video_height = computed(()=> cal_video_wh(false));
     
     function test2() {
-      console.log("girds : " + nCols.value + " " + nRows.value);
-      console.log("size : " + video_container_width.value + " " + video_container_height.value);
-      console.log("afted cal : " + each_video_width.value + " " + each_video_height.value);
+     store.dispatch('sendChat', {sender: store.state.Room.username, message:prompt('채팅 내용')});
     }
 
     // --------------------- add video on updated participants ----------------------- //
