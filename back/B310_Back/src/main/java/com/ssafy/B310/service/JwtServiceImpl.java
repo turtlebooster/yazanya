@@ -98,19 +98,5 @@ public class JwtServiceImpl implements JwtService {
 			return null;
 		}
 	}
-	
-	// JWT 갱신
-	@Override
-	public <T> String refresh(String jwt) {
-		try {
-			Jws<Claims> claims = Jwts.parser().setSigningKey(this.generateKey()).parseClaimsJws(jwt);
-			String userId = (String) claims.getBody().get("userId");
-			System.out.println(userId + " 유저가 토큰을 갱신했습니다.");
-			return create("userId", userId, "access-token");
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-			return null;	
-		}
-	}
 
 }

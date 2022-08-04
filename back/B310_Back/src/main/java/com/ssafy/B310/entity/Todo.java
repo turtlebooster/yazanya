@@ -1,7 +1,6 @@
 package com.ssafy.B310.entity;
 
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -16,12 +15,14 @@ import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
+@AllArgsConstructor
 public class Todo {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,17 +49,6 @@ public class Todo {
 	private User user;
 	
 	public Todo() {}
-	public Todo(int todoNum, String todoContent, Date todoStartTime, Date todoEndTime, String todoName,
-			int todoProgress, User user) {
-		super();
-		this.todoNum = todoNum;
-		this.todoContent = todoContent;
-		this.todoStartTime = todoStartTime;
-		this.todoEndTime = todoEndTime;
-		this.todoName = todoName;
-		this.todoProgress = todoProgress;
-		this.user = user;
-	}
 	
 	
 }

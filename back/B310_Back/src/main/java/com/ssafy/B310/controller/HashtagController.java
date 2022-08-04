@@ -13,11 +13,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.B310.entity.Hashtag;
-import com.ssafy.B310.entity.Room;
 import com.ssafy.B310.service.HashtagService;
 
 @RestController
@@ -48,19 +46,6 @@ public class HashtagController {
 		if(cnt==1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 		else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-	
-//	//방에 해쉬태그 추가
-//	@PostMapping("/room")
-//	public ResponseEntity<?> addHashtagOnRoom() throws SQLException {
-//		
-//	}
-//	
-//	//유저에 해쉬태그 추가
-//	@PostMapping("/user")
-//	public ResponseEntity<?> addHashtagOnUser() throws SQLException {
-//		
-//	}
-
 	
 	//해쉬태그 삭제
 	@DeleteMapping("/remove/{hashtagNum}")

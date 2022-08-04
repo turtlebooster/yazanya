@@ -3,8 +3,6 @@ package com.ssafy.B310.service;
 import java.sql.SQLException;
 import java.util.List;
 
-import org.springframework.stereotype.Service;
-
 import com.ssafy.B310.entity.User;
 
 public interface UserService {

@@ -1,8 +1,6 @@
 package com.ssafy.B310.service;
 
-import com.ssafy.B310.entity.Profile;
 import com.ssafy.B310.entity.User;
-import com.ssafy.B310.repository.ProfileRepository;
 import com.ssafy.B310.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,10 +11,6 @@ import java.util.Optional;
 
 @Service
 public class ProfileServiceImpl implements ProfileService{
-
-    @Autowired
-    ProfileRepository profileRepository;
-
     @Autowired
     UserRepository userRepository;
 

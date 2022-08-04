@@ -16,9 +16,6 @@ import com.ssafy.B310.repository.UserRepository;
 @Service
 public class 	UserServiceImpl implements UserService{
 	
-//	@Autowired
-//	UserMapper userMapper;
-	
 	@Autowired
 	UserRepository userRepository;
 	
@@ -88,7 +85,6 @@ public class 	UserServiceImpl implements UserService{
 		
 		if (oUser.isPresent()) {
 			userRepository.delete(oUser.get());
-//			userRepository.deleteByUserId(user.getUserId());
 			return 1;
 		}
 		
