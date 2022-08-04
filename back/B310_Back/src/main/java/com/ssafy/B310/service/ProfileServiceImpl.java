@@ -7,6 +7,7 @@ import com.ssafy.B310.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.Optional;
 
@@ -25,13 +26,11 @@ public class ProfileServiceImpl implements ProfileService{
         if (oUser.isPresent()) {
             User u = oUser.get();
             u.setProfileSelfIntroduce(user.getProfileSelfIntroduce());
-            System.out.println(u);
-            System.out.println("is?");
+            // 유저 닉네임 변경시 중복 검사 해 줄 것.
 //            u.setUserNickname(user.getUserNickname());
             userRepository.save(u);
             return 1;
         }
-        System.out.println("else?");
         return 0;
     }
     @Override
@@ -43,4 +42,19 @@ public class ProfileServiceImpl implements ProfileService{
         }
         return null;
     }
+
+    @Override
+    public int updateProfileImg(String userId, String imgPath) throws SQLException {
+        Optional<User> oUser = userRepository.findByUserId(userId);
+        if (oUser.isPresent()) {
+            User u = oUser.get();
+            System.out.println(imgPath);
+            u.setProfilePictureLink(imgPath);
+            userRepository.save(u);
+            return 1;
+        }
+        return 0;
+    }
+
+
 }

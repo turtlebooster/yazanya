@@ -12,4 +12,6 @@ public interface ProfileService {
     int updateProfile(String userId, User user) throws SQLException;
 
     User getProfile(String userId) throws SQLException;
+
+    int updateProfileImg(String userId, String imgPath) throws SQLException;
 }

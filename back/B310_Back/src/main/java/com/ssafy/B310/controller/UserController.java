@@ -1,9 +1,14 @@
 package com.ssafy.B310.controller;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -14,17 +19,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 
 @RestController
@@ -252,9 +248,6 @@ public class UserController {
 	@PutMapping("/profile/{userId}")
 	public ResponseEntity<?> updateProfile (HttpServletRequest request, @RequestBody User user, @PathVariable("userId") String userId) throws SQLException {
 		String requestUserId = jwtService.getUserID(request.getHeader("access-token"));
-		System.out.println(requestUserId);
-		System.out.println("what is requestUserId");
-		System.out.println(userId);
 		if (requestUserId.equals(userId)) {
 			int cnt = profileService.updateProfile(userId, user);
 
@@ -263,8 +256,7 @@ public class UserController {
 				return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 			}
 
-			else
-			{System.out.println("update fail");
+			else {
 				return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);}
 		}
 		else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -278,6 +270,47 @@ public class UserController {
 		return new ResponseEntity<User>(userProfile, HttpStatus.OK);
 	}
 
+//	@PostMapping("/profile/{userId}/profileImg")
+//	public @ResponseBody String image(@PathVariable("userId") String userId, @RequestPart MultipartFile pic) {
+//		// 파일이름 찾는 함수
+//		String imageFileName = pic.getOriginalFilename();
+//
+//		// 사진은 하드에 저장
+//		// 파일 이름은 db에 저장
+//		String path = "C:/Users/multicampus/Desktop/yazanya/S07P12B310/back/B310_Back/src/main/resources/static/userImg/";
+//		// \는 윈도우가 이해하는 기법이고 프로그래밍 언어에서는 /를 사용한다.
+//		Path imagePath = Paths.get(path + imageFileName);
+//
+//		try {
+//			Files.write(imagePath, pic.getBytes());
+//		} catch (Exception e) {
+//
+//		}
+//
+//		return imageFileName;
+//
+//	}
+	@PostMapping("/profile/{userId}/profileImg")
+	public ResponseEntity<?> addProfileImage(@PathVariable("userId") String userId, @RequestPart MultipartFile pic) throws IOException, SQLException {
+		UUID uuid = UUID.randomUUID();
+		String profileImg = uuid.toString();
+
+		String path = "C:/Users/multicampus/Desktop/yazanya/S07P12B310/back/B310_Back/src/main/resources/static/userImg/";
+
+		Path imagePath = Paths.get(path + profileImg+'_'+userId);
+
+		Path p = Files.write(imagePath, pic.getBytes());
+
+//		try {
+//			Files.write(imagePath, pic.getBy	tes());
+//		} catch (Exception e) {
+//
+//		}
+		profileService.updateProfileImg(userId, imagePath.toString());
+
+		return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+
+	}
 	// 팔로우
 	// 팔로우 기능
 	@PostMapping("/profile/{userId}")
@@ -297,5 +330,12 @@ public class UserController {
 		followService.deleteByFollowToUserAndFollowFromUser(followToUserId, followFromUserId);
 		return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 	}
+
+	// 유저 팔로우 목록
+//	@GetMapping("/profile/{userId}/follow")
+//	public ResponseEntity<?> followList (@PathVariable("userId") String userId) throws SQLException {
+//
+//		return new ResponseEntity<List<User>>(followService.followList(userId), HttpStatus.OK);
+//	}
 }
 

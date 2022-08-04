@@ -17,15 +17,15 @@ public class WebConfig implements WebMvcConfigurer {
 				.allowedOrigins("*")
 				.allowedMethods("GET", "POST", "PUT", "DELETE");		
 	}
+//	@Value("${resource.path}")
+//	private String resourcePath;
+//
+//	@Value("${upload.path}")
+//	private String uploadPath;
+//	@Override
+//	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+//		registry.addResourceHandler(uploadPath)
+//				.addResourceLocations(resourcePath);
+//	}
 
-	@Value("${resource.path}")
-	private String resourcePath;
-
-	@Value("${upload.path}")
-	private String uploadPath;
-	@Override
-	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		registry.addResourceHandler(uploadPath)
-				.addResourceLocations(resourcePath);
-	}
 }

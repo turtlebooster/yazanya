@@ -7,10 +7,13 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Repository
 public interface FollowRepository extends JpaRepository<Follow, Integer> {
     @Modifying
     @Transactional
     void deleteByFollowToUserAndFollowFromUser(User followToUser, User followFromUser);
+
+    List<User> findByFollowToUser(User user);
 }
