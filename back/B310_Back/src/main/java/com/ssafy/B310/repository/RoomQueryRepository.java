@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.B310.entity.Room;
+import com.ssafy.B310.entity.RoomThumbnail;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Repository
 public class RoomQueryRepository {
-	private final JPAQueryFactory queryFactory;
+	public final JPAQueryFactory queryFactory;
 	
 	public List<Room> findRecommendRoom(List<Integer> hashtagNumList) {
 		return 	queryFactory
@@ -57,7 +58,7 @@ public class RoomQueryRepository {
 	
 	@Transactional
 	@Modifying
-	public long addThumbnail(int roomNum, String filename) {
+	public long addThumbnailonRoom(int roomNum, String filename) {
 		return queryFactory
 			.update(room)
 			.where(room.roomNum.eq(roomNum))
