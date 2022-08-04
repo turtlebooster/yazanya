@@ -3,7 +3,9 @@ import store from '../../store';
 
 const http = axios.create({
   baseURL: 'http://localhost:8081/B310',
-  headers: { 'content-type': 'application/json' },
+  headers: {
+    'content-type': 'application/json; charset=UTF-8',
+  },
 });
 
 http.interceptors.request.use(
