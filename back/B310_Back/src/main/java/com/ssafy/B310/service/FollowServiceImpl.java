@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -53,4 +54,11 @@ public class FollowServiceImpl implements FollowService {
         User followFromUser = oUser2.get();
         followRepository.deleteByFollowToUserAndFollowFromUser(followToUser, followFromUser);
     }
+
+//    @Override
+//    public List<User> followList(String userId) {
+//        Optional<User> oUser = userRepository.findByUserId(userId);
+//        User user = oUser.get();
+//        return followRepository.findByFollowToUser(user);
+//    }
 }
