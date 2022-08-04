@@ -12,28 +12,31 @@ export default {};
 @font-face {
   /* 여기어때 잘난체 */
   font-family: 'Jalnan';
-  src: url('@/assets/font/Jalnan.ttf') format('truetype');
+  src: url('./assets/font/Jalnan.ttf') format('truetype');
   font-weight: normal;
+}
 
+@font-face {
   /* 한버워치체 */
   font-family: 'Koverwatch';
-  src: url('@/assets/font/Koverwatch.ttf') format('truetype');
+  src: url('./assets/font/Koverwatch.ttf') format('truetype');
   font-weight: normal;
+}
 
+@font-face {
   /* 나눔고딕 */
   font-family: 'NanumGothic';
-  src: url('@/assets/font/NanumGothic.ttf') format('truetype');
+  src: url('./assets/font/NanumGothic.ttf') format('truetype');
   font-weight: normal;
 }
 
 :root {
   /* 비율 */
-  /* TODO remove */
-  --size-h-header: 40px;
-  --size-w-side: 40px;
+  --size-h-header: 48px;
+  --size-w-side: 80px;
 
   /* 메인 테마색 */
-  --main-color: #009e73;
+  --theme-color: #009e73;
 
   --sub-color-r: #d55e00;
   --sub-color-o: #e69f00;
@@ -42,16 +45,15 @@ export default {};
   --sub-color-p: #cc79a7;
 
   /* 다크모드 */
-  --dark-bg-color: #404040;
-
   --dark-main-color: #404040;
   --dark-sub-color: #000000;
 
   /* 라이트모드 */
-  --light-bg-color: #ffffff;
-
   --light-main-color: #ffffff;
   --light-sub-color: #d9d9d9;
+
+  --main-color: #ffffff;
+  --sub-color: #d9d9d9;
 }
 
 * {
@@ -59,7 +61,7 @@ export default {};
   padding: 0;
   box-sizing: border-box;
 
-  font-family: NanumGothic !important;
+  font-family: Koverwatch !important;
 }
 
 /* ---- for light and dark mode ---- */
