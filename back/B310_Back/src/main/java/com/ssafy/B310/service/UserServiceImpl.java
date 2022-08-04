@@ -14,7 +14,7 @@ import com.ssafy.B310.entity.User;
 import com.ssafy.B310.repository.UserRepository;
 
 @Service
-public class UserServiceImpl implements UserService{
+public class 	UserServiceImpl implements UserService{
 	
 //	@Autowired
 //	UserMapper userMapper;

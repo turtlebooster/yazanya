@@ -16,10 +16,13 @@ import javax.persistence.OneToOne;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 
 @Entity
 @Getter
 @Setter
+@DynamicInsert
 public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,6 +59,28 @@ public class User {
 	@JsonIgnore
 	private Room room;
 	
+	// 자기소개
+
+	@Column
+	private String profileSelfIntroduce;
+
+	// 프로필 사진(링크)
+	@Column
+	private String profilePictureLink;
+
+	// 총 공부 시간(분 기준)
+
+	@Column
+	private int profileTotalStudyTime;
+
+	// 랭크
+	@Column
+	private int profileRank;
+
+	// 소속
+	@Column
+	private String profileBelongTo;
+
 	public User(String userId, String userPw, String userName, String userEmail, String userNickname,
 			int userStatusNum) {
 		this.userId = userId;
@@ -74,6 +99,24 @@ public class User {
 		this.userNickname = userNickname;
 	}
 
+
+	public User(int userNum, String userId, String userPw, String userName, String userEmail, String userNickname, int userStatusNum, String profileSelfIntroduce, String profilePictureLink, int profileTotalStudyTime, int profileRank, String profileBelongTo, Set<Participation> participationList, Set<Todo> todo) {
+		this.userNum = userNum;
+		this.userId = userId;
+		this.userPw = userPw;
+		this.userName = userName;
+		this.userEmail = userEmail;
+		this.userNickname = userNickname;
+		this.userStatusNum = userStatusNum;
+		this.profileSelfIntroduce = profileSelfIntroduce;
+		this.profilePictureLink = profilePictureLink;
+		this.profileTotalStudyTime = profileTotalStudyTime;
+		this.profileRank = profileRank;
+		this.profileBelongTo = profileBelongTo;
+		this.participationList = participationList;
+		this.todo = todo;
+	}
+
 	@Override
 	public String toString() {
 		return "User{" +
@@ -84,6 +127,11 @@ public class User {
 				", userEmail='" + userEmail + '\'' +
 				", userNickname='" + userNickname + '\'' +
 				", userStatusNum=" + userStatusNum +
+				", profileSelfIntroduce='" + profileSelfIntroduce + '\'' +
+				", profilePictureLink='" + profilePictureLink + '\'' +
+				", profileTotalStudyTime=" + profileTotalStudyTime +
+				", profileRank=" + profileRank +
+				", profileBelongTo='" + profileBelongTo + '\'' +
 				", participationList=" + participationList +
 				", todo=" + todo +
 				'}';
