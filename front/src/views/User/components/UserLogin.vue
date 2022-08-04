@@ -50,29 +50,33 @@
 </template>
 
 <script>
-import { ref, onBeforeMount } from 'vue';
-import { useStore } from 'vuex';
-import { useRouter } from 'vue-router';
+import { onBeforeMount } from 'vue';
+// import { useStore } from 'vuex';
+// import { useRouter } from 'vue-router';
+
+// import rest_user from '@/rest/user';
 
 export default {
   setup() {
-    const id = ref('test');
-    const pw = ref('test');
-    const store = useStore();
-    const router = useRouter();
+    // const id = ref('test');
+    // const pw = ref('test');
+    // const store = useStore();
+    // const router = useRouter();
+  
 
-    store
-      .dispatch('login', {
-        id: id.value,
-        password: pw.value,
-      })
-      .then((rs) => {
-        console.log(rs);
-        router.replace();
-      })
-      .catch((err) => {
-        alert(err);
-      });
+    // store
+    //   .dispatch('login', {
+    //     id: id.value,
+    //     password: pw.value,
+    //   })
+    //   .then((rs) => {
+    //     console.log(rs);
+    //     router.replace();
+    //   })
+    //   .catch((err) => {
+    //     alert(err);
+    //   });
+
 
     onBeforeMount(() => {
       document.documentElement.style.setProperty('--size-h-header', '0');

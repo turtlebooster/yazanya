@@ -2,11 +2,11 @@ import http from '@/util/common/http-commons';
 var REST_PATH = '/user';
 
 export default {
-  sinUp: function (payload) {
+  signUp: function (payload) {
     let params = {
       userId: payload.id,
+      uesrPw: payload.pw,
       userEmail: payload.email,
-      uesrPw: payload.password,
       userName: payload.name,
       userNickname: payload.nickname,
     };

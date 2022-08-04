@@ -4,38 +4,70 @@
         <div style="text-align:left; font-weight: bold; color: white;">Sign Up</div>
         <div class="d-flex flex-column m-3 input">
           <div class="form-floating m-auto mb-3 w-75">
-            <input type="text" class="form-control" id="floatingID" placeholder="ID">
+            <input type="text" class="form-control" id="floatingID" placeholder="ID" v-model="id">
             <label for="floatingID">ID</label>
           </div>
           <div class="form-floating m-auto mb-3 w-75">
-            <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+            <input type="password" class="form-control" id="floatingPassword" placeholder="Password" v-model="pw">
             <label for="floatingPassword">Password</label>
           </div>
           <div class="form-floating m-auto mb-3 w-75">
-            <input type="email" class="form-control" id="floatingEmail" placeholder="E-mail">
+            <input type="email" class="form-control" id="floatingEmail" placeholder="E-mail" v-model="email">
             <label for="floatingEmail">E-mail</label>
           </div>
           <div class="form-floating m-auto mb-3 w-75">
-            <input type="text" class="form-control" id="floatingName" placeholder="이름">
+            <input type="text" class="form-control" id="floatingName" placeholder="이름" v-model="name">
             <label for="floatingName">Name</label>
           </div>
           <div class="form-floating m-auto mb-3 w-75">
-            <input type="text" class="form-control" id="floatingNickname" placeholder="닉네임">
+            <input type="text" class="form-control" id="floatingNickname" placeholder="닉네임" v-model="nickname">
             <label for="floatingNickname">Nickname</label>
           </div>
         </div>
         <div class="d-flex justify-content-between link">
           <button @click="$router.back()">Cancel</button>
-          <button>Submit</button>
+          <button @click="signup">Submit</button>
         </div>
       </div>
   </div>
 </template>
 
 <script>
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import rest_user from '@/rest/user';
+
+
 export default {
   setup() {
-    
+    let router = useRouter();
+
+    let id = ref("");
+    let pw = ref("");
+    let email = ref("");
+    let name = ref("");
+    let nickname = ref("");
+
+    function signup() {
+      // TODO : 빈칸 체크, 입력값 검증, ID, EMAIL, PW, 중복 검사
+      rest_user.signUp({
+        id : id.value, pw : pw.value, email : email.value, 
+        name : name.value, nickname : nickname.value
+      })
+        .then((response) => {
+          if(response.data == 'success') {
+            router.to('/account/login');
+          } else {
+            alert("회원가입 중 문제가 발생하였습니다. 나중에 다시 시도해주세요");  
+          }
+        })
+        .catch(()=> {
+          alert("회원가입 중 문제가 발생하였습니다. 나중에 다시 시도해주세요");
+        })
+    }
+   
+    return { id, pw, email, name, nickname,
+      signup }
   }
 }
 </script>
