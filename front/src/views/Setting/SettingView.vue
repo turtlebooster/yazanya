@@ -10,7 +10,7 @@
       <!-- Side -->
       <div class="app-side">
         <!-- <side-bar style="display: none" /> -->
-        <side-bar v-if="toggle"/>
+        <side-bar />
       </div>
 
       <!-- Contents -->
