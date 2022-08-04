@@ -26,6 +26,13 @@
       <button @click="test()" class="m-2">increase member</button>
       <button @click="register()" class="m-2">add member </button>
       <button @click="leaveRoom()" class="m-2">leave member </button>
+      <button @click="test2()" class="m-2"> test </button>
+
+      {{ Object.keys(participants).length }}
+
+      <div v-for="(value, name) in participants" :key="name">
+        {{ name }}   
+      </div>
     </div>
 
     <!-- Video Content -->
@@ -66,29 +73,22 @@
       </div>
 
       <div
-        class="video-components-plane d-flex justify-content-center flex-grow-1 flex-wrap"
+        class="video-components-plane d-flex justify-content-center align-content-center flex-grow-1 flex-wrap"
         style="overflow: hidden"
         ref="video_plane"
       >
         <div v-for="(value, name) in participants" :key="name" :ref="(el) => { members[name] = el }"
-          class="d-flex justify-content-center m-0 p-0"
-          style="height: 100vh; flex-grow: 1;"
+          :style="{ position: 'relative', width:  each_video_width + 'px', height:  + each_video_height + 'px'}"
           >
+          <b-dropdown
+            style="position: absolute; bottom: 10px; right: 10px; z-index: 2; background-color:#404040;"
+            size="sm" variant="link" toggle-class="rounded-circle text-decoration-none" no-caret>
+            <template #button-content><i class="bi bi-three-dots-vertical" style="color:#f3f3f3"></i></template>
+            <b-dropdown-item href="#">Action</b-dropdown-item>
+            <b-dropdown-item href="#">Another action</b-dropdown-item>
+            <b-dropdown-item href="#">Something else here...</b-dropdown-item>
+          </b-dropdown>
         </div>
-
-
-        <!-- <div
-          v-for="i in rows_cnt"
-          :key="i"
-          class="row d-flex justify-content-center flex-grow-1"
-        >
-          <div
-            v-for="j in cols_cnt"
-            :key="j"
-            class="col justify-content-center py-1 w-100"
-          >
-          </div>
-        </div> -->
       </div>
 
       <!-- Videoroom bottombar for control -->
@@ -142,10 +142,12 @@
 
 <script>
 import RoomNav from './components/RoomNavbar.vue';
-// import VideoComp from  './components/RoomVideo.vue';
 import { ref, computed, onBeforeMount, onUpdated } from 'vue';
+// import { onMounted, onUpdated } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex'
+
+// import VideoComp from './components/RoomVideo.vue';
 
 export default {
   components: {
@@ -189,21 +191,11 @@ export default {
       // TODO : get roomname from server
       roomname.value = room_number;
 
-      // ---------------- for hide header nav and side bar ------------------ //
-      // document.documentElement.style.setProperty('--size-h-header', '0');
-      // document.documentElement.style.setProperty('--size-w-side', '0');
-
       // start socket connection
       store.commit("initSocket");
     });
 
-
-    // for debugging
-    function test() {
-      console.log();
-    }
-
-    // -------------------- video utility -------------------- //
+    // -------------------- room asign -------------------- //
     var store = useStore();
 
     function register() {
@@ -213,52 +205,85 @@ export default {
       store.dispatch("leaveRoom");
     }
 
-    // add video on updated participants
-    var members = ref({});
-    var video_plane = ref("");
-    
+    // for debugging
+    // let nMember = ref(0);
+    function test() {
+      // console.log(nMember.value++);
+    }
 
+    // ---------- dynamic video grid for participants ↓ ------------ //
+    var nMember = computed(()=> Object.keys(store.getters.getParticipants).length);
+    var nCols = computed(()=> nMember.value < 3 ? nMember.value : Math.ceil(Math.sqrt(nMember.value + 1)));
+    var nRows = computed(()=> Math.ceil(nMember.value / nCols.value));
+
+    // ------------------- calculate width and height ------------------------ //
+    let video_plane = ref(null);
+    const video_container_width = computed(()=> video_plane.value != null? video_plane.value.clientWidth - 5: 0);
+    const video_container_height = computed(()=> video_plane.value != null? video_plane.value.clientHeight - 5: 0);
+
+    function cal_video_wh(returnWidth) {
+      // axis 1 : 1.7     
+      let width = video_container_width.value / nCols.value;
+      let height = width * 0.59;
+
+      let over_height = height * nRows.value - video_container_height.value;
+      if(over_height > 0) {
+        width -= (over_height / nRows.value) * 1.7;
+        height = width * 0.59
+      }
+      return returnWidth? width : height;
+    }
+    var each_video_width = computed(()=> cal_video_wh(true));
+    var each_video_height = computed(()=> cal_video_wh(false));
+    
+    function test2() {
+      console.log("girds : " + nCols.value + " " + nRows.value);
+      console.log("size : " + video_container_width.value + " " + video_container_height.value);
+      console.log("afted cal : " + each_video_width.value + " " + each_video_height.value);
+    }
+
+    // --------------------- add video on updated participants ----------------------- //
+    var members = ref({});
     onUpdated(() => {
-      // add video of newly participants 
+      // add video of newly participants
       Object.keys(members.value).forEach((key) => {
-        console.log(key + " : " + members.value[key]);
-        if(members.value[key].children.length > 0) {
+        if(!members.value[key]) {
+          // check null
+          return;
+        }
+        if(members.value[key].lastChild.tagName === "VIDEO") {
+          // already has video
           return;
         }
           
         let video = store.state.Room.participants[key].getVideoElement();
+
+        video.style.margin = 'auto';
+        video.style.objectFit = 'cover';
+        video.setAttribute('width', each_video_width.value - 5);
+        video.setAttribute('height', each_video_height.value - 5);
         members.value[key].appendChild(video);
       })
 
-      // calculate width and height
-      let width = video_plane.value.clientWidth;
-      let height = video_plane.value.clientHeight;
-      let nMembers = Object.keys(members.value).length;
-
-      // ---------- dynamic video grid for participants ↓ ------------ //
-      let nCols = nMembers < 4
-          ? nMembers
-          : Math.ceil(Math.sqrt(nMembers));
-      let nRows =  Math.ceil(nMembers / nCols);
-
-      console.log(nCols);
-      console.log(nRows);
-
-      let video_width = width / nCols;
-      let video_height = height / nRows;
-
-      // resize width and height
+      // -------------------- match width height dynamically ---------------------- //
       Object.keys(members.value).forEach((key) => {
-        console.log(key, video_width);
-        console.log(key, video_height);
-
-        // members.value[key].firstChild.setAttribute('width', video_width);
-        // members.value[key].firstChild.setAttribute('height', video_height);
+        if(!members.value[key]) {
+          // check null
+          return;
+        }
+        // already has video
+        if(members.value[key].lastChild.tagName !== "VIDEO") {
+          return;
+        }
+  
+        members.value[key].lastChild.setAttribute('width', each_video_width.value - 5);
+        members.value[key].lastChild.setAttribute('height', each_video_height.value - 5);
       })
     })
 
     // --------------------- room information ----------------------- //
     let isRoomPrivate = ref(true);
+
 
     return {
       togglePlanner,
@@ -268,12 +293,19 @@ export default {
       roomname,
       isRoomPrivate,
 
-      test,
       register,
       leaveRoom,
       members,
 
+      // for test
+      test,
+      test2,
+
       video_plane,
+
+      nMember,
+      each_video_width,
+      each_video_height,
 
       participants: computed(() => store.state.Room.participants),
       isConnected: computed(() => store.state.Room.isSocketConnected)
@@ -313,7 +345,7 @@ export default {
 }
 
 .planner-sidebar {
-  background-color: blueviolet;
+  background-color: azure;
 }
 
 .chat-sidebar {
@@ -322,9 +354,14 @@ export default {
 
 
 /* for video */
-video {
-  max-height: 100%;
+.video {
+  /* max-height: 100%;
   min-width: 100%;
-  object-fit: contain;
+  object-fit: cover; */
+
+  height: 100vh;
+  width: 100%;
+  object-fit: cover;
+  position: absolute;
 }
 </style>
