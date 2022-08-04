@@ -124,6 +124,13 @@ function onExistingParticipants(msg) {
 	msg.data.forEach(receiveVideo);
 }
 
+const kickOutUserName = 'ssafy'
+function kickOut() {
+	sendMessage({
+		id : 'kickOut',
+		kickOutUserName : kickOutUserName
+	});
+}
 function filterOn() {
 	sendMessage({
 		id : 'filterOn'
