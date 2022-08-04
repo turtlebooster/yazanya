@@ -65,7 +65,7 @@ public class TodoServiceImpl implements TodoService {
 	@Override
 	public int updateTodo(Todo todo) throws SQLException {
 		Optional<Todo> oTodo = todoRepository.findById(todo.getTodoNum());
-		// 해당 todo 가 있을 경우
+
 		if (oTodo.isPresent()) {
 			Todo t = oTodo.get();
 			if (todo.getTodoContent() != null) t.setTodoContent(todo.getTodoContent());
@@ -81,7 +81,7 @@ public class TodoServiceImpl implements TodoService {
 	@Override
 	public int removeTodo(int todoNum) throws SQLException {
 		Optional<Todo> oTodo = todoRepository.findById(todoNum);
-		// 해당 todo 가 있을 경우
+
 		if (oTodo.isPresent()) {
 			todoRepository.deleteById(todoNum);
 			return 1;

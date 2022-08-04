@@ -69,8 +69,6 @@ public class UserController {
 	@Autowired
 	HashtagService hashtagService;
 	
-	@NoJwt
-
 	@Autowired
 	ProfileService profileService;
 
@@ -78,6 +76,7 @@ public class UserController {
 	FollowService followService;
 
 	// 로그인 요청 처리 - POST /user/login
+	@NoJwt
 	@PostMapping("/login")
 	public ResponseEntity<Map<String, Object>> login(@RequestBody User user) {
 		Map<String, Object> resultMap = new HashMap<>();
@@ -108,32 +107,6 @@ public class UserController {
 		return new ResponseEntity<List<User>>(userService.selectUserList(), HttpStatus.OK);
 	}
 	
-    // 상세 조회 - GET /user
-	@GetMapping("/info/{userId}")
-	public ResponseEntity<Map<String, Object>> getInfo(@PathVariable("userId") String userId, HttpServletRequest request) {
-		Map<String, Object> resultMap = new HashMap<>();
-		HttpStatus status = HttpStatus.ACCEPTED;
-		if(jwtService.isUsable(request.getHeader("access-token"))) {
-			logger.info("사용 가능한 토큰!!!");
-			try {
-				User user = userService.myPage(userId);
-				resultMap.put("userInfo", user);
-				resultMap.put("message", SUCCESS);
-				status = HttpStatus.ACCEPTED;
-			} catch (Exception e) {
-				logger.error("정보조회 실패 : {}", e);
-				resultMap.put("message", e.getMessage());
-				status = HttpStatus.INTERNAL_SERVER_ERROR;
-			}
-		}
-		else {
-			logger.error("사용 불가능 토큰!!!");
-			resultMap.put("message", FAIL);
-			status = HttpStatus.ACCEPTED;
-		}
-		return new ResponseEntity<Map<String,Object>>(resultMap, status);
-	}
-	
 	// 수정하기
 	@PutMapping("/update")
 	public ResponseEntity<?> updateUser(@RequestBody User user) throws SQLException {
@@ -144,8 +117,8 @@ public class UserController {
 		else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	@NoJwt
 	// ID 중복체크
+	@NoJwt
 	@GetMapping("/checkId")
 	public ResponseEntity<?> checkId(@RequestParam String userId) throws SQLException {
 		// User 회원가입
@@ -157,6 +130,7 @@ public class UserController {
 	}
 	
 	// 닉네임 중복체크
+	@NoJwt
 	@GetMapping("/checkNick")
 	public ResponseEntity<?> checkNickname(@RequestParam String userNickname) throws SQLException {
 		// User 회원가입
@@ -167,13 +141,10 @@ public class UserController {
 		else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	@NoJwt
 	// 회원가입
+	@NoJwt
 	@PostMapping("/regist")
 	public ResponseEntity<?> registUser(@RequestBody User user) throws SQLException {
-		// User 회원가입
-		
-		
 		int cnt = userService.registUser(user);
 		
 		// 상태 코드만으로 구분
@@ -204,8 +175,8 @@ public class UserController {
 		else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	@NoJwt
 	// 아이디 찾기
+	@NoJwt
 	@GetMapping("/findid")
 	public ResponseEntity<?> findId(@RequestParam String userEmail) throws SQLException {
 		String userId = userService.findId(userEmail);
@@ -217,8 +188,8 @@ public class UserController {
 		}
 	}
 	
-	@NoJwt
 	// 비밀번호 찾기 -> 이메일로 임시 비밀번호 전송
+	@NoJwt
 	@GetMapping("/findpw")
 	public ResponseEntity<?> getTmpPw(@RequestParam String userId, @RequestParam String userEmail) throws SQLException {
 		
@@ -303,7 +274,8 @@ public class UserController {
 		}
 		else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-
+	
+	// 프로필 정보 가져오기
 	@GetMapping("/profile/{userId}")
 	public ResponseEntity<?> getProfile (@PathVariable("userId") String userId) throws SQLException {
 
@@ -312,7 +284,7 @@ public class UserController {
 		return new ResponseEntity<User>(userProfile, HttpStatus.OK);
 	}
 
-
+	// 프로필 이미지 추가
 	@PostMapping("/profile/{userId}/profileImg")
 	public ResponseEntity<?> addProfileImage(@PathVariable("userId") String userId, @RequestPart MultipartFile pic) throws IOException, SQLException {
 		UUID uuid = UUID.randomUUID();
@@ -334,8 +306,9 @@ public class UserController {
 		return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 
 	}
+	
 	// 팔로우
-	// 팔로우 기능
+	// 팔로우 추가
 	@PostMapping("/profile/{userId}")
 	public ResponseEntity<?> userFollow (HttpServletRequest request, @PathVariable("userId") String followToUserId) throws SQLException {
 		String followFromUserId = jwtService.getUserID(request.getHeader("access-token"));

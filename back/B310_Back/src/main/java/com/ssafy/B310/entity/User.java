@@ -1,9 +1,7 @@
 package com.ssafy.B310.entity;
 
-import java.util.List;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,16 +11,21 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import org.hibernate.annotations.DynamicInsert;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.DynamicInsert;
+import lombok.ToString;
 
 @Entity
 @Getter
 @Setter
 @DynamicInsert
+@ToString
+@AllArgsConstructor
 public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -90,50 +93,12 @@ public class User {
 		this.userNickname = userNickname;
 		this.userStatusNum = userStatusNum;
 	}
+	
 	public User() {
 	}
 
-	public User(int userNum, String userId, String userNickname) {
-		this.userNum = userNum;
+	public User(String userId, String userNickname) {
 		this.userId = userId;
 		this.userNickname = userNickname;
-	}
-
-
-	public User(int userNum, String userId, String userPw, String userName, String userEmail, String userNickname, int userStatusNum, String profileSelfIntroduce, String profilePictureLink, int profileTotalStudyTime, int profileRank, String profileBelongTo, Set<Participation> participationList, Set<Todo> todo) {
-		this.userNum = userNum;
-		this.userId = userId;
-		this.userPw = userPw;
-		this.userName = userName;
-		this.userEmail = userEmail;
-		this.userNickname = userNickname;
-		this.userStatusNum = userStatusNum;
-		this.profileSelfIntroduce = profileSelfIntroduce;
-		this.profilePictureLink = profilePictureLink;
-		this.profileTotalStudyTime = profileTotalStudyTime;
-		this.profileRank = profileRank;
-		this.profileBelongTo = profileBelongTo;
-		this.participationList = participationList;
-		this.todo = todo;
-	}
-
-	@Override
-	public String toString() {
-		return "User{" +
-				"userNum=" + userNum +
-				", userId='" + userId + '\'' +
-				", userPw='" + userPw + '\'' +
-				", userName='" + userName + '\'' +
-				", userEmail='" + userEmail + '\'' +
-				", userNickname='" + userNickname + '\'' +
-				", userStatusNum=" + userStatusNum +
-				", profileSelfIntroduce='" + profileSelfIntroduce + '\'' +
-				", profilePictureLink='" + profilePictureLink + '\'' +
-				", profileTotalStudyTime=" + profileTotalStudyTime +
-				", profileRank=" + profileRank +
-				", profileBelongTo='" + profileBelongTo + '\'' +
-				", participationList=" + participationList +
-				", todo=" + todo +
-				'}';
 	}
 }

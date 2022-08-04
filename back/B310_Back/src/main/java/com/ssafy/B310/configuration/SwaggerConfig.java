@@ -47,7 +47,6 @@ public class SwaggerConfig extends WebMvcConfigurationSupport {
 	private ApiInfo getApiInfo() {
 		return new ApiInfoBuilder().title("test")
 				.description("****************")
-//				.contact(new Contact("("****************")", "("****************")", "("****************")"))
 				.version("1.0")
 				.build();
 	}

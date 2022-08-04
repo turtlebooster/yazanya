@@ -2,7 +2,6 @@ package com.ssafy.B310.entity;
 
 import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,10 +18,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Getter
 @Setter
+@ToString
 public class Participation {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,16 +57,5 @@ public class Participation {
 	public Participation(Room room, User user) {
 		this.room = room;
 		this.user = user;
-	}
-
-	@Override
-	public String toString() {
-		return "Participation{" +
-				"participationNum=" + participationNum +
-				", room=" + room +
-				", user=" + user +
-				", participationEnterTime=" + participationEnterTime +
-				", exitTime=" + participationExitTime +
-				'}';
 	}
 }

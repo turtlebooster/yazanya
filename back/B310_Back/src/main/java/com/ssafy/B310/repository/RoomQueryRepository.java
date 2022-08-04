@@ -13,8 +13,6 @@ import org.springframework.stereotype.Repository;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.B310.entity.Room;
-import com.ssafy.B310.entity.RoomThumbnail;
-
 import lombok.RequiredArgsConstructor;
 
 
