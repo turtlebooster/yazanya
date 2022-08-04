@@ -1,5 +1,6 @@
 package com.ssafy.B310.controller;
 
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -228,13 +229,19 @@ public class RoomController {
     	UUID uuid = UUID.randomUUID();
     	String fileId = uuid.toString();
     	
-//    	String fileName = uuid + "_" + thumbnail.getOriginalFilename();
-    	
-//    	String path = "C:/ssafy/Works_2/S07P12B310/back/B310_Back/src/main/resources/static/img/";
     	String path = "C:/image/";
     	
+    	File makeFolder = new File(path);
+    	
+    	if(!makeFolder.exists()) {
+    		makeFolder.mkdir(); 
+    		System.out.println(path + "에 폴더 생성");
+    		System.out.println(("폴더가 존재하는지 체크 true/false : "+ makeFolder.exists()));
+    	} else {
+    		System.out.println("폴더 이미 존재함");
+    	}
+    	
     	Path imagePath = Paths.get(path + fileId);
-//    	Path imagePath = Paths.get(path);
     	
     	Path p = Files.write(imagePath, thumbnail.getBytes());
     	
