@@ -11,8 +11,8 @@
       >
         Login
       </div>
-      <div class="input">
-        <div class="form-floating">
+      <div class="d-flex flex-column m-3 input">
+        <div class="form-floating mb-3">
           <input
             type="text"
             class="form-control"
@@ -21,7 +21,7 @@
           />
           <label for="floatingID">ID</label>
         </div>
-        <div class="form-floating">
+        <div class="form-floating mb-3">
           <input
             type="password"
             class="form-control"
@@ -33,11 +33,12 @@
         <div>
           <button>Submit</button>
         </div>
-        <div
+        <!-- <div
           style="display: flex; justify-content: space-between; color: white"
           id="link"
-        >
-          <span><router-link to="register">Sign Up</router-link></span>
+        > -->
+        <div class="d-flex justify-content-between link">
+          <span><router-link to="signup">Sign Up</router-link></span>
           <span>
             <span><router-link to="findid">Find ID</router-link></span> /
             <span><router-link to="findpw">Password</router-link></span>
@@ -87,13 +88,6 @@ export default {
   background-color: rgb(0, 0, 0, 0.3);
   padding: 16px;
 }
-.input {
-  margin: 16px 16px;
-}
-.form-floating {
-  /* width: 250px; */
-  margin: 16px auto;
-}
 .form-control {
   background-color: rgb(0, 0, 0, 0);
   border-top: transparent;
@@ -116,7 +110,7 @@ button {
   font-weight: bold;
   color: white;
 }
-#link * {
+.link * {
   text-decoration: none;
   color: white;
 }

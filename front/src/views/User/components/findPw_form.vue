@@ -2,19 +2,20 @@
   <div class="findpw">
       <div class="container">
         <div style="text-align:left; font-weight: bold; margin-bottom:32px; color: white;">Find Password</div>
-        <div class="input">
-          <div class="form-floating">
+        <div class="d-flex flex-column m-3 input">
+          <div class="form-floating mb-3">
             <input type="text" class="form-control" id="floatingID" placeholder="ID">
             <label for="floatingID">ID</label>
           </div>
-          <div class="form-floating">
+          <div class="form-floating mb-3">
             <input type="email" class="form-control" id="floatingEmail" placeholder="E-mail">
             <label for="floatingEmail">E-mail</label>
           </div>
           <div>
             <button>Submit</button>
           </div>
-          <div style="display:flex;justify-content: space-between;" id="link">
+          <!-- <div style="display:flex;justify-content: space-between;" id="link"> -->
+          <div class="d-flex justify-content-between link">
             <span><router-link to="login">Login</router-link></span>
             <span><router-link to="findid">Find ID</router-link></span>
           </div>
@@ -34,12 +35,6 @@ export default {
     width: 400px;
     background-color: rgba(0,0,0,0.3);
     padding: 16px;
-  }
-  .input {
-    margin: 16px 16px;
-  }
-  .form-floating{
-    margin: 16px auto;
   }
   .form-control {
     background-color: rgb(0,0,0,0);
@@ -63,7 +58,7 @@ export default {
     font-weight: bold;
     color: white;
   }
-  #link * {
+  .link * {
     text-decoration: none;
     color: white;
   }
