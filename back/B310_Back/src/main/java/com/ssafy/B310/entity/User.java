@@ -1,9 +1,7 @@
 package com.ssafy.B310.entity;
 
-import java.util.List;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,13 +11,21 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import org.hibernate.annotations.DynamicInsert;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Getter
 @Setter
+@DynamicInsert
+@ToString
+@AllArgsConstructor
 public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,6 +62,28 @@ public class User {
 	@JsonIgnore
 	private Room room;
 	
+	// 자기소개
+
+	@Column
+	private String profileSelfIntroduce;
+
+	// 프로필 사진(링크)
+	@Column
+	private String profilePictureLink;
+
+	// 총 공부 시간(분 기준)
+
+	@Column
+	private int profileTotalStudyTime;
+
+	// 랭크
+	@Column
+	private int profileRank;
+
+	// 소속
+	@Column
+	private String profileBelongTo;
+
 	public User(String userId, String userPw, String userName, String userEmail, String userNickname,
 			int userStatusNum) {
 		this.userId = userId;
@@ -65,27 +93,12 @@ public class User {
 		this.userNickname = userNickname;
 		this.userStatusNum = userStatusNum;
 	}
+	
 	public User() {
 	}
 
-	public User(int userNum, String userId, String userNickname) {
-		this.userNum = userNum;
+	public User(String userId, String userNickname) {
 		this.userId = userId;
 		this.userNickname = userNickname;
-	}
-
-	@Override
-	public String toString() {
-		return "User{" +
-				"userNum=" + userNum +
-				", userId='" + userId + '\'' +
-				", userPw='" + userPw + '\'' +
-				", userName='" + userName + '\'' +
-				", userEmail='" + userEmail + '\'' +
-				", userNickname='" + userNickname + '\'' +
-				", userStatusNum=" + userStatusNum +
-				", participationList=" + participationList +
-				", todo=" + todo +
-				'}';
 	}
 }

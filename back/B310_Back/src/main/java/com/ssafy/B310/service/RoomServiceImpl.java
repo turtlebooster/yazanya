@@ -27,7 +27,6 @@ public class RoomServiceImpl implements RoomService {
 	
 	@Override
 	public int createRoom(Room room) throws SQLException {
-		// JPA save로 반환되는 객체가 이번에 생성된 room 인지?
 		Room newRoom = roomRepository.save(room);
 		return newRoom.getRoomNum();
 	}
@@ -35,17 +34,16 @@ public class RoomServiceImpl implements RoomService {
 	@Override
 	public int updateRoom(Room room) throws SQLException {
 		Optional<Room> oRoom = roomRepository.findById(room.getRoomNum()); 
-		// 해당 방이 있을경우
+		
 		if (oRoom.isPresent()) {
 			Room r = oRoom.get();
-			// 해시태그는 여기서 업데이트 못함
-			// 방 제목과 알람설정 수정
 			r.setRoomName(room.getRoomName());
 			r.setRoomStudyTime(room.getRoomStudyTime());
 			r.setRoomRestTime(room.getRoomRestTime());
 			r.setRoomVideo(room.isRoomVideo());
 			r.setRoomSound(room.isRoomSound());
 			r.setRoomPw(room.getRoomPw());
+			r.setRoomThumbnail(room.getRoomThumbnail());
 			roomRepository.save(r);
 			return 1;
 		}
@@ -86,7 +84,6 @@ public class RoomServiceImpl implements RoomService {
 		// 해당 방이 있을경우
 		if (oRoom.isPresent()) {
 			Room r = oRoom.get();
-//			System.out.println(r);
 			return r;
 		}
 		else return null;
@@ -118,6 +115,11 @@ public class RoomServiceImpl implements RoomService {
 		if(room.isRoomActive() && (room.getRoomCapacity() > room.getRoomParticipationCount()))
 			return true;
 		else return false;
+	}
+
+	@Override
+	public long addThumbnail(int roomNum, String filename) throws SQLException {
+		return roomQueryRepository.addThumbnailonRoom(roomNum, filename);
 	}	
 }
 

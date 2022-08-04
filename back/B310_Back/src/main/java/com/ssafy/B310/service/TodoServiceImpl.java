@@ -1,7 +1,7 @@
 package com.ssafy.B310.service;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,14 +10,17 @@ import org.springframework.stereotype.Service;
 
 import com.ssafy.B310.entity.Todo;
 import com.ssafy.B310.entity.User;
-import com.ssafy.B310.repository.UserRepository;
+import com.ssafy.B310.repository.TodoQueryRepository;
 import com.ssafy.B310.repository.TodoRepository;
+import com.ssafy.B310.repository.UserRepository;
 
 @Service
 public class TodoServiceImpl implements TodoService {
 	
 	@Autowired
 	TodoRepository todoRepository;
+	@Autowired
+	TodoQueryRepository todoQueryRepository;
 	@Autowired
 	UserRepository userRepository;
 	
@@ -62,7 +65,7 @@ public class TodoServiceImpl implements TodoService {
 	@Override
 	public int updateTodo(Todo todo) throws SQLException {
 		Optional<Todo> oTodo = todoRepository.findById(todo.getTodoNum());
-		// 해당 todo 가 있을 경우
+
 		if (oTodo.isPresent()) {
 			Todo t = oTodo.get();
 			if (todo.getTodoContent() != null) t.setTodoContent(todo.getTodoContent());
@@ -78,11 +81,27 @@ public class TodoServiceImpl implements TodoService {
 	@Override
 	public int removeTodo(int todoNum) throws SQLException {
 		Optional<Todo> oTodo = todoRepository.findById(todoNum);
-		// 해당 todo 가 있을 경우
+
 		if (oTodo.isPresent()) {
 			todoRepository.deleteById(todoNum);
 			return 1;
 		}
 		return 0;
+	}
+
+	@Override
+	public double calAchievement(List<Todo> todoList) {
+		int doneCnt = 0;
+		for (Todo todo : todoList) {
+			if (todo.getTodoProgress() == 1) {
+				doneCnt++;
+			}
+		}
+		return (doneCnt * 100.0) / todoList.size();
+	}
+
+	@Override
+	public List<Todo> findTodoByDateRange(String userId, Date startDate, Date endDate) throws SQLException {
+		return todoQueryRepository.findTodoByDateRange(userId, startDate, endDate);
 	}
 }

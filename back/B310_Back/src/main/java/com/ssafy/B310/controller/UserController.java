@@ -1,17 +1,25 @@
 package com.ssafy.B310.controller;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.ssafy.B310.entity.*;
+import com.ssafy.B310.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +40,10 @@ import com.ssafy.B310.service.HashtagService;
 import com.ssafy.B310.service.JwtService;
 import com.ssafy.B310.service.UserHashtagService;
 import com.ssafy.B310.service.UserService;
+
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 
 
 @RestController
@@ -57,8 +69,14 @@ public class UserController {
 	@Autowired
 	HashtagService hashtagService;
 	
-	@NoJwt
+	@Autowired
+	ProfileService profileService;
+
+	@Autowired
+	FollowService followService;
+
 	// 로그인 요청 처리 - POST /user/login
+	@NoJwt
 	@PostMapping("/login")
 	public ResponseEntity<Map<String, Object>> login(@RequestBody User user) {
 		Map<String, Object> resultMap = new HashMap<>();
@@ -89,32 +107,6 @@ public class UserController {
 		return new ResponseEntity<List<User>>(userService.selectUserList(), HttpStatus.OK);
 	}
 	
-    // 상세 조회 - GET /user
-	@GetMapping("/info/{userId}")
-	public ResponseEntity<Map<String, Object>> getInfo(@PathVariable("userId") String userId, HttpServletRequest request) {
-		Map<String, Object> resultMap = new HashMap<>();
-		HttpStatus status = HttpStatus.ACCEPTED;
-		if(jwtService.isUsable(request.getHeader("access-token"))) {
-			logger.info("사용 가능한 토큰!!!");
-			try {
-				User user = userService.myPage(userId);
-				resultMap.put("userInfo", user);
-				resultMap.put("message", SUCCESS);
-				status = HttpStatus.ACCEPTED;
-			} catch (Exception e) {
-				logger.error("정보조회 실패 : {}", e);
-				resultMap.put("message", e.getMessage());
-				status = HttpStatus.INTERNAL_SERVER_ERROR;
-			}
-		}
-		else {
-			logger.error("사용 불가능 토큰!!!");
-			resultMap.put("message", FAIL);
-			status = HttpStatus.ACCEPTED;
-		}
-		return new ResponseEntity<Map<String,Object>>(resultMap, status);
-	}
-	
 	// 수정하기
 	@PutMapping("/update")
 	public ResponseEntity<?> updateUser(@RequestBody User user) throws SQLException {
@@ -125,8 +117,8 @@ public class UserController {
 		else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	@NoJwt
 	// ID 중복체크
+	@NoJwt
 	@GetMapping("/checkId")
 	public ResponseEntity<?> checkId(@RequestParam String userId) throws SQLException {
 		// User 회원가입
@@ -138,6 +130,7 @@ public class UserController {
 	}
 	
 	// 닉네임 중복체크
+	@NoJwt
 	@GetMapping("/checkNick")
 	public ResponseEntity<?> checkNickname(@RequestParam String userNickname) throws SQLException {
 		// User 회원가입
@@ -148,13 +141,10 @@ public class UserController {
 		else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	@NoJwt
 	// 회원가입
+	@NoJwt
 	@PostMapping("/regist")
 	public ResponseEntity<?> registUser(@RequestBody User user) throws SQLException {
-		// User 회원가입
-		
-		
 		int cnt = userService.registUser(user);
 		
 		// 상태 코드만으로 구분
@@ -185,8 +175,8 @@ public class UserController {
 		else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	@NoJwt
 	// 아이디 찾기
+	@NoJwt
 	@GetMapping("/findid")
 	public ResponseEntity<?> findId(@RequestParam String userEmail) throws SQLException {
 		String userId = userService.findId(userEmail);
@@ -198,8 +188,8 @@ public class UserController {
 		}
 	}
 	
-	@NoJwt
 	// 비밀번호 찾기 -> 이메일로 임시 비밀번호 전송
+	@NoJwt
 	@GetMapping("/findpw")
 	public ResponseEntity<?> getTmpPw(@RequestParam String userId, @RequestParam String userEmail) throws SQLException {
 		
@@ -265,5 +255,83 @@ public class UserController {
 		
 		return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 	}
+
+	// 유저 프로필 페이지
+	// 프로필 수정
+	@PutMapping("/profile/{userId}")
+	public ResponseEntity<?> updateProfile (HttpServletRequest request, @RequestBody User user, @PathVariable("userId") String userId) throws SQLException {
+		String requestUserId = jwtService.getUserID(request.getHeader("access-token"));
+		if (requestUserId.equals(userId)) {
+			int cnt = profileService.updateProfile(userId, user);
+
+			if (cnt == 1) {
+				System.out.println(user);
+				return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+			}
+
+			else {
+				return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);}
+		}
+		else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	// 프로필 정보 가져오기
+	@GetMapping("/profile/{userId}")
+	public ResponseEntity<?> getProfile (@PathVariable("userId") String userId) throws SQLException {
+
+		User userProfile = profileService.getProfile(userId);
+
+		return new ResponseEntity<User>(userProfile, HttpStatus.OK);
+	}
+
+	// 프로필 이미지 추가
+	@PostMapping("/profile/{userId}/profileImg")
+	public ResponseEntity<?> addProfileImage(@PathVariable("userId") String userId, @RequestPart MultipartFile pic) throws IOException, SQLException {
+		UUID uuid = UUID.randomUUID();
+		String profileImg = uuid.toString();
+
+		String path = "C:/Users/multicampus/Desktop/yazanya/S07P12B310/back/B310_Back/src/main/resources/static/userImg/";
+
+		Path imagePath = Paths.get(path + profileImg+'_'+userId);
+
+		Path p = Files.write(imagePath, pic.getBytes());
+
+//		try {
+//			Files.write(imagePath, pic.getBy	tes());
+//		} catch (Exception e) {
+//
+//		}
+		profileService.updateProfileImg(userId, imagePath.toString());
+
+		return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+
+	}
+	
+	// 팔로우
+	// 팔로우 추가
+	@PostMapping("/profile/{userId}")
+	public ResponseEntity<?> userFollow (HttpServletRequest request, @PathVariable("userId") String followToUserId) throws SQLException {
+		String followFromUserId = jwtService.getUserID(request.getHeader("access-token"));
+
+		Follow follow = followService.follow(followToUserId, followFromUserId);
+
+		return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+	}
+
+	// 팔로우 취소
+	@DeleteMapping("/profile/{userId}")
+	public ResponseEntity<?> userUnFollow (HttpServletRequest request, @PathVariable("userId") String followToUserId) throws SQLException {
+		String followFromUserId = jwtService.getUserID(request.getHeader("access-token"));
+
+		followService.deleteByFollowToUserAndFollowFromUser(followToUserId, followFromUserId);
+		return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+	}
+
+	// 유저 팔로우 목록
+//	@GetMapping("/profile/{userId}/follow")
+//	public ResponseEntity<?> followList (@PathVariable("userId") String userId) throws SQLException {
+//
+//		return new ResponseEntity<List<User>>(followService.followList(userId), HttpStatus.OK);
+//	}
 }
 

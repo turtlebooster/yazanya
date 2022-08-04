@@ -1,12 +1,19 @@
 package com.ssafy.B310.controller;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+
 
 import javax.servlet.http.HttpServletRequest;
+
+import java.util.UUID;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,11 +28,14 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.ssafy.B310.entity.Hashtag;
 import com.ssafy.B310.entity.Room;
 import com.ssafy.B310.entity.RoomHashtag;
+import com.ssafy.B310.entity.RoomThumbnail;
 import com.ssafy.B310.entity.User;
 import com.ssafy.B310.service.HashtagService;
 import com.ssafy.B310.service.JwtService;
@@ -33,6 +43,11 @@ import com.ssafy.B310.service.ParticipationHistoryService;
 import com.ssafy.B310.service.ParticipationService;
 import com.ssafy.B310.service.RoomHashtagService;
 import com.ssafy.B310.service.RoomService;
+
+import com.ssafy.B310.service.UserService;
+
+import com.ssafy.B310.service.ThumbnailService;
+
 
 @RestController
 @RequestMapping("/room")
@@ -51,6 +66,9 @@ public class RoomController {
     ParticipationHistoryService participationHistoryService; 
     
     @Autowired
+    UserService userService;
+    
+    @Autowired
     HashtagService hashtagService;
     
     @Autowired
@@ -59,6 +77,9 @@ public class RoomController {
     @Autowired
     JwtService jwtService;
     
+
+    ThumbnailService thumbnailService;
+
     // 방 생성
     @PostMapping
     public ResponseEntity<?> createRoom(@RequestBody Room room) throws SQLException{
@@ -85,12 +106,14 @@ public class RoomController {
     public ResponseEntity<?> getRoom(@PathVariable int roomNum) throws SQLException{
     	Room room = roomservice.getRoom(roomNum);
     	
+    	String thumbnailPath = thumbnailService.getThumbnail(room.getRoomThumbnail()).getThumnailPath();
+    	
 		Map<String, Object> resultMap = new HashMap<>();
 		
 		resultMap.put("room", room);
 		resultMap.put("message", SUCCESS);
+		resultMap.put("thumnailPath", thumbnailPath);
     	
-//    	return null;
     	if(room != null) {
     		return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
     	}
@@ -128,26 +151,27 @@ public class RoomController {
     
 
     //방에 비밀번호 쳐서 맞으면 입장
+
     @Transactional
-    @PostMapping("/{roomNum}/{pw}")
-    public ResponseEntity<?> joinRoom(@RequestBody User user , @PathVariable("roomNum") int roomNum, @PathVariable("pw") int pw) throws SQLException {
-        Room room = roomservice.getRoom(roomNum);
-        
+    @PostMapping("/{roomNum}")
+    public ResponseEntity<?> joinRoom(@RequestBody Room room, @RequestParam int roomNum, HttpServletRequest request) throws SQLException {
+    	String userId = jwtService.getUserID(request.getHeader("access-token"));
+    	Room r = roomservice.getRoom(roomNum);
+
         int cnt = 0;
-        if((room.getRoomPw() == pw) && roomservice.enableJoinRoom(roomNum)) {
-        	cnt = participationservice.joinRoom(user, room);
+        if((r.getRoomPw() == room.getRoomPw()) && roomservice.enableJoinRoom(roomNum)) {
+        	cnt = participationservice.joinRoom(userId, r);
         }
 
         if(cnt==1) {
-        	roomservice.addParticipation(room);
+        	roomservice.addParticipation(r);
         	return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
         }
         else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
 
     }
-
-    //hashtag num을 넘겨주면 해당 번호에 맞는 hashtag를 찾아옴
-    //넘겨받은 hashtag를 room의 hashtag set에 저장
+    
+    // 방에 대한 해쉬태그 추가 
     @PostMapping("/hashtag")
     public ResponseEntity<?> addHashtag(@RequestParam int roomNum, @RequestParam int hashtagNum) throws SQLException {
     	Hashtag hashtag = hashtagService.getHashtag(hashtagNum);
@@ -160,7 +184,7 @@ public class RoomController {
 	    else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
     }
     
-    //해쉬태그 목록
+    // 해쉬태그 목록
     @GetMapping("/hashtag")
     public ResponseEntity<?> getHashtagList(@RequestParam int roomNum) throws SQLException {
     	Room room = roomservice.getRoom(roomNum);
@@ -171,7 +195,6 @@ public class RoomController {
     		return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
     	}
     	
-//    	System.out.println(set.size());
     	for(RoomHashtag tag : set) {
     		System.out.println(tag.getHashtag().getHashtagName());
     	}
@@ -214,19 +237,55 @@ public class RoomController {
     // 입장 유저 리스트 반환
     @GetMapping("/join/{roomNum}")
     public ResponseEntity<?> joinedUser(@PathVariable int roomNum) throws SQLException {
-
         List joinedUserList = participationservice.joinedUser(roomNum);
 
-//        return new ResponseEntity<List<Participation>>(joinedUserList, HttpStatus.OK);
         return new ResponseEntity<List<User>>(joinedUserList, HttpStatus.OK);
 
     }
     
+
     // 전에 방문했던 방 목록 반환
     @GetMapping("/history")
     public ResponseEntity<?> getRoomHistory(HttpServletRequest request) throws SQLException {
-    	String userId = jwtService.getUserID(request.getHeader("access-token"));
+        String userId = jwtService.getUserID(request.getHeader("access-token"));
+        System.out.println(userId);
+        return new ResponseEntity<List<Room>>(participationHistoryService.getRoomHistoryList(userId), HttpStatus.OK);
+    }
+
+    //방 썸네일 추가
+    @PostMapping("/addThumbnail/{roomNum}")
+    public ResponseEntity<?> addThumbnail(@PathVariable int roomNum, @RequestPart MultipartFile thumbnail) throws Exception {
     	
-    	return new ResponseEntity<List<Room>>(participationHistoryService.getRoomHistoryList(userId), HttpStatus.OK);
+    	UUID uuid = UUID.randomUUID();
+    	String fileId = uuid.toString();
+    	
+    	String path = "C:/image/";
+    	
+    	File makeFolder = new File(path);
+    	
+    	if(!makeFolder.exists()) {
+    		makeFolder.mkdir(); 
+    		System.out.println(path + "에 폴더 생성");
+    		System.out.println(("폴더가 존재하는지 체크 true/false : "+ makeFolder.exists()));
+    	} else {
+    		System.out.println("폴더 이미 존재함");
+    	}
+    	
+    	Path imagePath = Paths.get(path + fileId);
+    	
+    	Files.write(imagePath, thumbnail.getBytes());
+    	
+    	RoomThumbnail tn = new RoomThumbnail();
+    	tn.setThumbnailId(fileId);
+    	tn.setThumbnailName(thumbnail.getOriginalFilename());
+    	tn.setThumnailPath(imagePath.toString());
+    	
+    	thumbnailService.saveFile(tn);
+    	
+    	long result = roomservice.addThumbnail(roomNum, fileId);
+    	
+    	if(result != 0) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+    	else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+
     }
 }

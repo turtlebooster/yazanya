@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,16 +18,18 @@ import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.ColumnDefault;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Getter
 @Setter
+@ToString
+@AllArgsConstructor
 public class Room {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,6 +37,7 @@ public class Room {
 	
 	@Column(nullable = false, unique = true)
 	private String roomName;
+	
 	
 	@Column
 	private String roomDescription;
@@ -64,6 +66,10 @@ public class Room {
 	@Column
 	private LocalDateTime roomStartTime;
 	
+	//방 썸네일 사진 링크
+	@Column
+	private String roomThumbnail;
+	
 	@Column
 	private int roomPw;
 	
@@ -91,36 +97,9 @@ public class Room {
 	
 	@OneToMany(mappedBy = "room")
 	@JsonIgnore
+	private Set<ParticipationHistory> participationHistoryList;
+	
+	@OneToMany(mappedBy = "room")
+	@JsonIgnore
 	private Set<RoomHashtag> roomHashtag;
-
-	@Override
-	public String toString() {
-		return "Room [roomNum=" + roomNum + ", roomName=" + roomName + ", roomVideo=" + roomVideo + ", roomSound="
-				+ roomSound + ", roomEndTime=" + roomEndTime + ", roomStudyTime=" + roomStudyTime + ", roomRestTime="
-				+ roomRestTime + ", roomCapacity=" + roomCapacity + ", roomParticipationCount=" + roomParticipationCount
-				+ ", roomStartTime=" + roomStartTime + ", roomPw=" + roomPw + ", roomActive=" + roomActive
-				+ ", manager=" + manager + ", participationList=" + participationList + ", roomHashtag=" + roomHashtag
-				+ "]";
-	}
-
-	public Room(int roomNum, String roomName, boolean roomVideo, boolean roomSound, Date roomEndTime, int roomStudyTime,
-			int roomRestTime, int roomCapacity, int roomParticipationCount, LocalDateTime roomStartTime, int roomPw,
-			boolean roomActive, User manager, Set<Participation> participationList, Set<RoomHashtag> roomHashtag) {
-		super();
-		this.roomNum = roomNum;
-		this.roomName = roomName;
-		this.roomVideo = roomVideo;
-		this.roomSound = roomSound;
-		this.roomEndTime = roomEndTime;
-		this.roomStudyTime = roomStudyTime;
-		this.roomRestTime = roomRestTime;
-		this.roomCapacity = roomCapacity;
-		this.roomParticipationCount = roomParticipationCount;
-		this.roomStartTime = roomStartTime;
-		this.roomPw = roomPw;
-		this.roomActive = roomActive;
-		this.manager = manager;
-		this.participationList = participationList;
-		this.roomHashtag = roomHashtag;
-	}
 }
