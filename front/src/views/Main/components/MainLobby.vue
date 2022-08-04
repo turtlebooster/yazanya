@@ -191,7 +191,7 @@ export default {
         {
           thumbnailNum: 2,
           userNum: 3,
-          codeNum: 'b308',
+          codeNum: '308',
           title: '공부 1대1 고수만',
           detail: '쉬는 시간 세팅 0으로 해놨습니다. 쫄?',
           hashTag: ['취업', '휴식없음', '빡공'],
@@ -199,7 +199,7 @@ export default {
         {
           thumbnailNum: 1,
           userNum: 2,
-          codeNum: 'b309',
+          codeNum: '309',
           title: 'ASMR',
           detail: '카페 분위기에서 공부하실 분?',
           hashTag: ['쉬엄쉬엄', '화이트노이즈'],
@@ -207,7 +207,7 @@ export default {
         {
           thumbnailNum: 0,
           userNum: 0,
-          codeNum: 'b310',
+          codeNum: '310',
           title: 'b310',
           detail: 'b310',
           hashTag: ['테스트용'],
@@ -215,7 +215,7 @@ export default {
         {
           thumbnailNum: 0,
           userNum: 0,
-          codeNum: 'b311',
+          codeNum: '311',
           title: 'b311',
           detail: 'b311',
           hashTag: [],
@@ -223,7 +223,7 @@ export default {
         {
           thumbnailNum: 0,
           userNum: 0,
-          codeNum: 'b312',
+          codeNum: '312',
           title: 'b312',
           detail: 'b312',
           hashTag: [],
@@ -233,7 +233,7 @@ export default {
         {
           thumbnailNum: 2,
           userNum: 3,
-          codeNum: 'b308',
+          codeNum: '308',
           title: '공부 1대1 고수만',
           detail: '쉬는 시간 세팅 0으로 해놨습니다. 쫄?',
           hashTag: ['취업', '휴식없음', '빡공'],
@@ -241,7 +241,7 @@ export default {
         {
           thumbnailNum: 1,
           userNum: 2,
-          codeNum: 'b309',
+          codeNum: '309',
           title: 'ASMR',
           detail: '카페 분위기에서 공부하실 분?',
           hashTag: ['쉬엄쉬엄', '화이트노이즈'],
