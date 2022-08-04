@@ -88,6 +88,13 @@ public class CallHandler extends TextWebSocketHandler {
 	    filterOff(user , room);
 	    log.info("room '{}' user '{}' filter off", user.getRoomName(), user.getName());
     	  break;
+      case "kickOut":
+    	  room = roomManager.getRoom(user.getRoomName());
+    	  String kickOutUserName = jsonMessage.get("kickOutUserName").getAsString();
+    	  UserSession kickOutUser = room.getParticipant(kickOutUserName);
+    	  room.leave(kickOutUser);
+    	  log.info("room '{}' user '{}' kicked out", user.getRoomName(), kickOutUserName);
+    	  break;
       case "onIceCandidate":
         JsonObject candidate = jsonMessage.get("candidate").getAsJsonObject();
 

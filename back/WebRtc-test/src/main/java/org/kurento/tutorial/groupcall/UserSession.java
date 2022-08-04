@@ -85,6 +85,8 @@ public class UserSession implements Closeable {
         }
       }
     });
+    
+    this.getEndpointForUser(this);
   }
 
   public WebRtcEndpoint getOutgoingWebRtcPeer() {
