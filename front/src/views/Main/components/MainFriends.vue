@@ -1,6 +1,8 @@
+<!-- opgg 나 오버워치 친구창 참고할 것 -->
+
 <template>
   <div class="main-friends">
-    <div class="container d-flex flex-column">
+    <div class="container d-flex flex-column align-items-center">
       <div v-for="friend in state.friendList" :key="friend.userNum">
         <div class="friend-form">
           <div>
@@ -59,7 +61,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .main-friends {
   margin: 10px;
 }
@@ -68,13 +70,8 @@ export default {
   margin: 10px;
   background: white;
   height: 100px;
-  width: 100px;
-  border-radius: 10%;
+  width: 50vw;
+  border-radius: 16px;
   box-shadow: 1px 1px 8px gray;
-}
-
-.container {
-  display: flex;
-  justify-content: center;
 }
 </style>

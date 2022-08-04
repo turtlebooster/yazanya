@@ -1,5 +1,6 @@
 import { Participant } from './Participant';
 import { WebRtcPeer } from 'kurento-utils';
+import store from '@/store';
 
 export function onExistingParticipants(msg, participants, userName, roomName) {
   var constraints = {
@@ -23,8 +24,7 @@ export function onExistingParticipants(msg, participants, userName, roomName) {
 
     dataChannels: true,
     dataChannelConfig: {
-      // onmessage: onMessage,
-      // onerror: onDataChanelError,
+      onmessage: onDataChanelMessage,
     },
 
     onicecandidate: participant.onIceCandidate.bind(participant),
@@ -55,6 +55,12 @@ function receiveVideo(sender, participants) {
 
   var options = {
     remoteVideo: video,
+
+    dataChannels: true,
+    dataChannelConfig: {
+      onmessage: onDataChanelMessage,
+    },
+
     onicecandidate: participant.onIceCandidate.bind(participant),
   };
 
@@ -66,6 +72,10 @@ function receiveVideo(sender, participants) {
     }
     this.generateOffer(participant.offerToReceiveVideo.bind(participant));
   });
+}
+
+function onDataChanelMessage(event) {
+  store.commit('addChat', event.data);
 }
 
 export function onParticipantLeft(request, participants) {

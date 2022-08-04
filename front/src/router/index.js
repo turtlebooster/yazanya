@@ -32,6 +32,17 @@ const routes = [
         component: () => import('../views/Main/components/MainLobby.vue'),
       },
       {
+        path: 'setting/profile',
+        name: 'setting',
+        component: () =>
+          import('../views/Setting/components/SettingProfile.vue'),
+      },
+      {
+        path: 'Planner',
+        name: 'main.Planner',
+        component: () => import('../views/Planner/PlannerView.vue'),
+      },
+      {
         path: 'friends',
         name: 'main.share',
         component: () => import('../views/Main/components/MainFriends.vue'),
@@ -42,11 +53,6 @@ const routes = [
         component: () => import('../views/Main/components/MainAlarm.vue'),
       },
     ],
-  },
-  {
-    path: '/Planner',
-    // beforeEnter: beforeAuth(true),
-    component: () => import('../views/Planner/PlannerView.vue'),
   },
   {
     path: '/user',
@@ -61,8 +67,8 @@ const routes = [
         component: () => import('../views/User/components/login_form.vue'),
       },
       {
-        path: 'register',
-        name: 'user.register',
+        path: 'signup',
+        name: 'user.signup',
         component: () => import('../views/User/components/register_form.vue'),
       },
       {

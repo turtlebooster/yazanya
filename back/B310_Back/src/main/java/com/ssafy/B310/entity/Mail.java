@@ -1,0 +1,18 @@
+package com.ssafy.B310.entity;
+
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+//@Data
+@Getter
+@Setter
+@ToString
+@Builder
+public class Mail {
+	private String toAddress; //수신인
+	private String title; //제목
+	private String message; //내용
+	private String fromAddress; //송신인
+}
