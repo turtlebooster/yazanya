@@ -20,22 +20,17 @@ public class JwtInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		
-		
-//		return HandlerInterceptor.super.preHandle(request, response, handler);
-		
-        boolean check=checkAnnotation(handler, NoJwt.class);
+
+		boolean check = checkAnnotation(handler, NoJwt.class);
         if(check) return true;
         
         return jwtService.isUsable(request.getHeader("access-token"));
-        
-
 	}
 	
     private boolean checkAnnotation(Object handler,Class cls){
         HandlerMethod handlerMethod=(HandlerMethod) handler;
       //해당 어노테이션이 존재하면 true.
-        if(handlerMethod.getMethodAnnotation(cls)!=null){ 
+        if(handlerMethod.getMethodAnnotation(cls) != null){ 
             return true;
         }
         return false;
