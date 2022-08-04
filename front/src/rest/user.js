@@ -26,7 +26,7 @@ export default {
   login: function (payload) {
     let params = {
       userId: payload.id,
-      userPw: payload.password,
+      userPw: payload.pw,
     };
 
     return new Promise((resolve, reject) => {

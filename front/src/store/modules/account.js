@@ -50,7 +50,7 @@ export const Account = {
 
     saveToken: function (context, payload) {
       context.commit('SET_ISLOGINED', true);
-      context.commit('SET_ACCESS_TOKEN', payload.data['access-token']);
+      context.commit('SET_ACCESS_TOKEN', payload);
     },
   },
 };

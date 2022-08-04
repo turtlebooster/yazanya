@@ -40,7 +40,7 @@ import rest_user from '@/rest/user';
 
 export default {
   setup() {
-    let router = useRouter();
+    const router = useRouter();
 
     let id = ref("");
     let pw = ref("");
@@ -55,19 +55,21 @@ export default {
         name : name.value, nickname : nickname.value
       })
         .then((response) => {
-          if(response.data == 'success') {
-            router.to('/account/login');
+          console.log(response);
+
+          if(response.data === "success") {
+            router.replace('/account/login');
           } else {
             alert("회원가입 중 문제가 발생하였습니다. 나중에 다시 시도해주세요");  
           }
         })
-        .catch(()=> {
+        .catch((error)=> {
+          console.log(error);
           alert("회원가입 중 문제가 발생하였습니다. 나중에 다시 시도해주세요");
         })
     }
    
-    return { id, pw, email, name, nickname,
-      signup }
+    return { id, pw, email, name, nickname, signup }
   }
 }
 </script>

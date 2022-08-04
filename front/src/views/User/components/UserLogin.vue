@@ -18,6 +18,7 @@
             class="form-control"
             id="floatingID"
             placeholder="ID"
+            v-model="id"
           />
           <label for="floatingID">ID</label>
         </div>
@@ -27,11 +28,12 @@
             class="form-control"
             id="floatingPassword"
             placeholder="Password"
+            v-model="pw"
           />
           <label for="floatingPassword">Password</label>
         </div>
         <div>
-          <button>Submit</button>
+          <button @click="login()">Submit</button>
         </div>
         <!-- <div
           style="display: flex; justify-content: space-between; color: white"
@@ -50,38 +52,43 @@
 </template>
 
 <script>
-import { onBeforeMount } from 'vue';
-// import { useStore } from 'vuex';
-// import { useRouter } from 'vue-router';
+import { ref, onBeforeMount } from 'vue';
+import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
 
-// import rest_user from '@/rest/user';
+import rest_user from '@/rest/user';
 
 export default {
   setup() {
-    // const id = ref('test');
-    // const pw = ref('test');
-    // const store = useStore();
-    // const router = useRouter();
-  
+    const store = useStore();
+    const router = useRouter();
 
-    // store
-    //   .dispatch('login', {
-    //     id: id.value,
-    //     password: pw.value,
-    //   })
-    //   .then((rs) => {
-    //     console.log(rs);
-    //     router.replace();
-    //   })
-    //   .catch((err) => {
-    //     alert(err);
-    //   });
+    let id = ref('');
+    let pw = ref('');
+    
+    function login() {
+      rest_user.login({ id:id.value, pw:pw.value })
+        .then((response)=> {
+          console.log(response);
+          if(response.data['message'] === 'success') {
+            router.replace('/main');
+            store.dispatch("", response.data['access-token']);
+          } else {
+            alert("로그인 실패!");
+          }
+        })
+        .catch(()=> {
+          alert("로그인 중 문제가 발생하였습니다.");
+        })
+    }
 
 
     onBeforeMount(() => {
       document.documentElement.style.setProperty('--size-h-header', '0');
       document.documentElement.style.setProperty('--size-w-side', '0');
     });
+
+    return { id, pw, login }
   },
 };
 </script>
