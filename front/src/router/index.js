@@ -58,22 +58,22 @@ const routes = [
       {
         path: 'login',
         name: 'user.login',
-        component: () => import('../views/User/components/login_form.vue'),
+        component: () => import('../views/User/components/UserLogin.vue'),
       },
       {
         path: 'signup',
-        name: 'user.signup',
-        component: () => import('../views/User/components/register_form.vue'),
+        name: 'user.register',
+        component: () => import('../views/User/components/UserSignup.vue'),
       },
       {
         path: 'findid',
         name: 'user.findid',
-        component: () => import('../views/User/components/findId_form.vue'),
+        component: () => import('../views/User/components/UserFindid.vue'),
       },
       {
         path: 'findpw',
         name: 'user.findpw',
-        component: () => import('../views/User/components/findPw_form.vue'),
+        component: () => import('../views/User/components/UserFindpw.vue'),
       },
     ],
   },
