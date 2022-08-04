@@ -37,6 +37,7 @@ public class Room {
 	@Column(nullable = false, unique = true)
 	private String roomName;
 	
+	
 	@Column
 	private String roomDescription;
 	
@@ -63,6 +64,10 @@ public class Room {
 	
 	@Column
 	private LocalDateTime roomStartTime;
+	
+	//방 썸네일 사진 링크
+	@Column
+	private String roomThumbnail;
 	
 	@Column
 	private int roomPw;
@@ -96,6 +101,7 @@ public class Room {
 	@OneToMany(mappedBy = "room")
 	@JsonIgnore
 	private Set<RoomHashtag> roomHashtag;
+	
 
 	@Override
 	public String toString() {
@@ -109,7 +115,7 @@ public class Room {
 
 	public Room(int roomNum, String roomName, boolean roomVideo, boolean roomSound, Date roomEndTime, int roomStudyTime,
 			int roomRestTime, int roomCapacity, int roomParticipationCount, LocalDateTime roomStartTime, int roomPw,
-			boolean roomActive, User manager, Set<Participation> participationList, Set<RoomHashtag> roomHashtag) {
+			boolean roomActive, User manager, Set<Participation> participationList, Set<RoomHashtag> roomHashtag, String roomThumbnail) {
 		super();
 		this.roomNum = roomNum;
 		this.roomName = roomName;
@@ -126,5 +132,6 @@ public class Room {
 		this.manager = manager;
 		this.participationList = participationList;
 		this.roomHashtag = roomHashtag;
+		this.roomThumbnail = roomThumbnail;
 	}
 }
