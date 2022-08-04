@@ -8,7 +8,6 @@ import java.util.List;
 
 public interface ParticipationService {
 
-//    public int joinRoom(User user, Room room) throws SQLException;
 
     public int joinRoom(String userId, Room room) throws SQLException;
 
