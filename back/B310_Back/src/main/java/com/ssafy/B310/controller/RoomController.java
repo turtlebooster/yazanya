@@ -1,6 +1,5 @@
 package com.ssafy.B310.controller;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -10,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,15 +25,16 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.ssafy.B310.dto.RoomThumbnailDto;
 import com.ssafy.B310.entity.Hashtag;
 import com.ssafy.B310.entity.Room;
 import com.ssafy.B310.entity.RoomHashtag;
+import com.ssafy.B310.entity.RoomThumbnail;
 import com.ssafy.B310.entity.User;
 import com.ssafy.B310.service.HashtagService;
 import com.ssafy.B310.service.ParticipationService;
 import com.ssafy.B310.service.RoomHashtagService;
 import com.ssafy.B310.service.RoomService;
+import com.ssafy.B310.service.ThumbnailService;
 
 @RestController
 @RequestMapping("/room")
@@ -55,6 +54,9 @@ public class RoomController {
     
     @Autowired
     RoomHashtagService roomHashtagService;
+    
+    @Autowired
+    ThumbnailService thumbnailService;
 
     // 방 생성
     @PostMapping
@@ -82,10 +84,13 @@ public class RoomController {
     public ResponseEntity<?> getRoom(@PathVariable int roomNum) throws SQLException{
     	Room room = roomservice.getRoom(roomNum);
     	
+    	String thumbnailPath = thumbnailService.getThumbnail(room.getRoomThumbnail()).getThumnailPath();
+    	
 		Map<String, Object> resultMap = new HashMap<>();
 		
 		resultMap.put("room", room);
 		resultMap.put("message", SUCCESS);
+		resultMap.put("thumnailPath", thumbnailPath);
     	
     	if(room != null) {
     		return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
@@ -221,27 +226,37 @@ public class RoomController {
     public ResponseEntity<?> addThumbnail(@PathVariable int roomNum, @RequestPart MultipartFile thumbnail) throws Exception {
     	
     	UUID uuid = UUID.randomUUID();
+    	String fileId = uuid.toString();
     	
-    	String fileName = uuid + "_" + thumbnail.getOriginalFilename();
+//    	String fileName = uuid + "_" + thumbnail.getOriginalFilename();
     	
-    	String path = "C:/ssafy/Works_2/S07P12B310/back/B310_Back/src/main/resources/static/img/";
+//    	String path = "C:/ssafy/Works_2/S07P12B310/back/B310_Back/src/main/resources/static/img/";
+    	String path = "C:/image/";
     	
-    	Path imagePath = Paths.get(path + fileName);
+    	Path imagePath = Paths.get(path + fileId);
+//    	Path imagePath = Paths.get(path);
     	
     	Path p = Files.write(imagePath, thumbnail.getBytes());
+    	
+    	RoomThumbnail tn = new RoomThumbnail();
+    	tn.setThumbnailId(fileId);
+    	tn.setThumbnailName(thumbnail.getOriginalFilename());
+    	tn.setThumnailPath(imagePath.toString());
+    	
+    	thumbnailService.saveFile(tn);
     	
 //    	여기서 db에 파일 경로를 저장한다. post entity
 //    	게시글에 사진을 포함시킨다고 하면
 //    	post에 이미지 경로 필드 하나 더 해주면 되는 것이다.
 //    	그럼 jsp에서 image에 src에 post엔티티에 있는 이미지 경로를 저장하면 되는 것이다.
-//    	그렇다면 path를 db에 저장했을 시에 서버를 이전한다고 한다면 경로가 다 틀어질 수 박에 없다
+//    	그렇다면 path를 db에 저장했을 시에 서버를 이전한다고 한다면 경로가 다 틀어질 수 밖에 없다
     	
 //    	그렇기 때문에 그냥 경로는 서버가 들고 db에는 경로가 저장돼선 안된다.
 //    	그래서 위 상황에서 디비에 저장한다고 치면 fileName를 저장하는 것이다.
     	
 //    	근데 이미지 파일 이름을 저장하게 하면 파일 이름이 겹칠 수 있다
 //    	그래서 UUID uuid = UUID.randomUUID();를 사용하면 중복되면 난수를 발생시킨다.
-    	long result = roomservice.addThumbnail(roomNum, fileName);
+    	long result = roomservice.addThumbnail(roomNum, fileId);
     	
     	if(result != 0) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
     	else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);

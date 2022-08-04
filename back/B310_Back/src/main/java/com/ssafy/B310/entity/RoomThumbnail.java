@@ -21,12 +21,11 @@ import lombok.ToString;
 public class RoomThumbnail {
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private int roomThumbnailId;
+	private String thumbnailId;
 	
 	@Column(nullable = false)
-	private String roomThumbnailFileName;
+	private String thumbnailName;
 	
 	@Column(nullable = false)
-	private String roomThumnailFilePath;
+	private String thumnailPath;
 }

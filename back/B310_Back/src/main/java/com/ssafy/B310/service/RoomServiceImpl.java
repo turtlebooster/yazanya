@@ -123,7 +123,7 @@ public class RoomServiceImpl implements RoomService {
 
 	@Override
 	public long addThumbnail(int roomNum, String filename) throws SQLException {
-		return roomQueryRepository.addThumbnail(roomNum, filename);
+		return roomQueryRepository.addThumbnailonRoom(roomNum, filename);
 	}	
 }
 
