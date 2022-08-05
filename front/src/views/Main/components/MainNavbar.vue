@@ -2,7 +2,7 @@
   <nav
     v-if="main_nav_on"
     class="main-nav"
-    :class="[$root.theme ? 'dark' : 'light']"
+    :class="[$root.theme ? 'light' : 'dark']"
   >
     <div>
       <router-link to="/main">

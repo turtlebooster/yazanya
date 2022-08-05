@@ -39,14 +39,34 @@
       <span class="title">설정</span>
     </router-link>
 
-    <router-link to="/">
+    <a href="#" @click="logout()">
       <span class="icon"><i class="bi bi-box-arrow-right"></i></span>
       <span class="title">로그아웃</span>
-    </router-link>
+    </a>
   </div>
 </template>
 
-<script></script>
+<script>
+import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
+
+export default {
+  setup() {
+    const store = useStore();
+    const router = useRouter();
+
+    function logout() {
+      store.dispatch('logout')
+      .then(() => {
+        router.replace('/');
+      })
+    }
+    
+    return { logout }
+  }
+}
+
+</script>
 
 <style scoped>
 .main-sidebar {
