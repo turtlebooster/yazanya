@@ -5,7 +5,7 @@
     :class="[$root.theme ? 'light' : 'dark']"
     style="height: 52px"
   >
-    <room-nav @toggle-planner="togglePlanner()" @toggle-chat="toggleChat()" />
+    <room-nav @toggle-planner="not_impl()" @toggle-chat="toggleChat()" />
   </div>
 
   <div
@@ -24,7 +24,7 @@
       <!-- TODO planner components -->
       <p>TODO planner components</p>
       <button @click="test()" class="m-2">increase member</button>
-      <button @click="register()" class="m-2">add member </button>
+      <button @click="joinRoom()" class="m-2">add member </button>
       <button @click="leaveRoom()" class="m-2">leave member </button>
       <button @click="test2()" class="m-2"> test </button>
 
@@ -100,6 +100,7 @@
         <b-button
           class="rounded-circle mx-2"
           :class="[$root.theme ? 'dark-content' : 'light-content']"
+          @click="not_impl()"
         >
           <i class="bi bi-mic-fill" style="font-size: 1.3em"></i>
           <!-- <i class="bi bi-mic-mute-fill"></i> -->
@@ -107,6 +108,7 @@
         <b-button
           class="rounded-circle mx-2"
           :class="[$root.theme ? 'dark-content' : 'light-content']"
+          @click="not_impl()"
         >
           <i class="bi bi-camera-video-fill" style="font-size: 1.3em"></i>
           <!-- <i class="bi bi-camera-video-off-fill"></i> -->
@@ -114,6 +116,7 @@
         <b-button
           class="rounded-circle mx-2"
           :class="[$root.theme ? 'dark-content' : 'light-content']"
+          @click="not_impl()"
         >
           <i class="bi bi-display" style="font-size: 1.3em"></i>
           <!-- <i class="bi bi-camera-video-off-fill"></i> -->
@@ -122,6 +125,7 @@
         <b-button pill
           class="mx-4 m-1 px-sm-4"
           variant="danger"
+          @click="leaveRoom()"
         >
           <i class="bi bi-power" style="font-size: 1.3em"></i>
           <!-- <i class="bi bi-camera-video-off-fill"></i> -->
@@ -141,11 +145,13 @@
 </template>
 
 <script>
-import RoomNav from './components/RoomNavbar.vue';
-import { ref, computed, onBeforeMount, onUpdated } from 'vue';
-// import { onMounted, onUpdated } from 'vue';
+import { ref, computed, onBeforeMount, onMounted, onUpdated } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex'
+
+import RoomNav from './components/RoomNavbar.vue';
+
+import rest_room from '@/rest/room';
 
 // import VideoComp from './components/RoomVideo.vue';
 
@@ -156,6 +162,9 @@ export default {
   },
 
   setup() {
+    const router = useRouter();
+    const store = useStore();
+
     // --------- sidebar sizing event handling  ↓ ----------- //
     const SIDEBAR_WIDTH = 28;
     const planner_width = ref(0);
@@ -168,47 +177,87 @@ export default {
       chat_width.value = chat_width.value === 0 ? SIDEBAR_WIDTH : 0;
     }
 
+    // ---------------------- set unload event ------------------------- //
+    function unLoadEvent(event) {
+      // REST request
+      store.dispatch("leaveRoom");      
+      event.returnValue = "";
+    }
+
+    // add event for leaving this page
+    onMounted(() => { window.addEventListener('beforeunload', unLoadEvent)} );
+
+    // remove event
+    // onBeforeUnmount(() => {window.removeEventListener('beforeunload', unLoadEvent)});
+
+    // --------------------- room information ----------------------- //
+    let isRoomPrivate = ref(true);
     let roomname = ref(null);
-    let router = useRouter();
+
     onBeforeMount(() => {
       // ----------- for room name ↓ ------------ //
       let url = document.URL;
       let idx = url.indexOf('studyroom/') + 10;
       if (idx === -1) {
         alert('올바르지 않은 방주소입니다');
-        router.replace('/');
+        router.replace('/main');
         return;
       }
 
       // check room number NaN
       let room_number = url.slice(idx);
       if (isNaN(room_number)) {
-        alert('방 번호가 형식에 맞지 않습니다');
-        router.replace('/');
+        alert('링크가 형식에 맞지 않습니다');
+        router.replace('/main');
         return;
       }
 
-      // TODO : get roomname from server
+      // ------------------- check RoomPW ---------------------- //
+      rest_room.joinRoom(room_number)
+        .then((response)=> {
+          if(response.data === 'fail') {
+            // room join falied => has Password
+            rest_room.joinRoom(room_number, prompt("방의 비밀번호를 입력해주세요"))
+            .then((response) => {
+              if(response.data === 'fail') {
+                alert('비밀번호가 일치하지 않습니다');
+                // router.replace('/main');
+              }
+            })
+          }
+        })
+        .then(() => {
+          // get room infomation
+          rest_room.getRoomInfo(room_number)
+            .then((response) => {
+              console.log("get Room info " + response.data);
+              store.dispatch('saveRoomInfo', response.data.room);
+            }) 
+        })
+        .catch((error)=> {
+          console.log(error);
+          alert("방 입장중 문제가 발생하였습니다");
+          router.replace('/main');
+        })
+      
       roomname.value = room_number;
 
       // start socket connection
-      store.commit("initSocket");
+      console.log(store.getters['getUserID']);
+      store.dispatch("joinRoom", store.getters['getUserID']);
     });
 
     // -------------------- room asign -------------------- //
-    var store = useStore();
 
-    function register() {
-      store.dispatch("register", { username: prompt("이름은?", "그래") || 'asdf', roomname: '310' });
+    function joinRoom() {
+      store.dispatch("joinRoom", { username: prompt("이름은?", "그래") || 'asdf', roomname: '310' });
     }
     function leaveRoom() {
+      // APP Server request
       store.dispatch("leaveRoom");
-    }
-
-    // for debugging
-    // let nMember = ref(0);
-    function test() {
-      console.log(store.state.Room.chat_list);
+      // REST request
+      rest_room.leaveRoom(store.state.Room.room.roomNum);
+      router.replace('/main');
     }
 
     // ---------- dynamic video grid for participants ↓ ------------ //
@@ -236,8 +285,16 @@ export default {
     var each_video_width = computed(()=> cal_video_wh(true));
     var each_video_height = computed(()=> cal_video_wh(false));
     
+
+    // --------------------- for debugging ------------------------ //
+    function test() {
+      console.log(store.state.Room.chat_list);
+    }
     function test2() {
-     store.dispatch('sendChat', {sender: store.state.Room.username, message:prompt('채팅 내용')});
+     store.dispatch('sendChat', {sender: store.state.Account.userID, message:prompt('채팅 내용')});
+    }
+    function not_impl() {
+      alert('아직 미구현입니다');
     }
 
     // --------------------- add video on updated participants ----------------------- //
@@ -279,25 +336,23 @@ export default {
       })
     })
 
-    // --------------------- room information ----------------------- //
-    let isRoomPrivate = ref(true);
-
-
     return {
       togglePlanner,
       toggleChat,
       planner_width,
       chat_width,
+
       roomname,
       isRoomPrivate,
 
-      register,
+      joinRoom,
       leaveRoom,
       members,
 
       // for test
       test,
       test2,
+      not_impl,
 
       video_plane,
 

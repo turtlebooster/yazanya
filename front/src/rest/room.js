@@ -56,6 +56,7 @@ export default {
   },
 
   leaveRoom: function (room_num) {
+    console.log('getters ', store.getters['getUserID']);
     let params = {
       // TODO : remove store code part later
       userId: store.getters['getUserID'],
@@ -63,7 +64,7 @@ export default {
 
     return new Promise((resolve, reject) => {
       http
-        .delete(REST_PATH + '/exit/' + room_num, params)
+        .patch(REST_PATH + '/exit/' + room_num, params)
         .then((response) => {
           resolve(response);
         })
