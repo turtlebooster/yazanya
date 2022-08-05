@@ -42,6 +42,10 @@ export default {
 </script>
 
 <style scoped>
+* {
+  font-family: Koverwatch !important;
+}
+
 .main-view {
   height: 100vh;
   width: 100vw;

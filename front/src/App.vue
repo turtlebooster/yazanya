@@ -6,11 +6,11 @@
 
 <script>
 export default {
-    setup() {
+  setup() {
     // get theme flag from local
     let theme = JSON.parse(localStorage.getItem('yaza_theme')) || true;
     return { theme };
-  }
+  },
 };
 </script>
 
@@ -66,8 +66,6 @@ export default {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-
-  font-family: Koverwatch !important;
 }
 
 /* ---- for light and dark mode ---- */
