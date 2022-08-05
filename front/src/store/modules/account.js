@@ -63,9 +63,15 @@ export const Account = {
     },
 
     login: function (context, payload) {
-      context.commit('SET_ISLOGINED', true);
-      context.commit('SET_ACCESS_TOKEN', payload);
-      context.commit('SET_USER_ID', payload);
+      // for aync proess
+      return new Promise((resolve) => {
+        setTimeout(function () {
+          context.commit('SET_ISLOGINED', true);
+          context.commit('SET_ACCESS_TOKEN', payload['access-token']);
+          context.commit('SET_USER_ID', payload['id']);
+          resolve({});
+        }, 500);
+      });
     },
   },
 };

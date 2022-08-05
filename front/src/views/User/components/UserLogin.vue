@@ -71,8 +71,9 @@ export default {
         .then((response)=> {
           console.log(response);
           if(response.data['message'] === 'success') {
-            router.replace('/main');
-            store.dispatch("", response.data['access-token']);
+            // save login info to local and move
+            store.dispatch("login", { 'access-token':response.data['access-token'], id : id.value})
+              .then(()=> {router.replace('/main');})
           } else {
             alert("로그인 실패!");
           }
