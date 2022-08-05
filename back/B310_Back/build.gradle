@@ -26,6 +26,13 @@ repositories {
 	mavenCentral()
 }
 
+task print() {
+	doLast{
+		println "gitlab push complete"
+	}
+}
+
+
 dependencies {
 	//swagger
 	implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
