@@ -1,44 +1,15 @@
 <template>
   <div id="app" class="d-flex flex-column flex-nowrap">
-    <!-- Header -->
-    <div class="app-header" :viewname="$route.name">
-      <!-- <header-nav style="display: none" /> -->
-      <header-nav />
-    </div>
-
-    <!-- Container -->
-    <div class="app-container d-flex flex-grow-1 flex-shrink-1">
-      <!-- Side -->
-      <div class="app-side">
-        <!-- <side-bar style="display: none" /> -->
-        <side-bar :viewname="$route.name" />
-      </div>
-
-      <!-- Contents -->
-      <div class="app-contents flex-grow-1">
-        <!-- <router-view style="display: none" /> -->
-        <router-view />
-      </div>
-    </div>
+    <router-view />
   </div>
 </template>
 
 <script>
-import HeaderNav from '@/views/common/components/HeaderNav.vue';
-import SideBar from '@/views/common/components/SideBar.vue';
-import { onBeforeMount } from 'vue';
-
 export default {
   setup() {
-    onBeforeMount(() => {
-      document.documentElement.style.setProperty('--size-h-header', '48px');
-      document.documentElement.style.setProperty('--size-w-side', '48px');
-    });
-  },
-
-  components: {
-    HeaderNav,
-    SideBar,
+    // get theme flag from local
+    let theme = JSON.parse(localStorage.getItem('yaza_theme')) || true;
+    return { theme };
   },
 };
 </script>
@@ -47,27 +18,31 @@ export default {
 @font-face {
   /* 여기어때 잘난체 */
   font-family: 'Jalnan';
-  src: url('@/assets/font/Jalnan.ttf') format('truetype');
+  src: url('./assets/font/Jalnan.ttf') format('truetype');
   font-weight: normal;
+}
 
+@font-face {
   /* 한버워치체 */
   font-family: 'Koverwatch';
-  src: url('@/assets/font/Koverwatch.ttf') format('truetype');
+  src: url('./assets/font/Koverwatch.ttf') format('truetype');
   font-weight: normal;
+}
 
+@font-face {
   /* 나눔고딕 */
   font-family: 'NanumGothic';
-  src: url('@/assets/font/NanumGothic.ttf') format('truetype');
+  src: url('./assets/font/NanumGothic.ttf') format('truetype');
   font-weight: normal;
 }
 
 :root {
   /* 비율 */
-  --size-h-header: 40px;
-  --size-w-side: 40px;
+  --size-h-header: 48px;
+  --size-w-side: 80px;
 
   /* 메인 테마색 */
-  --main-color: #009e73;
+  --theme-color: #009e73;
 
   --sub-color-r: #d55e00;
   --sub-color-o: #e69f00;
@@ -76,24 +51,21 @@ export default {
   --sub-color-p: #cc79a7;
 
   /* 다크모드 */
-  --dark-bg-color: #404040;
-
   --dark-main-color: #404040;
   --dark-sub-color: #000000;
 
   /* 라이트모드 */
-  --light-bg-color: #ffffff;
-
   --light-main-color: #ffffff;
   --light-sub-color: #d9d9d9;
+
+  --main-color: #ffffff;
+  --sub-color: #d9d9d9;
 }
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-
-  font-family: NanumGothic !important;
 }
 
 /* ---- for light and dark mode ---- */
