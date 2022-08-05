@@ -9,10 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import com.ssafy.B310.entity.Hashtag;
 import com.ssafy.B310.entity.Room;
+import com.ssafy.B310.entity.User;
 import com.ssafy.B310.repository.RoomQueryRepository;
 import com.ssafy.B310.repository.RoomRepository;
+import com.ssafy.B310.repository.UserRepository;
 import com.ssafy.B310.specification.RoomSpecification;
 
 @Service
@@ -25,10 +26,20 @@ public class RoomServiceImpl implements RoomService {
 	@Autowired
 	RoomQueryRepository roomQueryRepository;
 	
+	@Autowired
+	UserRepository userRepository;
+	
 	@Override
-	public int createRoom(Room room) throws SQLException {
-		Room newRoom = roomRepository.save(room);
-		return newRoom.getRoomNum();
+	public int createRoom(Room room, String userId) throws SQLException {
+		Optional<User> oUser = userRepository.findByUserId(userId);
+		
+		if (oUser.isPresent()) {
+			User u = oUser.get();
+			room.setManager(u);
+			Room newRoom = roomRepository.save(room);
+			return newRoom.getRoomNum();
+		}
+		return 0;
 	}
 
 	@Override
@@ -38,12 +49,15 @@ public class RoomServiceImpl implements RoomService {
 		if (oRoom.isPresent()) {
 			Room r = oRoom.get();
 			r.setRoomName(room.getRoomName());
+			r.setRoomDescription(room.getRoomDescription());
+			r.setRoomCapacity(room.getRoomCapacity());
 			r.setRoomStudyTime(room.getRoomStudyTime());
 			r.setRoomRestTime(room.getRoomRestTime());
 			r.setRoomVideo(room.isRoomVideo());
 			r.setRoomSound(room.isRoomSound());
 			r.setRoomPw(room.getRoomPw());
-			r.setRoomThumbnail(room.getRoomThumbnail());
+//			r.setRoomThumbnail(room.getRoomThumbnail());
+			r.setRoomActive(room.isRoomActive());
 			roomRepository.save(r);
 			return 1;
 		}
