@@ -10,7 +10,7 @@ public class RoomSpecification {
 	//0 - 비디오 끔. 1 - 비디오 켬. 2 - 상관 없음
 	public static Specification<Room> videoSetting(int status) {
 		if(status != 2) { 
-			return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("video"), status);
+			return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("roomVideo"), status);
 		} else {
 			return (root, query, criteriaBuilder) -> null;
 		}
@@ -20,7 +20,7 @@ public class RoomSpecification {
 	//0 - 오디오 끔. 1 - 오디오 켬. 2 - 상관 없음
 	public static Specification<Room> soundeSetting(int status) {
 		if(status != 2) {
-			return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("sound"), status);
+			return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("roomSound"), status);
 		} else {
 			return (root, query, criteriaBuilder) -> null;
 		}
@@ -33,7 +33,7 @@ public class RoomSpecification {
 		if(status == 0) {
 			return (root, query, criteriaBuilder) -> null;
 		} else {
-			return (root, query, criteriaBuilder) -> criteriaBuilder.greaterThanOrEqualTo(root.get("capacity"), root.get("participationCount"));
+			return (root, query, criteriaBuilder) -> criteriaBuilder.greaterThanOrEqualTo(root.get("roomCapacity"), root.get("roomParticipationCount"));
 			
 		}
 	}

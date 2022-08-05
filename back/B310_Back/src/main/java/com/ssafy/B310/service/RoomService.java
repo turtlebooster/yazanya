@@ -9,7 +9,7 @@ import com.ssafy.B310.entity.Room;
 
 public interface RoomService {
 	// 방 생성
-	public int createRoom(Room room) throws SQLException;
+	public int createRoom(Room room, String userId) throws SQLException;
 
 	// 방 검색
 	public List<Room> filterRoom(Map<String, Integer> params) throws SQLException;

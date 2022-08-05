@@ -8,12 +8,9 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-
-import javax.servlet.http.HttpServletRequest;
-
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -43,11 +40,14 @@ import com.ssafy.B310.service.ParticipationHistoryService;
 import com.ssafy.B310.service.ParticipationService;
 import com.ssafy.B310.service.RoomHashtagService;
 import com.ssafy.B310.service.RoomService;
-
+import com.ssafy.B310.service.ThumbnailService;
 import com.ssafy.B310.service.UserService;
 
-import com.ssafy.B310.service.ThumbnailService;
-
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 @RestController
 @RequestMapping("/room")
@@ -77,14 +77,28 @@ public class RoomController {
     @Autowired
     JwtService jwtService;
     
-
+    @Autowired
     ThumbnailService thumbnailService;
 
     // 방 생성
     @PostMapping
-    public ResponseEntity<?> createRoom(@RequestBody Room room) throws SQLException{
-
-        int cnt = roomservice.createRoom(room);
+    @ApiOperation(value = "방 생성", 
+	    		  notes = "방을 하나 생성함\r\n" + 
+	    		  		"로그인한 유저를 이 방의 관리자로 지정\r\n" + 
+	    		  		"{\r\n" + 
+	    		  		"  \"roomName\" : (방 이름),\r\n" + 
+	    		  		"  \"roomDescription\" : (방 설명),\r\n" + 
+	    		  		"  \"roomCapacity\" : (인원 제한),\r\n" + 
+	    		  		"  \"roomSound\" : (전체 소리 true/false),\r\n" + 
+	    		  		"  \"roomVideo\" : (전체 비디오 true/false),\r\n" + 
+	    		  		"  \"roomStudyTime\" : (공부시간 알람 간격),\r\n" + 
+	    		  		"  \"roomRestTime\" : (휴식시간 알람 간격),\r\n" + 
+	    		  		"  \"roomPw\" : (방 비밀번호),\r\n" + 
+	    		  		"  \"roomActive\" : (방 활성화 여부 true/false)\r\n" + 
+	    		  		" }")
+    public ResponseEntity<?> createRoom(@RequestBody Room room, HttpServletRequest request) throws SQLException{
+    	String userId = jwtService.getUserID(request.getHeader("access-token"));    	
+        int cnt = roomservice.createRoom(room, userId);
 
         if(cnt!=0) return new ResponseEntity<Integer>(cnt, HttpStatus.OK);
         else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -92,6 +106,13 @@ public class RoomController {
 
     // 방 필터링
     @PostMapping("/filter")
+    @ApiOperation(value = "방 검색", 
+    			  notes = "주어진 조건으로 방을 검색하여 목록 전달\r\n" + 
+    			  		"{\r\n" + 
+    			  		"  \"video\" : 0(끔) / 1(켬) / 2(무관),\r\n" + 
+    			  		"  \"sound\" : 0(끔) / 1(켬) / 2(무관),\r\n" + 
+    			  		"  \"fullcheck\" : 0(무관) / 1 (정원이 안찬 방)\r\n" + 
+    			  		"}")
     public ResponseEntity<?> filterRoom(@RequestBody Map<String, Integer> params) throws SQLException{
     	List<Room> roomList = roomservice.filterRoom(params);
     	
@@ -103,16 +124,18 @@ public class RoomController {
     
     // 방 하나 가져오기
     @GetMapping("/{roomNum}")
+    @ApiOperation(value = "방 정보 불러오기",
+    			  notes = "전달된 방 번호에 해당하는 방의 정보 전달")
     public ResponseEntity<?> getRoom(@PathVariable int roomNum) throws SQLException{
     	Room room = roomservice.getRoom(roomNum);
     	
-    	String thumbnailPath = thumbnailService.getThumbnail(room.getRoomThumbnail()).getThumnailPath();
+//    	String thumbnailPath = thumbnailService.getThumbnail(room.getRoomThumbnail()).getThumnailPath();
     	
 		Map<String, Object> resultMap = new HashMap<>();
 		
 		resultMap.put("room", room);
 		resultMap.put("message", SUCCESS);
-		resultMap.put("thumnailPath", thumbnailPath);
+//		resultMap.put("thumnailPath", thumbnailPath);
     	
     	if(room != null) {
     		return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
@@ -122,6 +145,8 @@ public class RoomController {
 
     // 방 삭제
     @DeleteMapping("/{roomNum}")
+    @ApiOperation(value = "방 삭제", 
+    			  notes = "전달된 방 번호에 해당하는 방을 삭제")	
     public ResponseEntity<?> removeRoom(@PathVariable int roomNum) throws SQLException{
 
         int cnt = roomservice.removeRoom(roomNum);
@@ -132,6 +157,20 @@ public class RoomController {
 
     // 방 정보 업데이트
     @PutMapping
+    @ApiOperation(value = "방 정보 수정",
+	  			  notes = "전달된 방 번호에 해당하는 방의 정보 수정\r\n" + 
+	  			  		"{\r\n" +  
+	  			  		"  \"roomNum\" : (방 번호)," +
+	  			  		"  \"roomName\" : (방 이름),\r\n" + 
+	  			  		"  \"roomDescription\" : (방 설명),\r\n" + 
+	  			  		"  \"roomCapacity\" : (인원 제한),\r\n" + 
+	  			  		"  \"roomSound\" : (전체 소리 true/false),\r\n" + 
+	  			  		"  \"roomVideo\" : (전체 비디오 true/false),\r\n" + 
+	  			  		"  \"roomStudyTime\" : (공부시간 알람 간격),\r\n" + 
+	  			  		"  \"roomRestTime\" : (휴식시간 알람 간격),\r\n" + 
+	  			  		"  \"roomPw\" : (방 비밀번호),\r\n" + 
+	  			  		"  \"roomActive\" : (방 활성화 여부 true/false)\r\n" + 
+	  			  		" }")
     public ResponseEntity<?> updateRoom(@RequestBody Room room) throws SQLException{
 
         int cnt = roomservice.updateRoom(room);
@@ -140,8 +179,10 @@ public class RoomController {
         else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
     }
     
-    //방에 입장할 수 있다면 success / 인원이 다 차서or방장이 방을 잠궈서 입장할 수 없다면 fail
     @GetMapping("/active")
+    @ApiOperation(value = "방 활성화 여부 체크", 
+    			  notes = "방에 입장할 수 있다면 success\n 인원이 다 차서or방장이 방을 잠궈서 입장할 수 없다면 fail")	
+    @ApiImplicitParam(name = "roomNum", value = "방 번호", dataType = "int")
     public ResponseEntity<?> enableJoinRoom(@RequestParam int roomNum) throws SQLException {
     	boolean result = roomservice.enableJoinRoom(roomNum);
     	
@@ -151,10 +192,15 @@ public class RoomController {
     
 
     //방에 비밀번호 쳐서 맞으면 입장
-
     @Transactional
     @PostMapping("/{roomNum}")
-    public ResponseEntity<?> joinRoom(@RequestBody Room room, @RequestParam int roomNum, HttpServletRequest request) throws SQLException {
+    @ApiOperation(value = "방 입장", 
+    			  notes = "방 비밀번호가 일치할 경우 success\n" +
+    					  "방 비밀번호가 다를 경우 fail \n" +
+    					  "{\r\n" + 
+    					  "  	roomPw : (방 비밀번호 / 없을경우(0))\r\n" + 
+    					  "}")	
+    public ResponseEntity<?> joinRoom(@RequestBody Room room, @PathVariable int roomNum, HttpServletRequest request) throws SQLException {
     	String userId = jwtService.getUserID(request.getHeader("access-token"));
     	Room r = roomservice.getRoom(roomNum);
 
@@ -173,6 +219,11 @@ public class RoomController {
     
     // 방에 대한 해쉬태그 추가 
     @PostMapping("/hashtag")
+    @ApiOperation(value = "방에 대한 해쉬태그 정보 추가")
+    @ApiImplicitParams({
+    	@ApiImplicitParam(name = "roomNum", value = "방 번호", dataType = "int"),
+    	@ApiImplicitParam(name = "hashtagNum", value = "해쉬태그 번호", dataType = "int")
+    })
     public ResponseEntity<?> addHashtag(@RequestParam int roomNum, @RequestParam int hashtagNum) throws SQLException {
     	Hashtag hashtag = hashtagService.getHashtag(hashtagNum);
     	Room room = roomservice.getRoom(roomNum);
@@ -186,6 +237,8 @@ public class RoomController {
     
     // 해쉬태그 목록
     @GetMapping("/hashtag")
+    @ApiOperation(value = "방에 설정된 해쉬태그 목록 조회", notes = "방에 설정된 해쉬태그 목록 조회")
+   	@ApiImplicitParam(name = "roomNum", value = "방 번호", dataType = "int")
     public ResponseEntity<?> getHashtagList(@RequestParam int roomNum) throws SQLException {
     	Room room = roomservice.getRoom(roomNum);
     	
@@ -204,6 +257,11 @@ public class RoomController {
     
     //해쉬태그 삭제
     @DeleteMapping("/hashtag")
+    @ApiOperation(value = "방에서 해쉬태그 삭제", notes = "방에 해당하는 해쉬태그 삭제")
+    @ApiImplicitParams({
+    	@ApiImplicitParam(name = "roomNum", value = "방 번호", dataType = "int"),
+    	@ApiImplicitParam(name = "hashtagNum", value = "해쉬태그 번호", dataType = "int")
+    })
     public ResponseEntity<?> deleteHashtag(@RequestParam int roomNum, @RequestParam int hashtagNum) throws SQLException {
     	Room room = roomservice.getRoom(roomNum);
     	Hashtag hashtag = hashtagService.getHashtag(hashtagNum);
@@ -216,11 +274,20 @@ public class RoomController {
 
     // 해쉬태그로 추천 방 리스트
     @GetMapping("/recommend")
+    @ApiOperation(value = "추천 방 리스트", 
+    			  notes = "해쉬태그 번호들을 받아 관련된 방 목록 전달\r\n"
+    				+ "hashtagNum=1,2,3,4,5")
+    @ApiImplicitParam(name = "hashtagNum", value = "해쉬태그 번호")
     public ResponseEntity<?> recommendRoom(@RequestParam(value="hashtagNum", required=false, defaultValue="") List<Integer> hashtagNumList) {
     	return new ResponseEntity<List<Room>>(roomservice.getRecommendHashtagList(hashtagNumList), HttpStatus.OK);
     }
     // 유저 퇴장
     @DeleteMapping("/exit/{roomNum}")
+    @ApiOperation(value = "유저 퇴장", 
+    			  notes = "해당 방의 유저 목록에서 유저 제거\r\n" + 
+    			  		"{\r\n" + 
+    			  		"  userId : (유저 아이디)\r\n" + 
+    			  		"}")	
     public ResponseEntity<?> exitRoom(@RequestBody Map<String, String> params , @PathVariable int roomNum ) throws SQLException {
         String userId = params.get("userId");
         int cnt = participationservice.exitRoom(userId, roomNum);
@@ -236,8 +303,10 @@ public class RoomController {
 
     // 입장 유저 리스트 반환
     @GetMapping("/join/{roomNum}")
+    @ApiOperation(value = "방에 접속한 유저 목록",
+    			  notes = "방에 접속한 유저 목록 전달")
     public ResponseEntity<?> joinedUser(@PathVariable int roomNum) throws SQLException {
-        List joinedUserList = participationservice.joinedUser(roomNum);
+        List<User> joinedUserList = participationservice.joinedUser(roomNum);
 
         return new ResponseEntity<List<User>>(joinedUserList, HttpStatus.OK);
 
@@ -246,6 +315,8 @@ public class RoomController {
 
     // 전에 방문했던 방 목록 반환
     @GetMapping("/history")
+    @ApiOperation(value = "이전에 방문했던 방",
+    			  notes = "이전에 방문했던 방 목록 전달")
     public ResponseEntity<?> getRoomHistory(HttpServletRequest request) throws SQLException {
         String userId = jwtService.getUserID(request.getHeader("access-token"));
         System.out.println(userId);
@@ -254,6 +325,7 @@ public class RoomController {
 
     //방 썸네일 추가
     @PostMapping("/addThumbnail/{roomNum}")
+    @ApiOperation(value = "방 썸네일 추가", notes = "방 썸네일 이미지 저장")
     public ResponseEntity<?> addThumbnail(@PathVariable int roomNum, @RequestPart MultipartFile thumbnail) throws Exception {
     	
     	UUID uuid = UUID.randomUUID();
