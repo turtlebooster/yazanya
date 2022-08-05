@@ -126,8 +126,10 @@ public class RoomController {
     	Room room = roomservice.getRoom(roomNum);
     	Map<String, Object> resultMap = new HashMap<>();
     	
-    	if (room.getRoomThumbnail() != null) {
-    		String thumbnailPath = thumbnailService.getThumbnail(room.getRoomThumbnail()).getThumnailPath();
+    	String tn = room.getRoomThumbnail();
+    	
+    	if (thumbnailService.getThumbnail(tn) != null) {
+    		String thumbnailPath = thumbnailService.getThumbnail(tn).getThumnailPath();
     		resultMap.put("thumnailPath", thumbnailPath);    		
     	}
     			
