@@ -65,31 +65,37 @@ export default {
 
     let id = ref('');
     let pw = ref('');
-    
+
     function login() {
-      rest_user.login({ id:id.value, pw:pw.value })
-        .then((response)=> {
+      rest_user
+        .login({ id: id.value, pw: pw.value })
+        .then((response) => {
           console.log(response);
-          if(response.data['message'] === 'success') {
+          if (response.data['message'] === 'success') {
             // save login info to local and move
-            store.dispatch("login", { 'access-token':response.data['access-token'], id : id.value})
-              .then(()=> {router.replace('/main');})
+            store
+              .dispatch('login', {
+                'access-token': response.data['access-token'],
+                'id': id.value,
+              })
+              .then(() => {
+                router.replace('/main');
+              });
           } else {
-            alert("로그인 실패!");
+            alert('로그인 실패!');
           }
         })
-        .catch(()=> {
-          alert("로그인 중 문제가 발생하였습니다.");
-        })
+        .catch(() => {
+          alert('로그인 중 문제가 발생하였습니다.');
+        });
     }
-
 
     onBeforeMount(() => {
       document.documentElement.style.setProperty('--size-h-header', '0');
       document.documentElement.style.setProperty('--size-w-side', '0');
     });
 
-    return { id, pw, login }
+    return { id, pw, login };
   },
 };
 </script>
@@ -114,7 +120,7 @@ button {
   border: transparent;
   border-radius: 5px;
   /* background-color: rgb(131,220,183); */
-  background-color: var(--main-color);
+  background-color: var(--theme-color);
   width: 100%;
   height: 40px;
   margin-top: 48px;
