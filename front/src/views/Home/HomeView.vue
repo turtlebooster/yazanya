@@ -1,49 +1,59 @@
 <template>
-  <div>
-    <MainBar @toggle="toggleOnOff"/>
-    <section>
-    <SidebarLogout v-if="isOn"/>
-    <HomeLogout/>
-    </section>
+  <div class="d-flex flex-column vh-100 home-view">
+    <img class="vw-100 h-50" src="@/assets/book.jpg"/>
+    <div class="d-flex justify-content-center">
+
+      <div class="d-flex fw-bold fs-6 home">
+        <img class="mx-5" style="width:20vw;" src="@/assets/connection_img.png"/>
+        <div class="d-flex flex-column justify-content-end">
+        <span
+          style="color: rgb(76, 205, 151);"
+          >야자냐가 처음이세요?</span
+        >
+        <span>지금도 0명의 유저가</span>
+        <span>야자냐와 함께 공부중입니다.</span>
+        <span>
+          <button style="background-color:var(--theme-color);" @click="pageLogin">로그인</button>
+          <button style="background-color:var(--light-sub-color);" @click="pageSignup">회원가입</button>
+        </span>
+        </div>
+      </div>
+
+    </div>
   </div>
 </template>
 
-
 <script>
-  import MainBar from "../Home/components/mainbar.vue"
-  import SidebarLogout from "../Home/components/sidebar_logout.vue"
-  import HomeLogout from "../Home/components/home_logout.vue"
-  import { ref } from 'vue'
+import { useRouter } from 'vue-router';
 
-  export default {
-    components: {
-      MainBar,
-      SidebarLogout,
-      HomeLogout,
-    },
-
-    setup() {
-      var isOn = ref(false)
-      function toggleOnOff() {
-        isOn.value = !isOn.value;
-      }
-      
-      return {
-        isOn,
-        toggleOnOff
-      }
+export default {
+  name: 'HomeView',
+  setup() {
+    let router = useRouter();
+    function pageLogin() {
+      router.push({ path: '/account/login' });
     }
-  }
+    function pageSignup() {
+      router.push({ path: '/account/signup' });
+    }
+
+    return {
+      pageLogin,
+      pageSignup,
+    };
+  },
+};
 </script>
 
-<style>
-  section {
-    display: flex;
+<style scoped>
+  .home {
+    margin-top: -10%;
   }
-  MainBar {
-    z-index: 2;
-  }
-  SidebarLogout {
-    z-index: 1;
+  button {
+    border-radius: 5px;
+    color: white;
+    border: transparent;
+    width: 100px;
+    margin: 30px;
   }
 </style>

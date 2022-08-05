@@ -1,15 +1,20 @@
 <template>
+<div class="d-flex flex-column" style="max-height: 100%; height:100%">
   <div
     class="room-navbar"
     :class="[$root.theme ? 'light' : 'dark']"
-    style="height: 48px"
+    style="height: 52px"
   >
-    <room-nav @toggle-planner="togglePlanner()" @toggle-chat="toggleChat()" />
+    <room-nav @toggle-planner="not_impl()" @toggle-chat="toggleChat()" />
   </div>
 
-  <div class="room-main d-flex justify-content-center w-100 h-100">
+  <div
+    class="room-main d-flex justify-content-center flex-grow-1 w-100"
+    :class="[$root.theme ? 'light-content' : 'dark-content']"
+  >
+    <!-- Planner Side bar -->
     <div
-      class="planner-sidebar h-100 me-auto"
+      class="planner-sidebar me-auto"
       :style="{
         width: planner_width + '%',
         transition: '750ms',
@@ -19,23 +24,34 @@
       <!-- TODO planner components -->
       <p>TODO planner components</p>
       <button @click="test()" class="m-2">increase member</button>
+      <button @click="joinRoom()" class="m-2">add member </button>
+      <button @click="leaveRoom()" class="m-2">leave member </button>
+      <button @click="test2()" class="m-2"> test </button>
+
+      {{ Object.keys(participants).length }}
+
+      <div v-for="(value, name) in participants" :key="name">
+        {{ name }}   
+      </div>
     </div>
 
+    <!-- Video Content -->
     <div
-      class="video-plane d-flex flex-column w-100 h-100"
+      class="video-plane d-flex flex-column w-100 m-3 rounded-3 shadow"
       :class="[$root.theme ? 'light-content' : 'dark-content']"
     >
       <div
-        class="video-room-info-topbar d-flex justify-content-center w-100 mb-auto p-1 pt-2"
-        style="height: 8%; min-height: 36px"
+        class="video-room-info-topbar d-flex justify-content-center  mb-auto p-1 pt-2"
+        style="height: 8%; min-height: 52px"
       >
         <i
           class="ms-2 mt-1 me-auto"
           :class="[isRoomPrivate ? 'bi bi-lock-fill' : '']"
-          style="font-size: 1.2em"
+          style="font-size: 1.5em"
           >&nbsp;&nbsp;{{ roomname }}
         </i>
 
+    
         <div class="drowdown ms-auto me-3">
           <a
             class="dropdown-toggle"
@@ -46,7 +62,7 @@
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
-            <i class="bi bi-list text-center" style="font-size: 1.5em"></i>
+            <i class="bi bi-list text-center" style="font-size: 2em"></i>
           </a>
           <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
             <li><a class="dropdown-item" href="#">Action</a></li>
@@ -57,47 +73,87 @@
       </div>
 
       <div
-        class="video-components-plane justify-content-center d-flex flex-column w-100 h-100 p-5"
+        class="video-components-plane d-flex justify-content-center align-content-center flex-grow-1 flex-wrap"
+        style="overflow: hidden"
+        ref="video_plane"
       >
-        <div
-          v-for="i in rows_cnt"
-          :key="i"
-          class="row d-flex justify-content-center flex-grow-1"
-        >
-          <div
-            v-for="j in cols_cnt"
-            :key="j"
-            class="col justify-content-center py-1"
+        <div v-for="(value, name) in participants" :key="name" :ref="(el) => { members[name] = el }"
+          :style="{ position: 'relative', width:  each_video_width + 'px', height:  + each_video_height + 'px'}"
           >
-            <img
-              class="w-100 h-100"
-              src="@/assets/logo/title_logo_009e73.png"
-              style="background-color: #fafafa"
-            />
-          </div>
+          <b-dropdown
+            style="position: absolute; bottom: 10px; right: 10px; z-index: 2; background-color:#404040;"
+            size="sm" variant="link" toggle-class="rounded-circle text-decoration-none" no-caret>
+            <template #button-content><i class="bi bi-three-dots-vertical" style="color:#f3f3f3"></i></template>
+            <b-dropdown-item href="#">Action</b-dropdown-item>
+            <b-dropdown-item href="#">Another action</b-dropdown-item>
+            <b-dropdown-item href="#">Something else here...</b-dropdown-item>
+          </b-dropdown>
         </div>
       </div>
 
+      <!-- Videoroom bottombar for control -->
+      <hr class="border-top border-dark border-3 rounded-3 mx-4 my-2 p-0" />
       <div
-        class="video-setting-bottombar w-100 mt-auto"
+        class="video-setting-bottombar d-flex justify-content-center align-items-center w-100 mt-auto p-3 pt-2"
         style="height: 12%; min-height: 56px"
-      ></div>
+      >
+        <b-button
+          class="rounded-circle mx-2"
+          :class="[$root.theme ? 'dark-content' : 'light-content']"
+          @click="not_impl()"
+        >
+          <i class="bi bi-mic-fill" style="font-size: 1.3em"></i>
+          <!-- <i class="bi bi-mic-mute-fill"></i> -->
+        </b-button>
+        <b-button
+          class="rounded-circle mx-2"
+          :class="[$root.theme ? 'dark-content' : 'light-content']"
+          @click="not_impl()"
+        >
+          <i class="bi bi-camera-video-fill" style="font-size: 1.3em"></i>
+          <!-- <i class="bi bi-camera-video-off-fill"></i> -->
+        </b-button>
+        <b-button
+          class="rounded-circle mx-2"
+          :class="[$root.theme ? 'dark-content' : 'light-content']"
+          @click="not_impl()"
+        >
+          <i class="bi bi-display" style="font-size: 1.3em"></i>
+          <!-- <i class="bi bi-camera-video-off-fill"></i> -->
+        </b-button>
+
+        <b-button pill
+          class="mx-4 m-1 px-sm-4"
+          variant="danger"
+          @click="leaveRoom()"
+        >
+          <i class="bi bi-power" style="font-size: 1.3em"></i>
+          <!-- <i class="bi bi-camera-video-off-fill"></i> -->
+        </b-button>
+      </div>
     </div>
 
+    <!-- Chat Sidebar -->
     <div
-      class="chat-sidebar h-100 ms-auto"
-      :style="{ width: chat_width + '%', transition: '750ms' }"
+      class="chat-sidebar ms-auto my-auto rounded-3"
+      :style="{ width: chat_width + '%', height: '95%', transition: '750ms' }"
     >
       <!-- TODO chat components -->
     </div>
   </div>
+  </div>
 </template>
 
 <script>
-import RoomNav from './components/RoomNavbar.vue';
-// import VideoComp from  './components/RoomVideo.vue';
-import { ref, computed, onBeforeMount } from 'vue';
+import { ref, computed, onBeforeMount, onMounted, onUpdated } from 'vue';
 import { useRouter } from 'vue-router';
+import { useStore } from 'vuex'
+
+import RoomNav from './components/RoomNavbar.vue';
+
+import rest_room from '@/rest/room';
+
+// import VideoComp from './components/RoomVideo.vue';
 
 export default {
   components: {
@@ -106,10 +162,13 @@ export default {
   },
 
   setup() {
+    const router = useRouter();
+    const store = useStore();
+
     // --------- sidebar sizing event handling  ↓ ----------- //
     const SIDEBAR_WIDTH = 28;
     const planner_width = ref(0);
-    const chat_width = ref(SIDEBAR_WIDTH);
+    const chat_width = ref(0);
 
     function togglePlanner() {
       planner_width.value = planner_width.value === 0 ? SIDEBAR_WIDTH : 0;
@@ -118,62 +177,191 @@ export default {
       chat_width.value = chat_width.value === 0 ? SIDEBAR_WIDTH : 0;
     }
 
+    // ---------------------- set unload event ------------------------- //
+    function unLoadEvent(event) {
+      // REST request
+      store.dispatch("leaveRoom");      
+      event.returnValue = "";
+    }
+
+    // add event for leaving this page
+    onMounted(() => { window.addEventListener('beforeunload', unLoadEvent)} );
+
+    // remove event
+    // onBeforeUnmount(() => {window.removeEventListener('beforeunload', unLoadEvent)});
+
+    // --------------------- room information ----------------------- //
+    let isRoomPrivate = ref(true);
     let roomname = ref(null);
-    let router = useRouter();
+
     onBeforeMount(() => {
       // ----------- for room name ↓ ------------ //
       let url = document.URL;
       let idx = url.indexOf('studyroom/') + 10;
       if (idx === -1) {
         alert('올바르지 않은 방주소입니다');
-        router.replace('/');
+        router.replace('/main');
         return;
       }
 
       // check room number NaN
       let room_number = url.slice(idx);
-      if (Number.isInteger(room_number)) {
-        alert('방 번호가 형식에 맞지 않습니다');
-        router.replace('/');
+      if (isNaN(room_number)) {
+        alert('링크가 형식에 맞지 않습니다');
+        router.replace('/main');
         return;
       }
 
-      // TODO : get roomname from server
+      // ------------------- check RoomPW ---------------------- //
+      rest_room.joinRoom(room_number)
+        .then((response)=> {
+          if(response.data === 'fail') {
+            // room join falied => has Password
+            rest_room.joinRoom(room_number, prompt("방의 비밀번호를 입력해주세요"))
+            .then((response) => {
+              if(response.data === 'fail') {
+                alert('비밀번호가 일치하지 않습니다');
+                // router.replace('/main');
+              }
+            })
+          }
+        })
+        .then(() => {
+          // get room infomation
+          rest_room.getRoomInfo(room_number)
+            .then((response) => {
+              console.log("get Room info " + response.data);
+              store.dispatch('saveRoomInfo', response.data.room);
+            }) 
+        })
+        .catch((error)=> {
+          console.log(error);
+          alert("방 입장중 문제가 발생하였습니다");
+          router.replace('/main');
+        })
+      
       roomname.value = room_number;
 
-      // ---------------- for hide header nav and side bar ------------------ //
-      // document.documentElement.style.setProperty('--size-h-header', '0');
-      // document.documentElement.style.setProperty('--size-w-side', '0');
+      // start socket connection
+      console.log(store.getters['getUserID']);
+      store.dispatch("joinRoom", store.getters['getUserID']);
     });
 
-    // ---------- dynamic vedio grid for participants ↓ ------------ //
-    var member_cnt = ref(1);
-    let cols_cnt = computed(() => {
-      return member_cnt.value < 4
-        ? member_cnt.value
-        : Math.ceil(Math.sqrt(member_cnt.value));
-    });
-    let rows_cnt = computed(() => {
-      return Math.ceil(member_cnt.value / cols_cnt.value);
-    });
+    // -------------------- room asign -------------------- //
 
-    function test() {
-      console.log(member_cnt);
-      member_cnt.value++;
+    function joinRoom() {
+      store.dispatch("joinRoom", { username: prompt("이름은?", "그래") || 'asdf', roomname: '310' });
+    }
+    function leaveRoom() {
+      // APP Server request
+      store.dispatch("leaveRoom");
+      // REST request
+      rest_room.leaveRoom(store.state.Room.room.roomNum);
+      router.replace('/main');
     }
 
-    let isRoomPrivate = ref(true);
+    // ---------- dynamic video grid for participants ↓ ------------ //
+    var nMember = computed(()=> Object.keys(store.getters.getParticipants).length);
+    var nCols = computed(()=> nMember.value < 3 ? nMember.value : Math.ceil(Math.sqrt(nMember.value + 1)));
+    var nRows = computed(()=> Math.ceil(nMember.value / nCols.value));
+
+    // ------------------- calculate width and height ------------------------ //
+    let video_plane = ref(null);
+    const video_container_width = computed(()=> video_plane.value != null? video_plane.value.clientWidth - 5: 0);
+    const video_container_height = computed(()=> video_plane.value != null? video_plane.value.clientHeight - 5: 0);
+
+    function cal_video_wh(returnWidth) {
+      // axis 1 : 1.7     
+      let width = video_container_width.value / nCols.value;
+      let height = width * 0.59;
+
+      let over_height = height * nRows.value - video_container_height.value;
+      if(over_height > 0) {
+        width -= (over_height / nRows.value) * 1.7;
+        height = width * 0.59
+      }
+      return returnWidth? width : height;
+    }
+    var each_video_width = computed(()=> cal_video_wh(true));
+    var each_video_height = computed(()=> cal_video_wh(false));
+    
+
+    // --------------------- for debugging ------------------------ //
+    function test() {
+      console.log(store.state.Room.chat_list);
+    }
+    function test2() {
+     store.dispatch('sendChat', {sender: store.state.Account.userID, message:prompt('채팅 내용')});
+    }
+    function not_impl() {
+      alert('아직 미구현입니다');
+    }
+
+    // --------------------- add video on updated participants ----------------------- //
+    var members = ref({});
+    onUpdated(() => {
+      // add video of newly participants
+      Object.keys(members.value).forEach((key) => {
+        if(!members.value[key]) {
+          // check null
+          return;
+        }
+        if(members.value[key].lastChild.tagName === "VIDEO") {
+          // already has video
+          return;
+        }
+          
+        let video = store.state.Room.participants[key].getVideoElement();
+
+        video.style.margin = 'auto';
+        video.style.objectFit = 'cover';
+        video.setAttribute('width', each_video_width.value - 5);
+        video.setAttribute('height', each_video_height.value - 5);
+        members.value[key].appendChild(video);
+      })
+
+      // -------------------- match width height dynamically ---------------------- //
+      Object.keys(members.value).forEach((key) => {
+        if(!members.value[key]) {
+          // check null
+          return;
+        }
+        // already has video
+        if(members.value[key].lastChild.tagName !== "VIDEO") {
+          return;
+        }
+  
+        members.value[key].lastChild.setAttribute('width', each_video_width.value - 5);
+        members.value[key].lastChild.setAttribute('height', each_video_height.value - 5);
+      })
+    })
 
     return {
       togglePlanner,
       toggleChat,
       planner_width,
       chat_width,
-      test,
-      cols_cnt,
-      rows_cnt,
+
       roomname,
       isRoomPrivate,
+
+      joinRoom,
+      leaveRoom,
+      members,
+
+      // for test
+      test,
+      test2,
+      not_impl,
+
+      video_plane,
+
+      nMember,
+      each_video_width,
+      each_video_height,
+
+      participants: computed(() => store.state.Room.participants),
+      isConnected: computed(() => store.state.Room.isSocketConnected)
     };
   },
 };
@@ -197,10 +385,10 @@ export default {
   color: #f3f3f3;
 }
 
-.light-content {
+.light-content-color {
   color: #545664;
 }
-.dark-content {
+.dark-content-color {
   color: #f3f3f3;
 }
 
@@ -210,14 +398,23 @@ export default {
 }
 
 .planner-sidebar {
-  background-color: blueviolet;
+  background-color: azure;
 }
 
 .chat-sidebar {
   background-color: azure;
 }
 
-.video-setting-bottombar {
-  background-color: brown;
+
+/* for video */
+.video {
+  /* max-height: 100%;
+  min-width: 100%;
+  object-fit: cover; */
+
+  height: 100vh;
+  width: 100%;
+  object-fit: cover;
+  position: absolute;
 }
 </style>
