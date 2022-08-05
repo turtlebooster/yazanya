@@ -12,10 +12,10 @@ export const Room = {
       participants: {},
       isSocketConnected: false,
 
-      username: '',
-      roomname: '',
-
       chat_list: [],
+
+      username: '', // used in kurento app server
+      room: {},
     };
   },
 
@@ -48,7 +48,7 @@ export const Room = {
                 parsedMessage,
                 state.participants,
                 state.username,
-                state.roomname
+                state.room.room_num
               );
               break;
             case 'newParticipantArrived':
@@ -110,8 +110,8 @@ export const Room = {
       state.username = data;
     },
 
-    setRoomName(state, data) {
-      state.roomname = data;
+    setRoomInfo(state, data) {
+      state.room = data;
     },
 
     addChat(state, data) {
@@ -127,6 +127,7 @@ export const Room = {
 
   actions: {
     leaveRoom({ commit }) {
+      commit('setRoomInfo', {});
       commit('sendMessage', {
         id: 'leaveRoom',
       });
@@ -134,15 +135,21 @@ export const Room = {
       commit('closeSocket');
     },
 
-    register({ commit }, payload) {
-      commit('setUserName', payload.username);
-      commit('setRoomName', payload.roomname);
+    saveRoomInfo({ commit }, payload) {
+      commit('setRoomInfo', payload);
+    },
+
+    joinRoom({ commit, state }, username) {
+      commit('initSocket');
+      commit('setUserName', username);
 
       var message = {
         id: 'joinRoom',
-        name: payload.username,
-        room: payload.roomname,
+        name: username,
+        room: state.room.room_num,
       };
+
+      console.log('asdf');
       commit('sendMessage', message);
     },
 
