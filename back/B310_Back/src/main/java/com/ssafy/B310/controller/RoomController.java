@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -270,7 +271,7 @@ public class RoomController {
     	return new ResponseEntity<List<Room>>(roomservice.getRecommendHashtagList(hashtagNumList), HttpStatus.OK);
     }
     
-    @DeleteMapping("/exit/{roomNum}")
+    @PatchMapping("/exit/{roomNum}")
     @ApiOperation(value = "유저 퇴장", 
     			  notes = "해당 방의 유저 목록에서 유저 제거\r\n" + 
     			  		"{\r\n" + 
