@@ -36,7 +36,7 @@ public class HashtagController {
 		int cnt = hashtagService.createHashtag(hashtag);
 	
 		if(cnt==1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
-		else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+		else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
 
 	}
 	
@@ -46,7 +46,7 @@ public class HashtagController {
 		int cnt = hashtagService.updateHashtag(hashtag);
 		
 		if(cnt==1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
-		else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+		else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
 	}
 	
 	@ApiOperation(value="해쉬태그 삭제", notes="hashtagNum을 PathVariable로 받아 해당 hashtag를 삭제한다.")
@@ -55,7 +55,7 @@ public class HashtagController {
 		int cnt = hashtagService.removeHashtag(hashtagNum);
 		
 		if(cnt==1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
-		else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+		else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
 
 	}
 	

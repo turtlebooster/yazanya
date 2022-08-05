@@ -54,7 +54,7 @@ public class TodoController {
     public ResponseEntity<?> createTodo(@RequestBody Todo todo, @PathVariable String userId) throws SQLException{
     	int cnt = todoService.createTodo(todo, userId);
     	if (cnt == 1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
-    	else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+    	else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
     }
     
     @ApiOperation(value="todo 전제조회", notes="DB에 기록되어있는 모든 todo들을 불러온다")
@@ -73,7 +73,7 @@ public class TodoController {
     		map.put("achievement", todoService.calAchievement(todoList));
     		return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);    		
     	} else {
-    		return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+    		return new ResponseEntity<String>(FAIL, HttpStatus.OK);
     	}
     }
     
@@ -84,8 +84,7 @@ public class TodoController {
     	if (todo != null) {
     		return new ResponseEntity<Todo>(todo, HttpStatus.OK);
     	} else {
-//    		return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
-    		return new ResponseEntity<Todo>(todo, HttpStatus.INTERNAL_SERVER_ERROR);
+    		return new ResponseEntity<String>(FAIL, HttpStatus.OK);
     	}
     }
     
@@ -101,7 +100,7 @@ public class TodoController {
     public ResponseEntity<?> updateTodo(@RequestBody Todo todo) throws SQLException{
     	int cnt = todoService.updateTodo(todo);
     	if (cnt == 1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
-    	else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+    	else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
     }
     
     @ApiOperation(value="todo 삭제", notes="특정 todo를 삭제한다.\nPathVariable로 삭제할 todoNum을 넣는다.")
@@ -109,7 +108,7 @@ public class TodoController {
     public ResponseEntity<?> removeTodo(@PathVariable("todoNum") int todoNum) throws SQLException{
     	int cnt = todoService.removeTodo(todoNum);
     	if (cnt == 1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
-    	else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+    	else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
     }
     
     @ApiOperation(value="todo 날짜별 조회", notes="특정 날의 todo 목록을 불러온다.\nRequestBody로 불러오고싶은 시작 날짜와 끝 날짜를 넣는다.\n"
@@ -125,7 +124,7 @@ public class TodoController {
     	int compare = startDate.compareTo(endDate);
     	if (compare > 0) {
     		System.out.println("날짜 범위 오류입니다.");
-    		return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+    		return new ResponseEntity<String>(FAIL, HttpStatus.OK);
     	} else if (compare == 0) {
     		Calendar cal = Calendar.getInstance();
     		cal.setTime(endDate);

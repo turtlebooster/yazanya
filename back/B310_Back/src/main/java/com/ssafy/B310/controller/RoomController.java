@@ -43,11 +43,9 @@ import com.ssafy.B310.service.RoomService;
 import com.ssafy.B310.service.ThumbnailService;
 import com.ssafy.B310.service.UserService;
 
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 
 @RestController
 @RequestMapping("/room")
@@ -80,7 +78,6 @@ public class RoomController {
     @Autowired
     ThumbnailService thumbnailService;
 
-    // 방 생성
     @PostMapping
     @ApiOperation(value = "방 생성", 
 	    		  notes = "방을 하나 생성함\r\n" + 
@@ -101,10 +98,9 @@ public class RoomController {
         int cnt = roomservice.createRoom(room, userId);
 
         if(cnt!=0) return new ResponseEntity<Integer>(cnt, HttpStatus.OK);
-        else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+        else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
     }
 
-    // 방 필터링
     @PostMapping("/filter")
     @ApiOperation(value = "방 검색", 
     			  notes = "주어진 조건으로 방을 검색하여 목록 전달\r\n" + 
@@ -119,31 +115,30 @@ public class RoomController {
     	if(!roomList.isEmpty())
     		return new ResponseEntity<List<Room>>(roomList, HttpStatus.OK);
     	else
-    		return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR); 
+    		return new ResponseEntity<String>(FAIL, HttpStatus.OK); 
     }
     
-    // 방 하나 가져오기
     @GetMapping("/{roomNum}")
     @ApiOperation(value = "방 정보 불러오기",
     			  notes = "전달된 방 번호에 해당하는 방의 정보 전달")
     public ResponseEntity<?> getRoom(@PathVariable int roomNum) throws SQLException{
     	Room room = roomservice.getRoom(roomNum);
+    	Map<String, Object> resultMap = new HashMap<>();
     	
-//    	String thumbnailPath = thumbnailService.getThumbnail(room.getRoomThumbnail()).getThumnailPath();
-    	
-		Map<String, Object> resultMap = new HashMap<>();
-		
+    	if (room.getRoomThumbnail() != null) {
+    		String thumbnailPath = thumbnailService.getThumbnail(room.getRoomThumbnail()).getThumnailPath();
+    		resultMap.put("thumnailPath", thumbnailPath);    		
+    	}
+    			
 		resultMap.put("room", room);
 		resultMap.put("message", SUCCESS);
-//		resultMap.put("thumnailPath", thumbnailPath);
     	
     	if(room != null) {
     		return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
     	}
-    	else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+    	else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
     }
 
-    // 방 삭제
     @DeleteMapping("/{roomNum}")
     @ApiOperation(value = "방 삭제", 
     			  notes = "전달된 방 번호에 해당하는 방을 삭제")	
@@ -152,10 +147,9 @@ public class RoomController {
         int cnt = roomservice.removeRoom(roomNum);
 
         if(cnt==1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
-        else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+        else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
     }
 
-    // 방 정보 업데이트
     @PutMapping
     @ApiOperation(value = "방 정보 수정",
 	  			  notes = "전달된 방 번호에 해당하는 방의 정보 수정\r\n" + 
@@ -176,7 +170,7 @@ public class RoomController {
         int cnt = roomservice.updateRoom(room);
 
         if(cnt==1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
-        else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+        else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
     }
     
     @GetMapping("/active")
@@ -187,11 +181,9 @@ public class RoomController {
     	boolean result = roomservice.enableJoinRoom(roomNum);
     	
     	if(result) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
-        else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+        else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
     }
     
-
-    //방에 비밀번호 쳐서 맞으면 입장
     @Transactional
     @PostMapping("/{roomNum}")
     @ApiOperation(value = "방 입장", 
@@ -213,11 +205,10 @@ public class RoomController {
         	roomservice.addParticipation(r);
         	return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
         }
-        else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+        else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
 
     }
     
-    // 방에 대한 해쉬태그 추가 
     @PostMapping("/hashtag")
     @ApiOperation(value = "방에 대한 해쉬태그 정보 추가")
     @ApiImplicitParams({
@@ -232,10 +223,9 @@ public class RoomController {
     	
     	int cnt = roomHashtagService.addRoomHashtag(roomHt);
 		if(cnt == 1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
-	    else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+	    else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
     }
     
-    // 해쉬태그 목록
     @GetMapping("/hashtag")
     @ApiOperation(value = "방에 설정된 해쉬태그 목록 조회", notes = "방에 설정된 해쉬태그 목록 조회")
    	@ApiImplicitParam(name = "roomNum", value = "방 번호", dataType = "int")
@@ -245,7 +235,7 @@ public class RoomController {
     	List<RoomHashtag> set = roomHashtagService.getRoomHashtagBy(room);
     	if(set.isEmpty()) {
     		System.out.println("list 비어있음");
-    		return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+    		return new ResponseEntity<String>(FAIL, HttpStatus.OK);
     	}
     	
     	for(RoomHashtag tag : set) {
@@ -255,7 +245,6 @@ public class RoomController {
     	return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
     }
     
-    //해쉬태그 삭제
     @DeleteMapping("/hashtag")
     @ApiOperation(value = "방에서 해쉬태그 삭제", notes = "방에 해당하는 해쉬태그 삭제")
     @ApiImplicitParams({
@@ -269,10 +258,9 @@ public class RoomController {
     	int cnt = roomHashtagService.deleteRoomHashtag(room, hashtag);
     	
 		if(cnt == 1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
-	    else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+	    else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
     }
 
-    // 해쉬태그로 추천 방 리스트
     @GetMapping("/recommend")
     @ApiOperation(value = "추천 방 리스트", 
     			  notes = "해쉬태그 번호들을 받아 관련된 방 목록 전달\r\n"
@@ -281,7 +269,7 @@ public class RoomController {
     public ResponseEntity<?> recommendRoom(@RequestParam(value="hashtagNum", required=false, defaultValue="") List<Integer> hashtagNumList) {
     	return new ResponseEntity<List<Room>>(roomservice.getRecommendHashtagList(hashtagNumList), HttpStatus.OK);
     }
-    // 유저 퇴장
+    
     @DeleteMapping("/exit/{roomNum}")
     @ApiOperation(value = "유저 퇴장", 
     			  notes = "해당 방의 유저 목록에서 유저 제거\r\n" + 
@@ -298,10 +286,9 @@ public class RoomController {
         	roomservice.decreaseParticipation(room);
         	return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
         }
-        else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+        else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
     }
 
-    // 입장 유저 리스트 반환
     @GetMapping("/join/{roomNum}")
     @ApiOperation(value = "방에 접속한 유저 목록",
     			  notes = "방에 접속한 유저 목록 전달")
@@ -312,8 +299,6 @@ public class RoomController {
 
     }
     
-
-    // 전에 방문했던 방 목록 반환
     @GetMapping("/history")
     @ApiOperation(value = "이전에 방문했던 방",
     			  notes = "이전에 방문했던 방 목록 전달")
@@ -323,7 +308,6 @@ public class RoomController {
         return new ResponseEntity<List<Room>>(participationHistoryService.getRoomHistoryList(userId), HttpStatus.OK);
     }
 
-    //방 썸네일 추가
     @PostMapping("/addThumbnail/{roomNum}")
     @ApiOperation(value = "방 썸네일 추가", notes = "방 썸네일 이미지 저장")
     public ResponseEntity<?> addThumbnail(@PathVariable int roomNum, @RequestPart MultipartFile thumbnail) throws Exception {
@@ -357,7 +341,7 @@ public class RoomController {
     	long result = roomservice.addThumbnail(roomNum, fileId);
     	
     	if(result != 0) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
-    	else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+    	else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
 
     }
 }
