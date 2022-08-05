@@ -1,61 +1,262 @@
 <template>
   <div class="main-lobby">
-    <div class="container d-flex flex-column">
-      <div class="main-lobby-search d-flex justify-content-center">
-        <div class="search outer d-flex align-items-center">
-          <input
-            class="search_input"
-            type="text"
-            placeholder="Search here..."
-          />
-          <a href="#" class="search_icon"><i class="bi bi-search"></i></a>
+    <div class="d-flex flex-column align-items-center" style="padding: 8px">
+      <div class="spacer"></div>
+
+      <!-- search -->
+      <div class="search outer d-flex align-items-center">
+        <input class="search_input" type="text" placeholder="방 검색" />
+        <a href="#" class="search_icon"><i class="bi bi-search"></i></a>
+      </div>
+      <div class="spacer"></div>
+      <div class="spacer"></div>
+
+      <!-- room history -->
+      <div style="width: 90%; font-size: 24px; font-weight: bold">
+        이전에 참여했던 방
+      </div>
+      <div class="spacer"></div>
+
+      <div class="container-fluid" style="border-radius: 24px; width: 90%">
+        <div class="row">
+          <div
+            v-for="room in state.roomHistory"
+            :key="room.userNum"
+            class="room col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2"
+          >
+            <!-- room -->
+            <div class="room-template outer">
+              <router-link
+                :to="`/studyroom/${room.codeNum}`"
+                class="room-component d-flex flex-column"
+              >
+                <!-- thumbnail -->
+                <img
+                  :src="require(`@/assets/thumbnail/${room.thumbnailNum}.jpg`)"
+                  alt="room-thumbnail"
+                  class="room-thumbnail"
+                />
+
+                <div class="d-flex align-items-center" style="margin-top: 8px">
+                  <!-- profile -->
+                  <b-avatar
+                    :src="require(`@/assets/avatar/${room.userNum}.jpg`)"
+                    size="2em"
+                  ></b-avatar>
+
+                  <div
+                    class="d-flex flex-column flex-grow-1"
+                    style="margin-left: 8px"
+                  >
+                    <!-- title -->
+                    <div style="font-size: 16pt; font-weight: bold">
+                      {{ room.title }}
+                    </div>
+
+                    <!-- detail -->
+                    <div style="font-size: 10pt">{{ room.detail }}</div>
+                  </div>
+                </div>
+
+                <!-- tag -->
+                <div class="d-flex" style="margin-top: 8px">
+                  <b-badge
+                    v-for="hashTag in room.hashTag"
+                    :key="hashTag"
+                    pill
+                    style="
+                      color: white;
+                      font-size: 10pt;
+                      margin-left: 4px;
+                      background: var(--sub-color-r) !important;
+                    "
+                    ># {{ hashTag }}</b-badge
+                  >
+                </div>
+              </router-link>
+            </div>
+          </div>
+
+          <!-- new room -->
+          <div class="room col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">
+            <div class="room-template outer" v-b-modal.modal-center>
+              <div class="room-component d-flex flex-column">
+                <i
+                  class="bi bi-plus-circle-fill"
+                  style="
+                    font-size: 2em;
+                    position: absolute;
+                    left: 50%;
+                    top: 50%;
+                    transform: translate(-50%, -50%);
+                  "
+                ></i>
+              </div>
+            </div>
+
+            <!-- modal -->
+            <b-modal id="modal-center" centered title="방 만들기">
+              <p class="my-4">방 코드 설정</p>
+              <p class="my-4">방 이름 설정</p>
+              <p class="my-4">방 세부내용 설정</p>
+              <p class="my-4">방 해시태그</p>
+            </b-modal>
+          </div>
         </div>
       </div>
 
-      <div
-        class="main-lobby-history"
-        style="background: var(--sub-color-o); height: 100px"
-      ></div>
+      <div class="spacer"></div>
+      <div class="liner"></div>
+      <div class="spacer"></div>
+      <div class="spacer"></div>
 
-      <div
-        class="outer d-flex flex-column"
-        style="height: 400px; width: 400px; padding: 20px"
-      >
-        <div class="search outer d-flex"></div>
-
-        <div></div>
-
-        <img
-          :src="require(`@/assets/avatar/3.jpg`)"
-          alt="profile"
-          class="image icon"
-          style="
-            height: 40px;
-            width: 40px;
-            object-fit: cover;
-            border-radius: 50%;
-          "
-        />
+      <!-- room recommend -->
+      <div style="width: 90%; font-size: 24px; font-weight: bold">
+        추천하는 공부방
       </div>
+      <div class="spacer"></div>
 
-      <div class="line"></div>
+      <div class="container-fluid" style="border-radius: 24px; width: 90%">
+        <div class="row">
+          <div
+            v-for="room in state.roomRecommend"
+            :key="room.userNum"
+            class="room col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2"
+          >
+            <!-- room -->
+            <div class="room-template outer">
+              <router-link
+                :to="`/studyroom/${room.codeNum}`"
+                class="room-component d-flex flex-column"
+              >
+                <!-- thumbnail -->
+                <img
+                  :src="require(`@/assets/thumbnail/${room.thumbnailNum}.jpg`)"
+                  alt="room-thumbnail"
+                  class="room-thumbnail"
+                />
 
-      <div
-        class="main-lobby-recommend"
-        style="background: var(--sub-color-b); height: 100px"
-      ></div>
+                <div class="d-flex align-items-center" style="margin-top: 8px">
+                  <!-- profile -->
+                  <b-avatar
+                    :src="require(`@/assets/avatar/${room.userNum}.jpg`)"
+                    size="2em"
+                  ></b-avatar>
+
+                  <div
+                    class="d-flex flex-column flex-grow-1"
+                    style="margin-left: 8px"
+                  >
+                    <!-- title -->
+                    <div style="font-size: 16pt; font-weight: bold">
+                      {{ room.title }}
+                    </div>
+
+                    <!-- detail -->
+                    <div style="font-size: 10pt">{{ room.detail }}</div>
+                  </div>
+                </div>
+
+                <!-- tag -->
+                <div class="d-flex" style="margin-top: 8px">
+                  <b-badge
+                    v-for="hashTag in room.hashTag"
+                    :key="hashTag"
+                    pill
+                    style="
+                      color: white;
+                      font-size: 10pt;
+                      margin-left: 4px;
+                      background: var(--sub-color-r) !important;
+                    "
+                    ># {{ hashTag }}</b-badge
+                  >
+                </div>
+              </router-link>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+import { reactive } from 'vue';
+
+export default {
+  setup() {
+    const state = reactive({
+      roomHistory: [
+        {
+          thumbnailNum: 2,
+          userNum: 3,
+          codeNum: '308',
+          title: '공부 1대1 고수만',
+          detail: '쉬는 시간 세팅 0으로 해놨습니다. 쫄?',
+          hashTag: ['취업', '휴식없음', '빡공'],
+        },
+        {
+          thumbnailNum: 1,
+          userNum: 2,
+          codeNum: '309',
+          title: 'ASMR',
+          detail: '카페 분위기에서 공부하실 분?',
+          hashTag: ['쉬엄쉬엄', '화이트노이즈'],
+        },
+        {
+          thumbnailNum: 0,
+          userNum: 0,
+          codeNum: '310',
+          title: 'b310',
+          detail: 'b310',
+          hashTag: ['테스트용'],
+        },
+        {
+          thumbnailNum: 0,
+          userNum: 0,
+          codeNum: '311',
+          title: 'b311',
+          detail: 'b311',
+          hashTag: [],
+        },
+        {
+          thumbnailNum: 0,
+          userNum: 0,
+          codeNum: '312',
+          title: 'b312',
+          detail: 'b312',
+          hashTag: [],
+        },
+      ],
+      roomRecommend: [
+        {
+          thumbnailNum: 2,
+          userNum: 3,
+          codeNum: '308',
+          title: '공부 1대1 고수만',
+          detail: '쉬는 시간 세팅 0으로 해놨습니다. 쫄?',
+          hashTag: ['취업', '휴식없음', '빡공'],
+        },
+        {
+          thumbnailNum: 1,
+          userNum: 2,
+          codeNum: '309',
+          title: 'ASMR',
+          detail: '카페 분위기에서 공부하실 분?',
+          hashTag: ['쉬엄쉬엄', '화이트노이즈'],
+        },
+      ],
+    });
+
+    return { state };
+  },
+};
 </script>
 
 <style scoped>
 .main-lobby {
   background-color: var(--light-main-color);
-  padding: 16px;
   height: 100%;
 }
 
@@ -69,19 +270,24 @@ export default {};
     inset -4px -4px 10px -1px rgba(255, 255, 255, 0.25);
 }
 
-.line {
-  height: 4px;
-  background: var(--main-color);
+.liner {
+  height: 2px;
+  width: 80%;
+  border-radius: 1px;
+  background: var(--light-sub-color);
+}
+
+.spacer {
+  height: 24px;
 }
 
 .search {
   height: 40px;
-  width: 60vw;
+  width: 80%;
   flex-wrap: nowrap;
 
   background-color: var(--light-main-color);
   border-radius: 24px;
-  margin-bottom: 50px;
   padding: 10px;
 }
 
@@ -97,13 +303,13 @@ export default {};
   padding: 0 10px;
   flex-grow: 1;
   flex-shrink: 1;
-  caret-color: var(--main-color);
+  caret-color: var(--theme-color);
 
   overflow: hidden;
 }
 
 .search:hover > .search_icon {
-  background: var(--main-color);
+  background: var(--theme-color);
   color: white;
 }
 
@@ -121,5 +327,53 @@ export default {};
 
 a:link {
   text-decoration: none;
+}
+
+.room-template * {
+  color: #000000;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.room-template {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 32px;
+  margin-left: auto;
+  margin-right: auto;
+
+  transition-duration: 0.2s;
+}
+
+.room-template:after {
+  content: '';
+  display: block;
+  padding-bottom: 100%;
+}
+
+.room-template:hover {
+  z-index: 10;
+  transform: scale(1.1); /*  default */
+  -webkit-transform: scale(1.1); /*  크롬 */
+  -moz-transform: scale(1.1); /* FireFox */
+  -o-transform: scale(1.1); /* Opera */
+}
+
+.room-component {
+  padding: 8px;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.room-thumbnail {
+  flex-grow: 1;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 8px;
 }
 </style>
