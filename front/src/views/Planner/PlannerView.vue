@@ -1,27 +1,41 @@
-<template>
-  <div class="planner-view">
-    <div class="achievement">
-      <div class="container">
-        <div class="logo">
-          <h1>achievement</h1>
-          <h2>progress</h2>
-        </div>
+<!--https://getbootstrap.com/docs/5.2/examples/ 좀 보고와라-->
+<!--https://getbootstrap.com/docs/5.2/examples/masonry/ 좀 보고와라-->
 
-        <div class="progress-container">
-          <svg class="progressbar" viewBox="0 0 64 64">
-            <circle
-              class="progressbar-track"
-              cx="50%"
-              cy="50%"
-              r="30px"
-            ></circle>
-            <circle
-              class="progressbar-line"
-              cx="50%"
-              cy="50%"
-              r="30px"
-            ></circle>
-          </svg>
+<template>
+  <div class="main-planner">
+    <div class="d-flex flex-column align-items-center" style="padding: 8px">
+      <div class="spacer"></div>
+
+      <!-- search -->
+      <div class="search outer d-flex align-items-center">
+        <input
+          class="search_input"
+          type="text"
+          placeholder="플래너 템플릿 검색"
+        />
+        <a href="#" class="search_icon"><i class="bi bi-search"></i></a>
+      </div>
+      <div class="spacer"></div>
+      <div class="spacer"></div>
+
+      <!-- widget -->
+      <div class="container-fluid" style="border-radius: 24px; width: 90%">
+        <div class="row">
+          <div
+            v-for="(widget, index) in widgetList"
+            :key="index"
+            :class="`widget col-${widget.column}`"
+          >
+            <div
+              class="widget-template outer"
+              v-b-modal="`modal-${widget.type}`"
+            >
+              <component
+                :is="componentList[widget.type]"
+                class="widget-component"
+              ></component>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -29,46 +43,168 @@
 </template>
 
 <script>
-export default {};
+import { reactive, toRefs } from 'vue';
+import PlannerCalender from './components/PlannerCalendar.vue';
+import PlannerProgress from './components/PlannerProgress.vue';
+import PlannerTode from './components/PlannerTodo.vue';
+import PlannerTotal from './components/PlannerTotal.vue';
+import PlannerRank from './components/PlannerRank.vue';
+import PlannerStatus from './components/PlannerStatus.vue';
+
+export default {
+  setup() {
+    const componentList = [
+      PlannerCalender,
+      PlannerProgress,
+      PlannerTode,
+      PlannerTotal,
+      PlannerRank,
+      PlannerStatus,
+    ];
+    const state = reactive({
+      widgetList: [
+        {
+          type: 3,
+          column: 4,
+        },
+        {
+          type: 4,
+          column: 4,
+        },
+        {
+          type: 5,
+          column: 4,
+        },
+        {
+          type: 2,
+          column: 6,
+        },
+        {
+          type: 1,
+          column: 4,
+        },
+        {
+          type: 0,
+          column: 12,
+        },
+      ],
+    });
+
+    return { componentList, ...toRefs(state) };
+  },
+};
 </script>
 
-<style>
-.planner-view {
-  background-color: red;
-  height: 100vh;
+<style scoped>
+.main-lobby {
+  background-color: var(--light-main-color);
+  height: 100%;
 }
 
-.container {
+.outer {
+  box-shadow: 4px 4px 10px -1px rgba(0, 0, 0, 0.25),
+    -4px -4px 10px -1px rgba(255, 255, 255, 0.25);
+}
+
+.inner {
+  box-shadow: inset 4px 4px 10px -1px rgba(0, 0, 0, 0.25),
+    inset -4px -4px 10px -1px rgba(255, 255, 255, 0.25);
+}
+
+.liner {
+  height: 2px;
+  width: 80%;
+  border-radius: 1px;
+  background: var(--light-sub-color);
+}
+
+.spacer {
+  height: 24px;
+}
+
+.search {
+  height: 40px;
+  width: 80%;
+  flex-wrap: nowrap;
+
+  background-color: var(--light-main-color);
+  border-radius: 24px;
+  padding: 10px;
+}
+
+.search_input {
+  width: 100px;
+  height: 32px;
+  color: black;
+  /* color: white; */
+  border: 0;
+  outline: 0;
+  background: none;
+
+  padding: 0 10px;
+  flex-grow: 1;
+  flex-shrink: 1;
+  caret-color: var(--theme-color);
+
+  overflow: hidden;
+}
+
+.search:hover > .search_icon {
+  background: var(--theme-color);
+  color: white;
+}
+
+.search_icon {
+  min-height: 28px;
+  min-width: 28px;
+  float: right;
   display: flex;
   justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  color: white;
+  background-color: black;
 }
 
-.progress-container {
-  width: 140px;
-  height: 140px;
+a:link {
+  text-decoration: none;
 }
 
-.progressbar-track {
-  fill: transparent;
-  stroke: #eeeeee;
-  stroke-width: 3px;
+.widget-template * {
+  /* text-decoration: none; */
+  color: #000000;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.progressbar-line {
-  fill: transparent;
-  stroke: #f0e442;
-  stroke-width: 3px;
-  stroke-dasharray: 0 calc(30 * 2 * 3.141593);
-  stroke-linecap: round;
-  transform: rotate(-90deg);
-  transform-origin: 50% 50%;
+.widget-template {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 32px;
+  margin-left: auto;
+  margin-right: auto;
+  height: 200px;
 
-  animation: progress 1.2s forwards;
+  transition-duration: 0.2s;
 }
 
-@keyframes progress {
-  to {
-    stroke-dasharray: 110;
-  }
+.widget-template:hover {
+  /* padding-bottom: 10%; */
+  z-index: 10;
+  transform: scale(1.1); /*  default */
+  -webkit-transform: scale(1.1); /*  크롬 */
+  -moz-transform: scale(1.1); /* FireFox */
+  -o-transform: scale(1.1); /* Opera */
+}
+
+.widget-component {
+  padding: 8px;
+  position: absolute;
+  width: 100%;
+  height: 100%;
 }
 </style>

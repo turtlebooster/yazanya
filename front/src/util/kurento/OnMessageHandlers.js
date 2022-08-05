@@ -1,12 +1,12 @@
 import { Participant } from './Participant';
 import { WebRtcPeer } from 'kurento-utils';
+import store from '@/store';
 
 export function onExistingParticipants(msg, participants, userName, roomName) {
   var constraints = {
     audio: true,
     video: {
       mandatory: {
-        maxWidth: 320,
         maxFrameRate: 15,
         minFrameRate: 15,
       },
@@ -21,6 +21,12 @@ export function onExistingParticipants(msg, participants, userName, roomName) {
   var options = {
     localVideo: video,
     mediaConstraints: constraints,
+
+    dataChannels: true,
+    dataChannelConfig: {
+      onmessage: onDataChanelMessage,
+    },
+
     onicecandidate: participant.onIceCandidate.bind(participant),
   };
   participant.rtcPeer = new WebRtcPeer.WebRtcPeerSendonly(options, function (
@@ -49,6 +55,12 @@ function receiveVideo(sender, participants) {
 
   var options = {
     remoteVideo: video,
+
+    dataChannels: true,
+    dataChannelConfig: {
+      onmessage: onDataChanelMessage,
+    },
+
     onicecandidate: participant.onIceCandidate.bind(participant),
   };
 
@@ -62,11 +74,15 @@ function receiveVideo(sender, participants) {
   });
 }
 
+function onDataChanelMessage(event) {
+  store.commit('addChat', event.data);
+}
+
 export function onParticipantLeft(request, participants) {
   console.log('Participant ' + request.name + ' left');
   var participant = participants[request.name];
   participant.dispose();
-  delete participants.value[request.name];
+  delete participants[request.name];
 }
 
 export function receiveVideoResponse(result, participants) {
