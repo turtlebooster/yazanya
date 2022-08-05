@@ -5,7 +5,7 @@ export default {
   signUp: function (payload) {
     let params = {
       userId: payload.id,
-      uesrPw: payload.pw,
+      userPw: payload.pw,
       userEmail: payload.email,
       userName: payload.name,
       userNickname: payload.nickname,

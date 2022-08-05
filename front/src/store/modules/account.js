@@ -7,6 +7,7 @@ export const Account = {
       // refreshToken : not added yet
     },
     isLogined: !!jwt.getToken(),
+    userID: jwt.getID(),
   },
 
   getters: {
@@ -16,6 +17,9 @@ export const Account = {
     isAuthenticated: function (state) {
       return state.isLogined;
     },
+    getUserID: function (state) {
+      return state.userID;
+    },
   },
 
   mutations: {
@@ -24,14 +28,24 @@ export const Account = {
       state.isLogined = flag;
     },
 
+    SET_ACCESS_TOKEN: function (state, accessToken) {
+      state.token.accessToken = accessToken;
+      jwt.saveToken(accessToken);
+    },
+
     REMOVE_ACCESS_TOKEN: function (state) {
       state.token.accessToken = '';
       jwt.destroyToken();
     },
 
-    SET_ACCESS_TOKEN: function (state, accessToken) {
-      state.token.accessToken = accessToken;
-      jwt.saveToken(accessToken);
+    SET_USER_ID: function (state, id) {
+      state.saveID = id;
+      jwt.saveID(id);
+    },
+
+    REMOVE_USER_ID: function (state) {
+      state.saveID = '';
+      jwt.destroyID();
     },
   },
 
@@ -42,15 +56,16 @@ export const Account = {
         setTimeout(function () {
           context.commit('SET_ISLOGINED', false);
           context.commit('REMOVE_ACCESS_TOKEN');
-
+          context.commit('REMOVE_USER_ID');
           resolve({});
         }, 500);
       });
     },
 
-    saveToken: function (context, payload) {
+    login: function (context, payload) {
       context.commit('SET_ISLOGINED', true);
       context.commit('SET_ACCESS_TOKEN', payload);
+      context.commit('SET_USER_ID', payload);
     },
   },
 };
