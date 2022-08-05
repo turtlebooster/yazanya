@@ -27,6 +27,8 @@ import com.ssafy.B310.service.JwtService;
 import com.ssafy.B310.service.TodoService;
 import com.ssafy.B310.service.UserService;
 
+import io.swagger.annotations.ApiOperation;
+
 @Controller
 @RequestMapping("/todo")
 @CrossOrigin("*")
@@ -41,22 +43,28 @@ public class TodoController {
     @Autowired
     JwtService jwtService;
     
-    // todo 생성
-    @PostMapping("/create/{userId}")
-//    @PostMapping -> jwt에서 userId 가져오도록
+    @ApiOperation(value="todo 생성", notes="userId[PathVariable] - 누구한테 할 일을 추가할지. todo[ResponseBody] - 무슨 일을 추가할지\n"
+    		+ "todoNum은 AI이므로 넣을 필요 X\n"
+    		+ "{\n\"todoContent\":\"[todo의 상세내용]\""
+    		+ "\n\"todoEndTime\":\"[todo의 마감시간]\""
+    		+ "\n\"todoName\":\"[todo의 제목]\""
+    		+ "\n\"todoProgress\": 0 (아직 못끝냄) or 1 (끝냄)"
+    		+ "\n\"todoStartTime\":\"[todo의 시작시간]\"\n}")
+    @PostMapping("/{userId}")
     public ResponseEntity<?> createTodo(@RequestBody Todo todo, @PathVariable String userId) throws SQLException{
     	int cnt = todoService.createTodo(todo, userId);
     	if (cnt == 1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
     	else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
     }
     
-    // todo 전체 조회
+    @ApiOperation(value="todo 전제조회", notes="DB에 기록되어있는 모든 todo들을 불러온다")
     @GetMapping
     public ResponseEntity<?> findAllTodo() throws SQLException{
     	return new ResponseEntity<List<Todo>>(todoService.findAllTodo(), HttpStatus.OK);
     }
-    // todo 유저별 조회
-    @GetMapping("/findbyuser/{userId}")
+    
+    @ApiOperation(value="todo 유저별 조회", notes="특정 유저의 todo를 불러온다\nPathVariable로 원하는 유저의 Id를 넣는다.")
+    @GetMapping("/{userId}")
     public ResponseEntity<?> findTodoByUserId(@PathVariable("userId") String userId) throws SQLException{
     	List<Todo> todoList = todoService.findTodoByUserId(userId);
     	if (todoList != null) {
@@ -69,9 +77,8 @@ public class TodoController {
     	}
     }
     
-    // todo 하나 조회
+    @ApiOperation(value="단일 todo 조회", notes="특정 todo만을 불러온다.\nPathVariable로 원하는 todoNum을 넣는다.")
     @GetMapping("/findbytodonum/{todoNum}")
-//    @GetMapping("/{todoNum}")
     public ResponseEntity<?> findTodoByTodoNum(@PathVariable("todoNum") int todoNum) throws SQLException{
     	Todo todo = todoService.findTodoByTodoNum(todoNum);
     	if (todo != null) {
@@ -82,23 +89,33 @@ public class TodoController {
     	}
     }
     
-    // todo 수정
-    @PutMapping("/update")
-//    @PutMapping("{todoNum}")
+    @ApiOperation(value="todo 수정", notes="todo를 수정한다.\n수정할 todo를 RequestBody로 전달한다."
+    		+"\n여기서는 todoNum도 같이 넣어줘야 한다.\n"
+    		+ "{\n\"todoNum\":[todo의 번호]"
+    		+ "\n\"todoContent\":\"[todo의 상세내용]\""
+    		+ "\n\"todoEndTime\":\"[todo의 마감시간]\""
+    		+ "\n\"todoName\":\"[todo의 제목]\""
+    		+ "\n\"todoProgress\": 0 (아직 못끝냄) or 1 (끝냄)"
+    		+ "\n\"todoStartTime\":\"[todo의 시작시간]\"\n}")
+    @PutMapping
     public ResponseEntity<?> updateTodo(@RequestBody Todo todo) throws SQLException{
     	int cnt = todoService.updateTodo(todo);
     	if (cnt == 1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
     	else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    // todo 삭제
-    @DeleteMapping("/remove/{todoNum}")
-//    @DeleteMapping("/{todoNum}")
+    
+    @ApiOperation(value="todo 삭제", notes="특정 todo를 삭제한다.\nPathVariable로 삭제할 todoNum을 넣는다.")
+    @DeleteMapping("/{todoNum}")
     public ResponseEntity<?> removeTodo(@PathVariable("todoNum") int todoNum) throws SQLException{
     	int cnt = todoService.removeTodo(todoNum);
     	if (cnt == 1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
     	else return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    // todo 날짜별 조회
+    
+    @ApiOperation(value="todo 날짜별 조회", notes="특정 날의 todo 목록을 불러온다.\nRequestBody로 불러오고싶은 시작 날짜와 끝 날짜를 넣는다.\n"
+    		+ "{\n\"startDate\" : \"[시작할 날짜]\""
+    		+ "\n\"endDate\" : \"[끝 날짜]\""
+    		+ "\n}")
     @GetMapping("/findbydaterange")
     public ResponseEntity<?> findTodoByDate(@RequestBody Map<String, Date> map, HttpServletRequest request) throws SQLException{
     	String userId = jwtService.getUserID(request.getHeader("access-token"));
