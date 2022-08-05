@@ -1,21 +1,16 @@
-<!--
-  현재 mainview 만드는 중 쓰고 있는 네비게이션바 
-  서로 충돌날까봐 분리해둠 마지막에 머지 후, 정리할 것
--->
-
 <template>
   <nav
     v-if="main_nav_on"
-    class="header-nav"
-    :class="[$root.theme ? 'dark' : 'light']"
+    class="main-nav"
+    :class="[$root.theme ? 'light' : 'dark']"
   >
-    <div class="h-100">
+    <div>
       <router-link to="/main">
         <!-- Main Nav -->
         <img
           src="@/assets/logo/title_logo_009e73.png"
-          class="align-bottom h-100"
-          style="margin-left: 24px"
+          class="align-bottom"
+          style="margin-left: 16px; height: var(--size-h-header)"
           alt="logo"
         />
       </router-link>
@@ -53,7 +48,10 @@ export default {
 </script>
 
 <style>
-.header-nav {
+.main-nav {
+  z-index: 20;
+  position: fixed;
+  width: 100vw;
   border-bottom: 4px solid #009e73;
   height: var(--size-h-header);
 }

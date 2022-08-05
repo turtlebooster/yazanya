@@ -10,7 +10,7 @@ public class RoomSpecification {
 	//0 - 비디오 끔. 1 - 비디오 켬. 2 - 상관 없음
 	public static Specification<Room> videoSetting(int status) {
 		if(status != 2) { 
-			return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("roomVideo"), status);
+			return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("video"), status);
 		} else {
 			return (root, query, criteriaBuilder) -> null;
 		}

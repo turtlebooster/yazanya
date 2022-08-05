@@ -1,25 +1,22 @@
 <template>
-  <div class="user">
-    <router-view/>
+  <div
+    class="d-flex justify-content-center align-items-center vw-100 vh-100 user-view"
+  >
+    <router-view />
   </div>
 </template>
 
-
 <script>
 export default {
-  setup() {
-    
-  },
-}
+  setup() {},
+};
 </script>
 
 <style scoped>
-  .user {
-    display:flex;
-    justify-content:center;
-    align-items: center;
-    width: 100vw;
-    height: 100vh;
-    background-image: url("../../assets/book_user.jpg");
-  }
+* {
+  font-family: NanumGothic !important;
+}
+.user-view {
+  background-image: url('../../assets/book_user.jpg');
+}
 </style>
