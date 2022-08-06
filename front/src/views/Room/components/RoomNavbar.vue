@@ -2,44 +2,35 @@
   <nav
     class="navbar justify-content-center w-100 h-100 border-bottom shadow-sm py-1"
   >
-    <i
-      id="planner-sidebar-toggle-icon"
-      class="toggle-btn bi bi-calendar-week align-items-center me-auto p-1 px-3"
+    <b-button
+      class="align-items-center me-auto py-1 pe-4 ps-3"
       :class="[
         $root.theme ? 'light-btn' : 'dark-btn',
         planner_play_anim ? 'planner-anim-active' : '',
       ]"
       style="
-        font-size: 1em;
+        font-size: 1.3em;
         border-top-right-radius: 2rem;
         border-bottom-right-radius: 2rem;
       "
-      ref="planner_sidebar_toggle_icon"
       @click="openPlanner()"
-    ></i>
+    ><i class="bi bi-calendar-week"> </i></b-button>
     
-    <!--
-    <button @click="planner_play_anim = true" class="mx-auto">alram Planner</button>
-    <button @click="chat_play_anim = true" class="mx-auto">alram Chat</button>
-    -->
-
     <img src="@/assets/logo/title_logo_009e73.png" class="d-inline-block align-top h-100" alt="logo">
 
-    <i
-      id="chat-sidebar-toggle-icon"
-      class="toggle-btn bi bi-chat-dots ms-auto p-1 px-3"
+    <b-button
+      class="align-items-center ms-auto py-1 pe-3 ps-4"
       :class="[
         $root.theme ? 'light-btn' : 'dark-btn',
         chat_play_anim ? 'chat-anim-active' : '',
       ]"
       style="
-        font-size: 1em;
+        font-size: 1.3em;
         border-top-left-radius: 2rem;
         border-bottom-left-radius: 2rem;
       "
-      ref="chat_sidebar_toggle_icon"
       @click="openChat()"
-    ></i>
+    ><i class="bi bi-chat-dots"></i></b-button>
   </nav>
 </template>
 
@@ -52,7 +43,6 @@ export default {
     var planner_play_anim = ref(false);
     var chat_play_anim = ref(false);
 
-    //
     function openPlanner() {
       planner_play_anim.value = false;
       emit('togglePlanner');
@@ -104,9 +94,4 @@ export default {
   animation-name: alram;
   background-color: var(--main-color);
 }
-
-/* .toggle-btn:hover {
-  background-color: var(--main-color);
-  transition-duration: 250ms;
-} */
 </style>
