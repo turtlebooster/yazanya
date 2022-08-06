@@ -24,6 +24,10 @@ export const Room = {
       return state.participants;
     },
 
+    getParticipantsCount(state) {
+      return Object.keys(state.participants).length;
+    },
+
     getChatList(state) {
       return state.chat_list;
     },
