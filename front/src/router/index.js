@@ -5,8 +5,6 @@ import store from '../store';
 // false : 로그인을 하면 이동 불가능
 const beforeAuth = (needAuth) => (from, to, next) => {
   const isLogined = store.getters['isAuthenticated']; // is logined
-  console.log(isLogined);
-
   if (needAuth && !isLogined) {
     // 로그인 필요
     alert('로그인이 필요한 서비스 입니다');

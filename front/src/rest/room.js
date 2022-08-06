@@ -81,4 +81,30 @@ export default {
         });
     });
   },
+
+  getRoomRecommendList: function (tagArr) {
+    return new Promise((resolve, reject) => {
+      http
+        .get(REST_PATH + '/recommend?hashtagNum=' + tagArr)
+        .then((response) => {
+          resolve(response.data);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
+
+  getRoomHistoryList: function () {
+    return new Promise((resolve, reject) => {
+      http
+        .get(REST_PATH + '/history')
+        .then((response) => {
+          resolve(response.data);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
 };

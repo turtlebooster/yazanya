@@ -2,12 +2,12 @@
   <div class="main-sidebar">
     <router-link to="/main/setting/profile">
       <img
-        src="@/assets/avatar/3.jpg"
+        :src="require(`@/assets/avatar/${userNum}.jpg`)"
         alt="profile"
         class="image icon"
         style="padding: 8px; object-fit: cover; border-radius: 50%"
       />
-      <span class="title">홍 길동</span>
+      <span class="title">{{ userName }}</span>
     </router-link>
 
     <router-link to="/main">
@@ -47,25 +47,39 @@
 </template>
 
 <script>
+import { ref, onBeforeMount } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 
+import rest_user from '@/rest/user';
+
 export default {
   setup() {
+    let userNum = ref(0);
+    let userName = ref(0);
+
     const store = useStore();
     const router = useRouter();
 
     function logout() {
-      store.dispatch('logout')
-      .then(() => {
+      store.dispatch('logout').then(() => {
         router.replace('/');
-      })
+      });
     }
-    
-    return { logout }
-  }
-}
 
+    async function init() {
+      let userData = await rest_user.getProfile(store.getters.getUserID);
+      userNum.value = userData.userNum;
+      userName.value = userData.userName;
+    }
+
+    onBeforeMount(() => {
+      init();
+    });
+
+    return { userNum, userName, logout };
+  },
+};
 </script>
 
 <style scoped>
