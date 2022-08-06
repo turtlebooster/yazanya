@@ -220,8 +220,8 @@ export default {
             rest_room.joinRoom(room_number, prompt("방의 비밀번호를 입력해주세요"))
             .then((response) => {
               if(response.data === 'fail') {
-                alert('비밀번호가 일치하지 않습니다');
-                // router.replace('/main');
+                alert('방 입장이 거부되었습니다');
+                router.replace('/main');
               }
             })
           }
@@ -230,8 +230,16 @@ export default {
           // get room infomation
           rest_room.getRoomInfo(room_number)
             .then((response) => {
-              console.log("get Room info " + response.data);
-              store.dispatch('saveRoomInfo', response.data.room);
+              if(response.data.message === 'success') {
+                store.dispatch('saveRoomInfo', response.data.room)
+                  .then(()=> {
+                    // start socket connection
+                    store.dispatch('joinRoom', store.getters['getUserID'])
+                  });
+              } else {
+                alert('방 정보를 불러오는 도중 문제가 발생하였습니다');
+                router.replace('/main');
+              }
             }) 
         })
         .catch((error)=> {
@@ -241,10 +249,6 @@ export default {
         })
       
       roomname.value = room_number;
-
-      // start socket connection
-      console.log(store.getters['getUserID']);
-      store.dispatch("joinRoom", store.getters['getUserID']);
     });
 
     // -------------------- room asign -------------------- //
@@ -256,6 +260,7 @@ export default {
       // APP Server request
       store.dispatch("leaveRoom");
       // REST request
+      console.log("leaveRoom", store.state.Room.room.roomNum);
       rest_room.leaveRoom(store.state.Room.room.roomNum);
       router.replace('/main');
     }

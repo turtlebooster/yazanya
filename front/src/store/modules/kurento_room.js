@@ -48,7 +48,7 @@ export const Room = {
                 parsedMessage,
                 state.participants,
                 state.username,
-                state.room.room_num
+                state.room.roomNum
               );
               break;
             case 'newParticipantArrived':
@@ -76,6 +76,9 @@ export const Room = {
               console.error('Unrecognized message', parsedMessage);
           }
         };
+
+        // join Room when socket is connected
+        this.commit('joinRoom');
       };
 
       state.ws.onerror = () => {
@@ -98,6 +101,15 @@ export const Room = {
         console.log('Sending message: ' + jsonMessage);
         state.ws.send(jsonMessage);
       }
+    },
+
+    joinRoom(state) {
+      var message = {
+        id: 'joinRoom',
+        name: state.username,
+        room: state.room.roomNum,
+      };
+      this.commit('sendMessage', message);
     },
 
     disposeAll(state) {
@@ -139,18 +151,9 @@ export const Room = {
       commit('setRoomInfo', payload);
     },
 
-    joinRoom({ commit, state }, username) {
-      commit('initSocket');
+    joinRoom({ commit }, username) {
       commit('setUserName', username);
-
-      var message = {
-        id: 'joinRoom',
-        name: username,
-        room: state.room.room_num,
-      };
-
-      console.log('asdf');
-      commit('sendMessage', message);
+      commit('initSocket');
     },
 
     sendChat({ commit }, payload) {
