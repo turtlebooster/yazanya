@@ -107,8 +107,11 @@ public class RoomServiceImpl implements RoomService {
 
 	// 해쉬태그 추천 목록
 	public List<Room> getRecommendHashtagList(List<Integer> hashtagNumList) {
-		return roomQueryRepository.findRecommendRoom(hashtagNumList);
-
+		List<Room> roomList = roomQueryRepository.findRecommendRoom(hashtagNumList);
+		if (roomList.size() == 0) {
+			roomList = roomRepository.findAll();
+		}
+		return roomList;
 	}
 	
 	//유저 입장할 때 participation 1 증가
