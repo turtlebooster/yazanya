@@ -24,7 +24,6 @@
       <!-- TODO planner components -->
       <p>TODO planner components</p>
       <button @click="test()" class="m-2">increase member</button>
-      <button @click="joinRoom()" class="m-2">add member </button>
       <button @click="leaveRoom()" class="m-2">leave member </button>
       <button @click="test2()" class="m-2"> test </button>
 
@@ -39,6 +38,7 @@
     <div
       class="video-plane d-flex flex-column w-100 m-3 rounded-3 shadow"
       :class="[$root.theme ? 'light-content' : 'dark-content']"
+      style="overflow: hidden"
     >
       <div
         class="video-room-info-topbar d-flex justify-content-center  mb-auto p-1 pt-2"
@@ -46,9 +46,9 @@
       >
         <i
           class="ms-2 mt-1 me-auto"
-          :class="[isRoomPrivate ? 'bi bi-lock-fill' : '']"
+          :class="[isPrivateRoom ? 'bi bi-lock-fill' : '']"
           style="font-size: 1.5em"
-          >&nbsp;&nbsp;{{ roomname }}
+          >&nbsp;&nbsp;{{ roomName }}
         </i>
 
     
@@ -80,10 +80,12 @@
         <div v-for="(value, name) in participants" :key="name" :ref="(el) => { members[name] = el }"
           :style="{ position: 'relative', width:  each_video_width + 'px', height:  + each_video_height + 'px'}"
           >
+          <p class="text-center align-middle rounded m-0 px-1" :class="[$root.theme ? 'light-content' : 'dark-content']" style="position: absolute; top: 10px; left: 10px; z-index: 2">{{name}}</p>
           <b-dropdown
-            style="position: absolute; bottom: 10px; right: 10px; z-index: 2; background-color:#404040;"
-            size="sm" variant="link" toggle-class="rounded-circle text-decoration-none" no-caret>
-            <template #button-content><i class="bi bi-three-dots-vertical" style="color:#f3f3f3"></i></template>
+            style="position: absolute; bottom: 10px; right: 10px; z-index: 2; border-radius: 4px;"
+            :class="[$root.theme ? 'light' : 'dark']"
+            size="sm" variant="link" toggle-class="text-decoration-none" no-caret>
+            <template #button-content><i class="bi bi-three-dots-vertical" :class="[$root.theme ? 'light-content-color' : 'dark-content-color']"></i></template>
             <b-dropdown-item href="#">Action</b-dropdown-item>
             <b-dropdown-item href="#">Another action</b-dropdown-item>
             <b-dropdown-item href="#">Something else here...</b-dropdown-item>
@@ -145,13 +147,14 @@
 </template>
 
 <script>
-import { ref, computed, onBeforeMount, onMounted, onUpdated } from 'vue';
+import { ref, computed, onBeforeMount, onUpdated } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex'
 
 import RoomNav from './components/RoomNavbar.vue';
 
 import rest_room from '@/rest/room';
+import rest_user from '@/rest/user';
 
 // import VideoComp from './components/RoomVideo.vue';
 
@@ -177,23 +180,31 @@ export default {
       chat_width.value = chat_width.value === 0 ? SIDEBAR_WIDTH : 0;
     }
 
-    // ---------------------- set unload event ------------------------- //
-    function unLoadEvent(event) {
-      // REST request
-      store.dispatch("leaveRoom");      
-      event.returnValue = "";
-    }
+    // ---------------------- TODO : set unload event ------------------------- //
+    // function unLoadEvent(event) {
+    //   // REST request
+    //   navigator.sendBeacon()
+    //   event.returnValue = "";
+    // }
 
-    // add event for leaving this page
-    onMounted(() => { window.addEventListener('beforeunload', unLoadEvent)} );
+    // // add event for leaving this page
+    // onMounted(() => { window.addEventListener('beforeunload', unLoadEvent)} );
+    // // remove event
+    // onBeforeUnmount(() => { window.removeEventListener('beforeunload', unLoadEvent)});
 
-    // remove event
-    // onBeforeUnmount(() => {window.removeEventListener('beforeunload', unLoadEvent)});
+    // window.onunload = function () {
+    //   const body = {
+    //     id,
+    //     email,
+    //   };
+    //   const headers = {
+    //     type: 'application/json',
+    //   };
+    //   const blob = new Blob([JSON.stringify(body)], headers);
+    //   navigator.sendBeacon('url', blob);
+    // };
 
     // --------------------- room information ----------------------- //
-    let isRoomPrivate = ref(true);
-    let roomname = ref(null);
-
     onBeforeMount(() => {
       // ----------- for room name ↓ ------------ //
       let url = document.URL;
@@ -207,56 +218,45 @@ export default {
       // check room number NaN
       let room_number = url.slice(idx);
       if (isNaN(room_number)) {
-        alert('링크가 형식에 맞지 않습니다');
+        alert('링크가 형식에 맞지 안습니다');
         router.replace('/main');
         return;
       }
 
-      // ------------------- check RoomPW ---------------------- //
-      rest_room.joinRoom(room_number)
-        .then((response)=> {
-          if(response.data === 'fail') {
-            // room join falied => has Password
-            rest_room.joinRoom(room_number, prompt("방의 비밀번호를 입력해주세요"))
-            .then((response) => {
-              if(response.data === 'fail') {
-                alert('비밀번호가 일치하지 않습니다');
-                // router.replace('/main');
-              }
-            })
-          }
-        })
-        .then(() => {
-          // get room infomation
-          rest_room.getRoomInfo(room_number)
-            .then((response) => {
-              console.log("get Room info " + response.data);
-              store.dispatch('saveRoomInfo', response.data.room);
-            }) 
-        })
-        .catch((error)=> {
-          console.log(error);
-          alert("방 입장중 문제가 발생하였습니다");
-          router.replace('/main');
-        })
-      
-      roomname.value = room_number;
-
-      // start socket connection
-      console.log(store.getters['getUserID']);
-      store.dispatch("joinRoom", store.getters['getUserID']);
+      enterRoom(room_number);
     });
 
-    // -------------------- room asign -------------------- //
+    async function enterRoom(room_number) {
+      try {
+        // TODO : add check room has password
+        await rest_room.joinRoom(room_number, prompt("방의 비밀번호를 입력해주세요"))
 
-    function joinRoom() {
-      store.dispatch("joinRoom", { username: prompt("이름은?", "그래") || 'asdf', roomname: '310' });
+        // gain room info
+        let room = await rest_room.getRoomInfo(room_number)
+        await store.dispatch('saveRoomInfo', room)
+
+        // gain user info
+        let user = await rest_user.getProfile(store.getters.getUserID)
+        await store.dispatch('saveUserInfo', user);
+        
+        // connect kurento server
+        await store.dispatch('joinRoom');
+      } catch(error) {
+        alert(error);
+        if(store.getters.isEntered) {
+          // when room entered
+          leaveRoom();
+        } else {
+          router.replace('/main');
+        }
+      }
     }
-    function leaveRoom() {
-      // APP Server request
-      store.dispatch("leaveRoom");
+
+    async function leaveRoom() {
+      // APP Server Socket disconnect
+      await store.dispatch("leaveRoom");
       // REST request
-      rest_room.leaveRoom(store.state.Room.room.roomNum);
+      await rest_room.leaveRoom(store.state.Room.room.roomNum);
       router.replace('/main');
     }
 
@@ -312,7 +312,6 @@ export default {
         }
           
         let video = store.state.Room.participants[key].getVideoElement();
-
         video.style.margin = 'auto';
         video.style.objectFit = 'cover';
         video.setAttribute('width', each_video_width.value - 5);
@@ -342,10 +341,6 @@ export default {
       planner_width,
       chat_width,
 
-      roomname,
-      isRoomPrivate,
-
-      joinRoom,
       leaveRoom,
       members,
 
@@ -359,6 +354,9 @@ export default {
       nMember,
       each_video_width,
       each_video_height,
+
+      roomName : computed(()=>store.getters['getRoomName']),
+      isPrivateRoom : computed(()=>store.getters['isPrivateRoom']),
 
       participants: computed(() => store.state.Room.participants),
       isConnected: computed(() => store.state.Room.isSocketConnected)
