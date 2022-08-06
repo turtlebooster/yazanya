@@ -42,9 +42,9 @@ public class Hashtag {
 		
 	}
 	@JsonIgnore
-	@OneToMany(mappedBy = "hashtag")
+	@OneToMany(mappedBy = "hashtag", cascade = CascadeType.REMOVE)
 	private List<UserHashtag> userHashtag = new ArrayList<UserHashtag>();
 	@JsonIgnore
-	@OneToMany(mappedBy = "hashtag")
+	@OneToMany(mappedBy = "hashtag", cascade = CascadeType.REMOVE)
 	private List<RoomHashtag> roomHashtag = new ArrayList<RoomHashtag>();
 }
