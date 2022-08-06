@@ -235,17 +235,9 @@ public class RoomController {
     public ResponseEntity<?> getHashtagList(@RequestParam int roomNum) throws SQLException {
     	Room room = roomservice.getRoom(roomNum);
     	
-    	List<RoomHashtag> set = roomHashtagService.getRoomHashtagBy(room);
-    	if(set.isEmpty()) {
-    		System.out.println("list 비어있음");
-    		return new ResponseEntity<String>(FAIL, HttpStatus.OK);
-    	}
+    	List<RoomHashtag> list = roomHashtagService.getRoomHashtagBy(room);
     	
-    	for(RoomHashtag tag : set) {
-    		System.out.println(tag.getHashtag().getHashtagName());
-    	}
-    	
-    	return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+    	return new ResponseEntity<List<RoomHashtag>>(list, HttpStatus.OK);
     }
     
     @DeleteMapping("/hashtag")
