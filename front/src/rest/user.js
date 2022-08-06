@@ -75,4 +75,17 @@ export default {
         });
     });
   },
+
+  getProfile: function (userid) {
+    return new Promise((resolve, reject) => {
+      http
+        .post(REST_PATH + '/profile/' + userid)
+        .then((response) => {
+          resolve(response);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
 };
