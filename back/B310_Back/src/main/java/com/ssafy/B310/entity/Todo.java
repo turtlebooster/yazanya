@@ -44,7 +44,7 @@ public class Todo {
 	private int todoProgress;
 	
 	@JsonIgnore
-	@ManyToOne(cascade = CascadeType.PERSIST)
+	@ManyToOne
 	@JoinColumn(name = "user_num")
 	private User user;
 	
