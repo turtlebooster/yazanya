@@ -49,9 +49,6 @@ public class ParticipationServiceImpl implements ParticipationService {
 
         User u = joinUser.get();
 
-        u.setUserId(userId);
-        u.setRoom(room);
-
         Participation participation = new Participation(room, u);
         participationRepository.save(participation);
         

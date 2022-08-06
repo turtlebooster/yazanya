@@ -37,6 +37,8 @@ public class RoomServiceImpl implements RoomService {
 			User u = oUser.get();
 			room.setManager(u);
 			Room newRoom = roomRepository.save(room);
+			u.setRoom(newRoom);
+			userRepository.save(u);
 			return newRoom.getRoomNum();
 		}
 		return 0;
