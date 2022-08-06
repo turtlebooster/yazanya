@@ -1,6 +1,5 @@
 package com.ssafy.B310.entity;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -24,12 +23,12 @@ public class UserHashtag {
 	private int userHashtagNum;
 	
 	@JsonIgnore
-	@ManyToOne(cascade = CascadeType.PERSIST)
+	@ManyToOne
 	@JoinColumn(name = "USER_NUM")
 	private User user;
 	
 	@JsonIgnore
-	@ManyToOne(cascade = CascadeType.PERSIST)
+	@ManyToOne
 	@JoinColumn(name = "HASHTAG_NUM")
 	private Hashtag hashtag;
 	
