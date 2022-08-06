@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -235,9 +236,13 @@ public class RoomController {
     public ResponseEntity<?> getHashtagList(@RequestParam int roomNum) throws SQLException {
     	Room room = roomservice.getRoom(roomNum);
     	
-    	List<RoomHashtag> list = roomHashtagService.getRoomHashtagBy(room);
-    	
-    	return new ResponseEntity<List<RoomHashtag>>(list, HttpStatus.OK);
+    	List<RoomHashtag> roomHashtagList = roomHashtagService.getRoomHashtagBy(room);
+    	List<Hashtag> list = new ArrayList<Hashtag>();
+    	for (RoomHashtag rht : roomHashtagList) {
+    		list.add(rht.getHashtag());
+    	}
+    	    	
+    	return new ResponseEntity<List<Hashtag>>(list, HttpStatus.OK);
     }
     
     @DeleteMapping("/hashtag")
