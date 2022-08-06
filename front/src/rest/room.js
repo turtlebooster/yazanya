@@ -30,7 +30,11 @@ export default {
       http
         .get(REST_PATH + '/' + room_num)
         .then((response) => {
-          resolve(response);
+          if (response.data.message === 'success') {
+            resolve(response.data.room);
+          } else {
+            reject('방 정보를 서버로부터 가져오는데 실패하였습니다');
+          }
         })
         .catch((error) => {
           reject(error);
@@ -47,7 +51,11 @@ export default {
       http
         .post(REST_PATH + '/' + room_num, params)
         .then((response) => {
-          resolve(response);
+          if (response.data === 'success') {
+            resolve(response.data);
+          } else {
+            reject('방 입장 실패');
+          }
         })
         .catch((error) => {
           reject(error);

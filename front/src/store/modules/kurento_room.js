@@ -14,8 +14,8 @@ export const Room = {
 
       chat_list: [],
 
-      username: '', // used in kurento app server
-      room: {},
+      user: null, // current logined
+      room: null,
     };
   },
 
@@ -27,11 +27,37 @@ export const Room = {
     getChatList(state) {
       return state.chat_list;
     },
+
+    // ------------------ Room Info ------------------------ //
+    isEntered(state) {
+      return state.room == null ? false : true;
+    },
+
+    getRoomName(state) {
+      if (state.room != null) {
+        return state.room.roomName;
+      } else {
+        return '';
+      }
+    },
+
+    isPrivateRoom(state) {
+      if (state.room != null) {
+        return state.room.roomPw == 0 ? false : true;
+      } else {
+        return true;
+      }
+    },
+
+    // ------------------ User Info ------------------------- //
+    getNickname(state) {
+      return state.user.userNickname;
+    },
   },
 
   mutations: {
     initSocket(state) {
-      console.log('Web Socekt Init');
+      console.log('Web Socket Init');
       state.ws = new WebSocket('ws://' + 'localhost:8334' + '/groupcall');
 
       state.ws.onopen = () => {
@@ -47,8 +73,8 @@ export const Room = {
               onExistingParticipants(
                 parsedMessage,
                 state.participants,
-                state.username,
-                state.room.room_num
+                state.user.userNickname,
+                state.room.roomNum
               );
               break;
             case 'newParticipantArrived':
@@ -71,11 +97,13 @@ export const Room = {
                 }
               );
               break;
-
             default:
               console.error('Unrecognized message', parsedMessage);
           }
         };
+
+        // join Room when socket is connected
+        this.commit('joinRoom');
       };
 
       state.ws.onerror = () => {
@@ -100,18 +128,27 @@ export const Room = {
       }
     },
 
+    joinRoom(state) {
+      var message = {
+        id: 'joinRoom',
+        name: state.user.userNickname,
+        room: state.room.roomNum,
+      };
+      this.commit('sendMessage', message);
+    },
+
     disposeAll(state) {
       for (var key in state.participants) {
         state.participants[key].dispose();
       }
     },
 
-    setUserName(state, data) {
-      state.username = data;
-    },
-
     setRoomInfo(state, data) {
       state.room = data;
+    },
+
+    setUserInfo(state, data) {
+      state.user = data;
     },
 
     addChat(state, data) {
@@ -127,7 +164,6 @@ export const Room = {
 
   actions: {
     leaveRoom({ commit }) {
-      commit('setRoomInfo', {});
       commit('sendMessage', {
         id: 'leaveRoom',
       });
@@ -139,18 +175,13 @@ export const Room = {
       commit('setRoomInfo', payload);
     },
 
-    joinRoom({ commit, state }, username) {
+    saveUserInfo({ commit }, payload) {
+      console.log('userInfo', payload);
+      commit('setUserInfo', payload);
+    },
+
+    joinRoom({ commit }) {
       commit('initSocket');
-      commit('setUserName', username);
-
-      var message = {
-        id: 'joinRoom',
-        name: username,
-        room: state.room.room_num,
-      };
-
-      console.log('asdf');
-      commit('sendMessage', message);
     },
 
     sendChat({ commit }, payload) {
