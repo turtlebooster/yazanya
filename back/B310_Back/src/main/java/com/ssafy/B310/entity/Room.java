@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -91,15 +92,15 @@ public class Room {
 	@JsonIgnore
 	private User manager;
 	
-	@OneToMany(mappedBy = "room")
+	@OneToMany(mappedBy = "room", cascade = CascadeType.REMOVE)
 	@JsonIgnore
 	private Set<Participation> participationList;
 	
-	@OneToMany(mappedBy = "room")
+	@OneToMany(mappedBy = "room", cascade = CascadeType.REMOVE)
 	@JsonIgnore
 	private Set<ParticipationHistory> participationHistoryList;
 	
-	@OneToMany(mappedBy = "room")
+	@OneToMany(mappedBy = "room", cascade = CascadeType.REMOVE)
 	@JsonIgnore
 	private Set<RoomHashtag> roomHashtag;
 }
