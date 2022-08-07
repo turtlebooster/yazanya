@@ -8,16 +8,19 @@
             style="height: 1px"
             ref="chatting_plane"
             @scroll="calScrollPosition">
-            <b-card v-for="index in 35" :key="index" class="my-2 rounded border-0" :class="[$root.theme ? 'light' : 'dark']"
-                style="width: 90%">
+            <b-card 
+                v-for="(chat, index) in chatList"
+                :key="index"
+                class="my-2 rounded border-0"
+                :class="[$root.theme ? 'light' : 'dark']"
+                style="width: 90%"
+                :style="(chat.senderId === myId)? 'margin-start: auto':''">
                 <!-- 내가 보낸 채팅은 ms-auto 추가 -->
-                <template v-if="true" #header>
-                    <div class="d-flex">
-                        <b-avatar variant="info" src="https://placekitten.com/300/300"></b-avatar>
-                        <span class="ms-3 fw-bolder align-middle">Lorem</span>
-                    </div>
+                <template v-if="!(chat.senderId === myId)" #header>
+                    <b-avatar variant="info" :src="chat.profile"></b-avatar>
+                    <span class="ms-3 fw-bolder align-middle">{{chat.senderName}}</span>
                 </template>
-                <b-card-text>Lorem ipsum dolor sit amet, consectetur adipiscing elit. asdfasd </b-card-text>
+                <b-card-text>{{chat.message}}</b-card-text>
             </b-card>
 
             <b-button
@@ -36,6 +39,7 @@
                 placeholder="채팅을 입력해주세요"
                 rows="3"
                 max-rows="3"
+                maxlength="100"
                 no-resize
                 @keydown.enter.exact.prevent="sendMessage"
                 @keydown.enter.shift.exact.prevent="text += '\n'"
@@ -60,6 +64,7 @@ export default {
 
     setup(props) {
         const store = useStore();
+
         // ------------------------  Scrollbar event and to bot button ---------------------------- //
         let chatting_plane = ref(null);
         function setScrollBottom() {
@@ -78,11 +83,11 @@ export default {
         let message = ref('');
         function sendMessage() {
             if(message.value != null) {
-                console.log(message.value);
+                store.dispatch('sendChat', {senderId: store.state.Room.user.userID, senderName: store.state.Room.user.userNickname, 
+                    profile: store.state.Room.user.profilePictureLink, message: message.value});
                 message.value = '';
             }
         }
-
         return {
             chatting_plane,
             isScrolled,
@@ -90,6 +95,8 @@ export default {
             calScrollPosition,
             message,
             sendMessage,
+            chatList : computed(()=> store.getters.getChatList),
+            myId : computed(()=> store.getters.getUserID),
             isActive : computed(()=> props.isSidebarOn === 0 ? false: true),
             nMember : computed(()=> store.getters.getParticipantsCount),
         }
