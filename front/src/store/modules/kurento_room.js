@@ -12,7 +12,14 @@ export const Room = {
       participants: {},
       isSocketConnected: false,
 
-      chat_list: [],
+      chat_list: [
+        {
+          senderId: 'zxcv',
+          senderName: 'James',
+          profile: 'https://placekitten.com/300/300',
+          message: 'Lorem ipsum dolor sit amet,',
+        },
+      ],
 
       user: null, // current logined
       room: null,
@@ -22,6 +29,10 @@ export const Room = {
   getters: {
     getParticipants(state) {
       return state.participants;
+    },
+
+    getParticipantsCount(state) {
+      return Object.keys(state.participants).length;
     },
 
     getChatList(state) {
@@ -52,6 +63,14 @@ export const Room = {
     // ------------------ User Info ------------------------- //
     getNickname(state) {
       return state.user.userNickname;
+    },
+
+    getRoomUserId(state) {
+      if (state.user != null) {
+        return state.user.userId;
+      } else {
+        return '';
+      }
     },
   },
 
@@ -155,9 +174,40 @@ export const Room = {
       state.chat_list.push(data);
     },
 
+    recieveData(state, data) {
+      let recieved = data.split(',');
+      console.log('recieved', recieved);
+
+      if (recieved[0] === 'chat') {
+        let message = '';
+        for (let i = 4; i < recieved.length; i++) {
+          // recouple splited message
+          message += recieved[i];
+        }
+
+        this.commit('addChat', {
+          senderId: recieved[1],
+          senderName: recieved[2],
+          profile: recieved[3],
+          message: message,
+        });
+      }
+    },
+
     sendChat(state, data) {
+      console.log('chat sended ', data);
       for (var key in state.participants) {
-        state.participants[key].rtcPeer.send(data.sender + ':' + data.message);
+        // "chat", senderId, senderName, profile, message
+        state.participants[key].rtcPeer.send(
+          'chat,' +
+            data.senderId +
+            ',' +
+            data.senderName +
+            ',' +
+            data.profile +
+            ',' +
+            data.message
+        );
       }
     },
   },

@@ -20,14 +20,6 @@ export function Participant(name) {
     return video;
   };
 
-  this.setWidth = function (width) {
-    video.setAttribute('width', width);
-  };
-
-  this.setHeight = function (height) {
-    video.setAttribute('width', height);
-  };
-
   // managing peer
   this.pauseVideo = function () {
     // if (rtcPeer) {
@@ -61,10 +53,4 @@ export function Participant(name) {
     console.log('Disposing participant ' + this.name);
     this.rtcPeer.dispose();
   };
-
-  // function sendMessage(message) {
-  //   var jsonMessage = JSON.stringify(message);
-  //   console.log("Sending message: " + jsonMessage);
-  //   ws.send(jsonMessage);
-  // }
 }

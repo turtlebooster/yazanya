@@ -2,30 +2,30 @@
 <div class="d-flex flex-column" style="max-height: 100%; height:100%">
   <div
     class="room-navbar"
-    :class="[$root.theme ? 'light' : 'dark']"
+    :class="[$root.theme ? 'light-back-only' : 'dark-back-only']"
     style="height: 52px"
   >
-    <room-nav @toggle-planner="not_impl()" @toggle-chat="toggleChat()" />
+    <room-nav @toggle-planner="togglePlanner()" @toggle-chat="toggleChat()" />
   </div>
 
   <div
     class="room-main d-flex justify-content-center flex-grow-1 w-100"
-    :class="[$root.theme ? 'light-content' : 'dark-content']"
+    :class="[$root.theme ? 'light' : 'dark']"
   >
     <!-- Planner Side bar -->
     <div
-      class="planner-sidebar me-auto"
+      class="planner-sidebar me-auto shadow"
       :style="{
         width: planner_width + '%',
-        transition: '750ms',
+        minWidth: planner_width != 0? 200 + 'px': 0,
         overflow: 'hidden',
+        height: '98%',
       }"
     >
       <!-- TODO planner components -->
       <p>TODO planner components</p>
       <button @click="test()" class="m-2">increase member</button>
-      <button @click="leaveRoom()" class="m-2">leave member </button>
-      <button @click="test2()" class="m-2"> test </button>
+      <button @click="test2()" class="m-2"> send message </button>
 
       {{ Object.keys(participants).length }}
 
@@ -36,9 +36,9 @@
 
     <!-- Video Content -->
     <div
-      class="video-plane d-flex flex-column w-100 m-3 rounded-3 shadow"
-      :class="[$root.theme ? 'light-content' : 'dark-content']"
-      style="overflow: hidden"
+      class="video-plane d-flex flex-column w-100 m-2 rounded-3 shadow"
+      :class="[$root.theme ? 'light' : 'dark']"
+      style="overflow: hidden; height = 95%"
     >
       <div
         class="video-room-info-topbar d-flex justify-content-center  mb-auto p-1 pt-2"
@@ -47,15 +47,14 @@
         <i
           class="ms-2 mt-1 me-auto"
           :class="[isPrivateRoom ? 'bi bi-lock-fill' : '']"
-          style="font-size: 1.5em"
+          style="font-size: 1.5em; font-style: normal;"
           >&nbsp;&nbsp;{{ roomName }}
         </i>
 
-    
         <div class="drowdown ms-auto me-3">
           <a
             class="dropdown-toggle"
-            :class="[$root.theme ? 'light-content' : 'dark-content']"
+            :class="[$root.theme ? 'light' : 'dark']"
             href="#"
             role="button"
             id="dropdownMenuLink"
@@ -80,12 +79,12 @@
         <div v-for="(value, name) in participants" :key="name" :ref="(el) => { members[name] = el }"
           :style="{ position: 'relative', width:  each_video_width + 'px', height:  + each_video_height + 'px'}"
           >
-          <p class="text-center align-middle rounded m-0 px-1" :class="[$root.theme ? 'light-content' : 'dark-content']" style="position: absolute; top: 10px; left: 10px; z-index: 2">{{name}}</p>
+          <p class="text-center align-middle rounded m-0 px-1" :class="[$root.theme ? 'light' : 'dark']" style="position: absolute; top: 10px; left: 10px; z-index: 2">{{name}}</p>
           <b-dropdown
             style="position: absolute; bottom: 10px; right: 10px; z-index: 2; border-radius: 4px;"
-            :class="[$root.theme ? 'light' : 'dark']"
+            :class="[$root.theme ? 'light-back-only' : 'dark-back-only']"
             size="sm" variant="link" toggle-class="text-decoration-none" no-caret>
-            <template #button-content><i class="bi bi-three-dots-vertical" :class="[$root.theme ? 'light-content-color' : 'dark-content-color']"></i></template>
+            <template #button-content><i class="bi bi-three-dots-vertical" :class="[$root.theme ? 'light-color-only' : 'dark-color-only']"></i></template>
             <b-dropdown-item href="#">Action</b-dropdown-item>
             <b-dropdown-item href="#">Another action</b-dropdown-item>
             <b-dropdown-item href="#">Something else here...</b-dropdown-item>
@@ -101,7 +100,7 @@
       >
         <b-button
           class="rounded-circle mx-2"
-          :class="[$root.theme ? 'dark-content' : 'light-content']"
+          :class="[$root.theme ? 'dark' : 'light']"
           @click="not_impl()"
         >
           <i class="bi bi-mic-fill" style="font-size: 1.3em"></i>
@@ -109,7 +108,7 @@
         </b-button>
         <b-button
           class="rounded-circle mx-2"
-          :class="[$root.theme ? 'dark-content' : 'light-content']"
+          :class="[$root.theme ? 'dark' : 'light']"
           @click="not_impl()"
         >
           <i class="bi bi-camera-video-fill" style="font-size: 1.3em"></i>
@@ -117,7 +116,7 @@
         </b-button>
         <b-button
           class="rounded-circle mx-2"
-          :class="[$root.theme ? 'dark-content' : 'light-content']"
+          :class="[$root.theme ? 'dark' : 'light']"
           @click="not_impl()"
         >
           <i class="bi bi-display" style="font-size: 1.3em"></i>
@@ -137,10 +136,15 @@
 
     <!-- Chat Sidebar -->
     <div
-      class="chat-sidebar ms-auto my-auto rounded-3"
-      :style="{ width: chat_width + '%', height: '95%', transition: '750ms' }"
+      class="chat-sidebar ms-auto my-auto rounded-3 shadow"
+      :style="{
+        width: chat_width + '%',
+        minWidth: chat_width != 0?
+        200 + 'px': 0,
+        height: '98%',
+      }"
     >
-      <!-- TODO chat components -->
+      <chat-sidebar :isSidebarOn="chat_width"/>
     </div>
   </div>
   </div>
@@ -152,16 +156,15 @@ import { useRouter } from 'vue-router';
 import { useStore } from 'vuex'
 
 import RoomNav from './components/RoomNavbar.vue';
+import ChatSidebar from './components/RoomChatSidebar.vue';
 
 import rest_room from '@/rest/room';
 import rest_user from '@/rest/user';
 
-// import VideoComp from './components/RoomVideo.vue';
-
 export default {
   components: {
     RoomNav,
-    // VideoComp
+    ChatSidebar,
   },
 
   setup() {
@@ -171,7 +174,7 @@ export default {
     // --------- sidebar sizing event handling  ↓ ----------- //
     const SIDEBAR_WIDTH = 28;
     const planner_width = ref(0);
-    const chat_width = ref(0);
+    const chat_width = ref(SIDEBAR_WIDTH);
 
     function togglePlanner() {
       planner_width.value = planner_width.value === 0 ? SIDEBAR_WIDTH : 0;
@@ -179,30 +182,6 @@ export default {
     function toggleChat() {
       chat_width.value = chat_width.value === 0 ? SIDEBAR_WIDTH : 0;
     }
-
-    // ---------------------- TODO : set unload event ------------------------- //
-    // function unLoadEvent(event) {
-    //   // REST request
-    //   navigator.sendBeacon()
-    //   event.returnValue = "";
-    // }
-
-    // // add event for leaving this page
-    // onMounted(() => { window.addEventListener('beforeunload', unLoadEvent)} );
-    // // remove event
-    // onBeforeUnmount(() => { window.removeEventListener('beforeunload', unLoadEvent)});
-
-    // window.onunload = function () {
-    //   const body = {
-    //     id,
-    //     email,
-    //   };
-    //   const headers = {
-    //     type: 'application/json',
-    //   };
-    //   const blob = new Blob([JSON.stringify(body)], headers);
-    //   navigator.sendBeacon('url', blob);
-    // };
 
     // --------------------- room information ----------------------- //
     onBeforeMount(() => {
@@ -224,6 +203,7 @@ export default {
       }
 
       enterRoom(room_number);
+      // console.log(enterRoom);
     });
 
     async function enterRoom(room_number) {
@@ -240,7 +220,7 @@ export default {
         await store.dispatch('saveUserInfo', user);
         
         // connect kurento server
-        await store.dispatch('joinRoom');
+        store.dispatch('joinRoom');
       } catch(error) {
         alert(error);
         if(store.getters.isEntered) {
@@ -254,14 +234,14 @@ export default {
 
     async function leaveRoom() {
       // APP Server Socket disconnect
-      await store.dispatch("leaveRoom");
+      store.dispatch("leaveRoom");
       // REST request
       await rest_room.leaveRoom(store.state.Room.room.roomNum);
       router.replace('/main');
     }
 
     // ---------- dynamic video grid for participants ↓ ------------ //
-    var nMember = computed(()=> Object.keys(store.getters.getParticipants).length);
+    var nMember = computed(()=> store.getters.getParticipantsCount);
     var nCols = computed(()=> nMember.value < 3 ? nMember.value : Math.ceil(Math.sqrt(nMember.value + 1)));
     var nRows = computed(()=> Math.ceil(nMember.value / nCols.value));
 
@@ -287,8 +267,11 @@ export default {
     
 
     // --------------------- for debugging ------------------------ //
-    function test() {
-      console.log(store.state.Room.chat_list);
+    async function test() {
+      let temp_id = prompt("유저 이름", "제임스");
+      await store.dispatch('saveRoomInfo', { roomNum : 11})
+      await store.dispatch('saveUserInfo', { userID : temp_id, userNickname : temp_id, profilePictureLink : "https://placekitten.com/300/300" });
+      store.dispatch('joinRoom');
     }
     function test2() {
      store.dispatch('sendChat', {sender: store.state.Account.userID, message:prompt('채팅 내용')});
@@ -355,8 +338,8 @@ export default {
       each_video_width,
       each_video_height,
 
-      roomName : computed(()=>store.getters['getRoomName']),
-      isPrivateRoom : computed(()=>store.getters['isPrivateRoom']),
+      roomName : computed(()=>store.getters.getRoomName),
+      isPrivateRoom : computed(()=>store.getters.isPrivateRoom),
 
       participants: computed(() => store.state.Room.participants),
       isConnected: computed(() => store.state.Room.isSocketConnected)
@@ -368,51 +351,31 @@ export default {
 <style scoped>
 /* for theme */
 .light {
-  background-color: #fafafa;
-}
-.dark {
-  background-color: #404040;
-}
-
-.light-content {
   background-color: #f3f3f3;
   color: #545664;
 }
-.dark-content {
+.dark {
   background-color: #545664;
   color: #f3f3f3;
 }
 
-.light-content-color {
+.light-back-only {
+  background-color: #fafafa;
+}
+.dark-back-only {
+  background-color: #404040;
+}
+
+.light-color-only {
   color: #545664;
 }
-.dark-content-color {
+.dark-color-only {
   color: #f3f3f3;
 }
+
 
 /* remove dropdwon triangle */
 .dropdown-toggle::after {
   display: none;
-}
-
-.planner-sidebar {
-  background-color: azure;
-}
-
-.chat-sidebar {
-  background-color: azure;
-}
-
-
-/* for video */
-.video {
-  /* max-height: 100%;
-  min-width: 100%;
-  object-fit: cover; */
-
-  height: 100vh;
-  width: 100%;
-  object-fit: cover;
-  position: absolute;
 }
 </style>
