@@ -32,13 +32,17 @@
               >
                 <!-- thumbnail -->
                 <div class="room-thumbnail flex-grow-1 flex-shrink-1">
-                  <img
-                    :src="
-                      require(`@/assets/thumbnail/${room.roomThumbnail}.jpg`)
+                  <div
+                    class="room-thumbnail-image text-align-center"
+                    style="
+                      color: white;
+                      font-size: 40px;
+                      margin-top: 8px;
+                      text-align: center;
                     "
-                    alt="room-thumbnail-image"
-                    class="room-thumbnail-image"
-                  />
+                  >
+                    {{ room.roomNum }}
+                  </div>
                 </div>
 
                 <div
@@ -47,7 +51,7 @@
                 >
                   <!-- profile -->
                   <b-avatar
-                    :src="require(`@/assets/avatar/${room.roomNum}.jpg`)"
+                    :src="require(`@/assets/avatar/0.jpg`)"
                     size="2em"
                   ></b-avatar>
 
@@ -70,11 +74,10 @@
             </div>
           </div>
 
-          <b-button id="toggle-btn" @click="toggleModal">Toggle Modal</b-button>
-
           <!-- new room -->
+
           <div class="room col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">
-            <div class="room-template outer" v-b-modal.modal-center>
+            <div class="room-template outer" @click="openModal">
               <div class="room-component d-flex flex-column">
                 <i
                   class="bi bi-plus-circle-fill"
@@ -91,15 +94,73 @@
 
             <!-- modal -->
             <b-modal
-              ref="my-modal"
-              id="modal-center"
-              centered
+              v-model="isShow"
+              id="modal-newroom"
               title="방 만들기"
+              centered
+              ok-disabled
+              hide-header
+              hide-footer
+              no-close-on-backdrop
+              @close="resetModal"
+              @hidden="resetModal"
             >
-              <p class="my-4">방 코드 설정</p>
-              <p class="my-4">방 이름 설정</p>
-              <p class="my-4">방 세부내용 설정</p>
-              <p class="my-4">방 해시태그</p>
+              <form ref="form" @submit.prevent="handleSubmit">
+                <div class="form-row">
+                  <div class="col-md-6 mb-3">
+                    <b-form-group
+                      label="방 이름"
+                      label-for="input-room-name"
+                      valid-feedback=""
+                      invalid-feedback="방의 이름을 적어주세요"
+                      :state="validation.name"
+                    >
+                      <b-form-input
+                        id="input-room-name"
+                        v-model="newRoom.roomName"
+                        :state="validation.name"
+                      ></b-form-input>
+                    </b-form-group>
+                  </div>
+
+                  <div class="col-md-6 mb-3">
+                    <b-form-group
+                      label="방 설명"
+                      label-for="input-room-desc"
+                      valid-feedback=""
+                      invalid-feedback="설명을 적어주세요"
+                      :state="validation.desc"
+                    >
+                      <b-form-input
+                        id="input-room-desc"
+                        v-model="newRoom.roomDescription"
+                        :state="validation.desc"
+                      ></b-form-input>
+                    </b-form-group>
+                  </div>
+
+                  <div class="col-md-6 mb-3">
+                    <b-form-group
+                      label="방 비밀번호"
+                      label-for="input-room-pw"
+                      valid-feedback=""
+                      invalid-feedback="4글자 이상이어야 합니다."
+                      :state="validation.pw"
+                    >
+                      <b-form-input
+                        id="input-room-pw"
+                        v-model="newRoom.roomPw"
+                        :state="validation.pw"
+                      ></b-form-input>
+                    </b-form-group>
+                  </div>
+                </div>
+                <div class="d-flex">
+                  <b-button @click="closeModal">닫기</b-button>
+                  <div class="flex-grow-1"></div>
+                  <b-button @click="makeRoom">방 생성하기</b-button>
+                </div>
+              </form>
             </b-modal>
           </div>
         </div>
@@ -131,13 +192,17 @@
               >
                 <!-- thumbnail -->
                 <div class="room-thumbnail flex-grow-1 flex-shrink-1">
-                  <img
-                    :src="
-                      require(`@/assets/thumbnail/${room.roomThumbnail}.jpg`)
+                  <div
+                    class="room-thumbnail-image text-align-center"
+                    style="
+                      color: white;
+                      font-size: 40px;
+                      margin-top: 8px;
+                      text-align: center;
                     "
-                    alt="room-thumbnail-image"
-                    class="room-thumbnail-image"
-                  />
+                  >
+                    {{ room.roomNum }}
+                  </div>
                 </div>
 
                 <div
@@ -146,7 +211,7 @@
                 >
                   <!-- profile -->
                   <b-avatar
-                    :src="require(`@/assets/avatar/${room.roomNum}.jpg`)"
+                    :src="require(`@/assets/avatar/0.jpg`)"
                     size="2em"
                   ></b-avatar>
 
@@ -175,32 +240,91 @@
 </template>
 
 <script>
-import { ref, onBeforeMount } from 'vue';
+import { ref, computed, nextTick, onBeforeMount } from 'vue';
 // import rest_user from '@/rest/user';
 import rest_room from '@/rest/room';
 
 export default {
   setup() {
-    let roomHistory = ref();
-    let roomRecommend = ref();
+    const form = ref(null);
+
+    const validation = ref({
+      name: computed(() => newRoom.value.roomName.length > 0),
+      desc: computed(() => newRoom.value.roomDescription.length > 0),
+      capa: true,
+      sound: true,
+      video: true,
+      pw: computed(() => newRoom.value.roomPw.length >= 4),
+    });
+
+    const newRoom = ref({
+      roomName: '',
+      roomDescription: '',
+      roomCapacity: 25,
+      roomSound: true,
+      roomVideo: true,
+      roomStudyTime: 0,
+      roomRestTime: 0,
+      roomPw: '',
+      roomActive: true,
+    });
+
+    const isShow = ref(false);
+    const roomHistory = ref();
+    const roomRecommend = ref();
 
     async function init() {
       roomHistory.value = await rest_room.getRoomHistoryList('');
       roomRecommend.value = await rest_room.getRoomRecommendList('');
     }
 
-    function toggleModal() {
-      console.log('작동했음');
-      // document.getElementById('modal-center').show();
-      console.dir(document.getElementById('modal-center'));
-      // this.$refs['my-modal'].toggle('#toggle-btn');
+    function openModal() {
+      isShow.value = true;
+    }
+
+    function closeModal() {
+      isShow.value = false;
+    }
+
+    function resetModal() {
+      newRoom.value.roomName = '';
+      newRoom.value.roomDescription = '';
+      newRoom.value.roomPw = '';
+    }
+
+    async function makeRoom() {
+      // Exit when the form isn't valid
+      if (
+        !validation.value.name ||
+        !validation.value.desc ||
+        !validation.value.pw
+      ) {
+        return;
+      }
+      await rest_room.creatRoom(newRoom.value);
+      await nextTick();
+      init();
+      closeModal();
     }
 
     onBeforeMount(() => {
       init();
     });
 
-    return { roomHistory, roomRecommend, toggleModal };
+    return {
+      form,
+      validation,
+      newRoom,
+      isShow,
+      roomHistory,
+      roomRecommend,
+
+      // function
+      openModal,
+      closeModal,
+      resetModal,
+      makeRoom,
+    };
   },
 };
 </script>
