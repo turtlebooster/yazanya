@@ -82,11 +82,16 @@ public class RoomServiceImpl implements RoomService {
 	}
 
 	@Override
-	public int removeRoom(int roomNum) throws SQLException {
+	public int removeRoom(int roomNum, String userId) throws SQLException {
 		Optional<Room> oRoom = roomRepository.findById(roomNum);
+		Optional<User> oUser = userRepository.findByUserId(userId);
 		// 해당 방이 있을경우
 		if (oRoom.isPresent()) {
 			Room r = oRoom.get();
+			User u = oUser.get();
+//			System.out.println(u);
+			u.setRoom(null);
+			userRepository.save(u);
 			roomRepository.deleteById(roomNum);
 			return 1;
 		}

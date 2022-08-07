@@ -146,9 +146,10 @@ public class RoomController {
     @DeleteMapping("/{roomNum}")
     @ApiOperation(value = "방 삭제", 
     			  notes = "전달된 방 번호에 해당하는 방을 삭제")	
-    public ResponseEntity<?> removeRoom(@PathVariable int roomNum) throws SQLException{
+    public ResponseEntity<?> removeRoom(HttpServletRequest request, @PathVariable int roomNum) throws SQLException{
+		String requestUserId = jwtService.getUserID(request.getHeader("access-token"));
 
-        int cnt = roomservice.removeRoom(roomNum);
+        int cnt = roomservice.removeRoom(roomNum, requestUserId);
 
         if(cnt==1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
         else return new ResponseEntity<String>(FAIL, HttpStatus.OK);

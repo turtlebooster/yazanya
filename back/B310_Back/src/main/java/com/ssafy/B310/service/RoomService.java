@@ -17,7 +17,7 @@ public interface RoomService {
 	public int updateRoom(Room room) throws SQLException;
 
 	// 방 삭제
-	public int removeRoom(int roomNum) throws SQLException;
+	public int removeRoom(int roomNum, String userId) throws SQLException;
 	// 방 하나 가져오기
 	public Room getRoom(int roomNum) throws SQLException;
 
