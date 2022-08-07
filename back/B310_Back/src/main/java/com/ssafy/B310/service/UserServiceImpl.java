@@ -49,6 +49,7 @@ public class 	UserServiceImpl implements UserService{
 		// 없을 경우
 		//비밀번호 암호화
 		String hashPw = hashPw(user.getUserPw());
+		System.out.println(hashPw);
 		user.setUserPw(hashPw);
 		userRepository.save(user);
 		
