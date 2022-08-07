@@ -89,6 +89,12 @@ public class RoomServiceImpl implements RoomService {
 		if (oRoom.isPresent()) {
 			Room r = oRoom.get();
 			User u = oUser.get();
+
+			// 삭제 요청한 사람이 해당 방의 관리자가 아닐경우
+			User manager = r.getManager();
+			if (!manager.getUserId().equals(userId)) {
+				return 0;
+			}
 //			System.out.println(u);
 			u.setRoom(null);
 			userRepository.save(u);
