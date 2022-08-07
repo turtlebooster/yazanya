@@ -39,8 +39,6 @@ export function onExistingParticipants(msg, participants, userName, roomName) {
   });
 
   msg.data.forEach((element) => receiveVideo(element, participants));
-
-  console.log(participants);
 }
 
 export function onNewParticipant(request, participants) {
@@ -75,7 +73,7 @@ function receiveVideo(sender, participants) {
 }
 
 function onDataChanelMessage(event) {
-  store.commit('addChat', event.data);
+  store.commit('recieveData', event.data);
 }
 
 export function onParticipantLeft(request, participants) {
