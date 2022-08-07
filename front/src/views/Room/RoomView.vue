@@ -183,30 +183,6 @@ export default {
       chat_width.value = chat_width.value === 0 ? SIDEBAR_WIDTH : 0;
     }
 
-    // ---------------------- TODO : set unload event ------------------------- //
-    // function unLoadEvent(event) {
-    //   // REST request
-    //   navigator.sendBeacon()
-    //   event.returnValue = "";
-    // }
-
-    // // add event for leaving this page
-    // onMounted(() => { window.addEventListener('beforeunload', unLoadEvent)} );
-    // // remove event
-    // onBeforeUnmount(() => { window.removeEventListener('beforeunload', unLoadEvent)});
-
-    // window.onunload = function () {
-    //   const body = {
-    //     id,
-    //     email,
-    //   };
-    //   const headers = {
-    //     type: 'application/json',
-    //   };
-    //   const blob = new Blob([JSON.stringify(body)], headers);
-    //   navigator.sendBeacon('url', blob);
-    // };
-
     // --------------------- room information ----------------------- //
     onBeforeMount(() => {
       // ----------- for room name ↓ ------------ //
@@ -226,8 +202,8 @@ export default {
         return;
       }
 
-      // enterRoom(room_number);
-      console.log(enterRoom);
+      enterRoom(room_number);
+      // console.log(enterRoom);
     });
 
     async function enterRoom(room_number) {
@@ -244,7 +220,7 @@ export default {
         await store.dispatch('saveUserInfo', user);
         
         // connect kurento server
-        await store.dispatch('joinRoom');
+        store.dispatch('joinRoom');
       } catch(error) {
         alert(error);
         if(store.getters.isEntered) {
@@ -258,7 +234,7 @@ export default {
 
     async function leaveRoom() {
       // APP Server Socket disconnect
-      await store.dispatch("leaveRoom");
+      store.dispatch("leaveRoom");
       // REST request
       await rest_room.leaveRoom(store.state.Room.room.roomNum);
       router.replace('/main');
@@ -292,9 +268,10 @@ export default {
 
     // --------------------- for debugging ------------------------ //
     async function test() {
+      let temp_id = prompt("유저 이름", "제임스");
       await store.dispatch('saveRoomInfo', { roomNum : 11})
-      await store.dispatch('saveUserInfo', { userNickname : prompt("유저 이름", "제임스") });
-      await store.dispatch('joinRoom');
+      await store.dispatch('saveUserInfo', { userID : temp_id, userNickname : temp_id, profilePictureLink : "https://placekitten.com/300/300" });
+      store.dispatch('joinRoom');
     }
     function test2() {
      store.dispatch('sendChat', {sender: store.state.Account.userID, message:prompt('채팅 내용')});
