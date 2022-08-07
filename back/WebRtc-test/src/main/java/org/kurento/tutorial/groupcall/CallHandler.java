@@ -92,6 +92,10 @@ public class CallHandler extends TextWebSocketHandler {
     	  room = roomManager.getRoom(user.getRoomName());
     	  String kickOutUserName = jsonMessage.get("kickOutUserName").getAsString();
     	  UserSession kickOutUser = room.getParticipant(kickOutUserName);
+    	  JsonObject kickOutMessage = new JsonObject();
+    	  kickOutMessage.addProperty("id", "kickedOut");
+    	  kickOutMessage.addProperty("name", kickOutUserName);
+    	  kickOutUser.sendMessage(kickOutMessage);
     	  room.leave(kickOutUser);
     	  log.info("room '{}' user '{}' kicked out", user.getRoomName(), kickOutUserName);
     	  break;
