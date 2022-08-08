@@ -2,7 +2,7 @@
   <div class="main-sidebar">
     <router-link to="/main/setting/profile">
       <img
-        :src="require(`@/assets/avatar/${userNum}.jpg`)"
+        :src="require(`@/assets/avatar/0.jpg`)"
         alt="profile"
         class="image icon"
         style="padding: 8px; object-fit: cover; border-radius: 50%"
