@@ -1,10 +1,11 @@
 package com.ssafy.B310.service;
 
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
+import com.ssafy.B310.entity.Hashtag;
+import com.ssafy.B310.entity.RoomHashtag;
+import com.ssafy.B310.repository.RoomHashtagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,8 @@ import com.ssafy.B310.repository.RoomQueryRepository;
 import com.ssafy.B310.repository.RoomRepository;
 import com.ssafy.B310.repository.UserRepository;
 import com.ssafy.B310.specification.RoomSpecification;
+
+import javax.transaction.Transactional;
 
 @Service
 public class RoomServiceImpl implements RoomService {
@@ -28,21 +31,29 @@ public class RoomServiceImpl implements RoomService {
 	
 	@Autowired
 	UserRepository userRepository;
-	
+
+	@Autowired
+	RoomHashtagRepository roomHashtagRepository;
+
+//	@Autowired
+//	RoomHashtag roomHashtag;
+
+	@Transactional
 	@Override
-	public int createRoom(Room room, String userId) throws SQLException {
-		Optional<User> oUser = userRepository.findByUserId(userId);
-		
+	public int createRoom(Room room, int userNum) throws SQLException {
+		Optional<User> oUser = userRepository.findByUserNum(userNum);
+
 		if (oUser.isPresent()) {
 			User u = oUser.get();
-			room.setManager(u);
+			room.setUserNum(userNum);
 			Room newRoom = roomRepository.save(room);
-			u.setRoom(newRoom);
+			u.setUserRoomCount(u.getUserRoomCount() + 1);
 			userRepository.save(u);
 			return newRoom.getRoomNum();
 		}
 		return 0;
 	}
+
 
 	@Override
 	public int updateRoom(Room room) throws SQLException {
@@ -82,24 +93,27 @@ public class RoomServiceImpl implements RoomService {
 	}
 
 	@Override
-	public int removeRoom(int roomNum, String userId) throws SQLException {
+	public int removeRoom(int roomNum, int userNum) throws SQLException {
 		Optional<Room> oRoom = roomRepository.findById(roomNum);
-		Optional<User> oUser = userRepository.findByUserId(userId);
-		// 해당 방이 있을경우
-		if (oRoom.isPresent()) {
-			Room r = oRoom.get();
-			User u = oUser.get();
+		Optional<User> oUser = userRepository.findByUserNum(userNum);
 
-			// 삭제 요청한 사람이 해당 방의 관리자가 아닐경우
-			User manager = r.getManager();
-			if (!manager.getUserId().equals(userId)) {
-				return 0;
+		// 해당 id의 user가 있으면
+		if (oUser.isPresent()) {
+			User manager = oUser.get();
+			// 해당 방이 있을경우
+			if (oRoom.isPresent()) {
+				Room r = oRoom.get();
+
+				// 삭제 요청한 사람이 해당 방의 관리자가 아닐경우
+				if (r.getUserNum() == (userNum)) {
+					return 0;
+				}
+
+				manager.setUserRoomCount(manager.getUserRoomCount() - 1);
+				userRepository.save(manager);
+				roomRepository.deleteById(roomNum);
+				return 1;
 			}
-//			System.out.println(u);
-			u.setRoom(null);
-			userRepository.save(u);
-			roomRepository.deleteById(roomNum);
-			return 1;
 		}
 		// 없을경우
 		return 0;
@@ -117,12 +131,31 @@ public class RoomServiceImpl implements RoomService {
 	}
 
 	// 해쉬태그 추천 목록
-	public List<Room> getRecommendHashtagList(List<Integer> hashtagNumList) {
+	public Map<String, Object> getRecommendHashtagList(List<Integer> hashtagNumList) {
 		List<Room> roomList = roomQueryRepository.findRecommendRoom(hashtagNumList);
+		Map<String, Object> result = new HashMap<>();
+		List<String> roomHsNameList = new ArrayList<>();
+		result.put("roomList", roomList);
+
 		if (roomList.size() == 0) {
 			roomList = roomRepository.findAll();
+			result.put("roomList", roomList);
 		}
-		return roomList;
+		for (Room r: roomList) {
+			int roomN = r.getRoomNum();
+			List<RoomHashtag> roomHs = roomHashtagRepository.findByRoom(r);
+
+			for (RoomHashtag roomH: roomHs) {
+				System.out.println(roomH);
+				String roomHsName = roomH.getHashtag().getHashtagName();
+				roomHsNameList.add(roomHsName);
+				result.put("roomHash", roomHsNameList);
+
+//				roomList.add(roomH);
+			}
+		}
+//		return roomList;
+		return result;
 	}
 	
 	//유저 입장할 때 participation 1 증가

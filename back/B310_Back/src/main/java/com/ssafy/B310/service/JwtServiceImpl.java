@@ -99,4 +99,11 @@ public class JwtServiceImpl implements JwtService {
 		}
 	}
 
+	@Override
+	public int getUserNum(String jwt) {
+		Jws<Claims> claims = Jwts.parser().setSigningKey(this.generateKey()).parseClaimsJws(jwt);
+		int userNum = (Integer) claims.getBody().get("userNum");
+		return userNum;
+	}
+
 }

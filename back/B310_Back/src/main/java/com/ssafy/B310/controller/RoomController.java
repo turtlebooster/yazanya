@@ -96,8 +96,8 @@ public class RoomController {
 	    		  		"  \"roomActive\" : (방 활성화 여부 true/false)\r\n" + 
 	    		  		" }")
     public ResponseEntity<?> createRoom(@RequestBody Room room, HttpServletRequest request) throws SQLException{
-    	String userId = jwtService.getUserID(request.getHeader("access-token"));    	
-        int cnt = roomservice.createRoom(room, userId);
+    	int userNum = jwtService.getUserNum(request.getHeader("access-token"));
+        int cnt = roomservice.createRoom(room, userNum);
 
         if(cnt!=0) return new ResponseEntity<Integer>(cnt, HttpStatus.OK);
         else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
@@ -147,9 +147,9 @@ public class RoomController {
     @ApiOperation(value = "방 삭제", 
     			  notes = "전달된 방 번호에 해당하는 방을 삭제")	
     public ResponseEntity<?> removeRoom(HttpServletRequest request, @PathVariable int roomNum) throws SQLException{
-		String requestUserId = jwtService.getUserID(request.getHeader("access-token"));
+		int requestUserNum = jwtService.getUserNum(request.getHeader("access-token"));
 
-        int cnt = roomservice.removeRoom(roomNum, requestUserId);
+        int cnt = roomservice.removeRoom(roomNum, requestUserNum);
 
         if(cnt==1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
         else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
@@ -268,7 +268,7 @@ public class RoomController {
     				+ "hashtagNum=1,2,3,4,5")
     @ApiImplicitParam(name = "hashtagNum", value = "해쉬태그 번호")
     public ResponseEntity<?> recommendRoom(@RequestParam(value="hashtagNum", required=false, defaultValue="") List<Integer> hashtagNumList) {
-    	return new ResponseEntity<List<Room>>(roomservice.getRecommendHashtagList(hashtagNumList), HttpStatus.OK);
+    	return new ResponseEntity<Map<String, Object>>(roomservice.getRecommendHashtagList(hashtagNumList), HttpStatus.OK);
     }
     
     @PatchMapping("/exit/{roomNum}")
@@ -299,14 +299,15 @@ public class RoomController {
         return new ResponseEntity<List<User>>(joinedUserList, HttpStatus.OK);
 
     }
-    
+
+//	@Transactional
     @GetMapping("/history")
     @ApiOperation(value = "이전에 방문했던 방",
     			  notes = "이전에 방문했던 방 목록 전달")
     public ResponseEntity<?> getRoomHistory(HttpServletRequest request) throws SQLException {
         String userId = jwtService.getUserID(request.getHeader("access-token"));
         System.out.println(userId);
-        return new ResponseEntity<List<Room>>(participationHistoryService.getRoomHistoryList(userId), HttpStatus.OK);
+        return new ResponseEntity<>(participationHistoryService.getRoomHistoryList(userId), HttpStatus.OK);
     }
 
     @PostMapping("/addThumbnail/{roomNum}")

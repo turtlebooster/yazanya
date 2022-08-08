@@ -9,7 +9,7 @@ import com.ssafy.B310.entity.Room;
 
 public interface RoomService {
 	// 방 생성
-	public int createRoom(Room room, String userId) throws SQLException;
+	public int createRoom(Room room, int userNum) throws SQLException;
 
 	// 방 검색
 	public List<Room> filterRoom(Map<String, Integer> params) throws SQLException;
@@ -17,13 +17,13 @@ public interface RoomService {
 	public int updateRoom(Room room) throws SQLException;
 
 	// 방 삭제
-	public int removeRoom(int roomNum, String userId) throws SQLException;
+	public int removeRoom(int roomNum, int userNum) throws SQLException;
 	// 방 하나 가져오기
 	public Room getRoom(int roomNum) throws SQLException;
 
 	
 	//해쉬태그 추천으로 목록 불러오기
-	List<Room> getRecommendHashtagList(List<Integer> hashtagNumList);
+	Map<String, Object> getRecommendHashtagList(List<Integer> hashtagNumList);
 	
 	//유저 입장할 때 participation 1 증가
 	public void addParticipation(Room room) throws SQLException;

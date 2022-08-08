@@ -11,5 +11,7 @@ public interface JwtService {
 	boolean isUsable(String jwt);
 	// 토큰 갱신
 	<T> String refresh(String jwt);
+	// 토큰으로부터 userNum 가져오기
+	int getUserNum(String jwt);
 	
 }
