@@ -234,10 +234,10 @@ export default {
 
     async function leaveRoom() {
       // APP Server Socket disconnect
-      store.dispatch("leaveRoom");
+      //store.dispatch("leaveRoom");
       // REST request
       await rest_room.leaveRoom(store.state.Room.room.roomNum);
-      router.replace('/main');
+      location.replace(window.location.origin + '/main');
     }
 
     // ---------- dynamic video grid for participants ↓ ------------ //

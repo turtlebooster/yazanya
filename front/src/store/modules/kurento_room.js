@@ -77,7 +77,7 @@ export const Room = {
   mutations: {
     initSocket(state) {
       console.log('Web Socket Init');
-      state.ws = new WebSocket('ws://' + 'localhost:8334' + '/groupcall');
+      state.ws = new WebSocket('wss://' + location.host + '/groupcall');
 
       state.ws.onopen = () => {
         console.log('Web Socket Opened');
