@@ -13,17 +13,11 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.ssafy.B310.entity.*;
-import com.ssafy.B310.service.*;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,19 +28,25 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.ssafy.B310.annotation.NoJwt;
+import com.ssafy.B310.entity.Follow;
 import com.ssafy.B310.entity.Hashtag;
 import com.ssafy.B310.entity.User;
 import com.ssafy.B310.entity.UserHashtag;
+import com.ssafy.B310.service.FollowService;
 import com.ssafy.B310.service.HashtagService;
 import com.ssafy.B310.service.JwtService;
+import com.ssafy.B310.service.ProfileService;
 import com.ssafy.B310.service.UserHashtagService;
 import com.ssafy.B310.service.UserService;
 
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 
 
 @RestController
@@ -77,22 +77,33 @@ public class UserController {
 
     @Autowired
     FollowService followService;
+    
 
     // 로그인 요청 처리 - POST /user/login
     @NoJwt
     @PostMapping("/login")
     @ApiOperation(value = "로그인", notes = "{\\n\\\"userId\\\" : {String}, \\n \\\"userPw\\\": {String} \n}")
     public ResponseEntity<Map<String, Object>> login(@RequestBody User user) {
+    	
+    	System.out.println("들어옹긴 함?111");
+    	
         Map<String, Object> resultMap = new HashMap<>();
         HttpStatus status = null;
         try {
             User loginUser = userService.login(user);
             if (loginUser != null) {
-                String token = jwtService.create("userId", loginUser.getUserId(), "access-token");
-                logger.debug("로그인 토큰정보 : {}", token);
-                resultMap.put("access-token", token);
+                String accesstoken = jwtService.createAccessToken("userId", loginUser.getUserId(), "access-token");
+                String refreshtoken = jwtService.createRefreshToken("userId", loginUser.getUserId(), "refresh-token");
+                
+                
+                userService.saveRefreshToken(loginUser, refreshtoken);
+                
+                logger.debug("로그인 access 토큰정보 : {}", accesstoken);
+                resultMap.put("access-token", accesstoken);
+                resultMap.put("refresh-token", refreshtoken);
                 resultMap.put("message", SUCCESS);
                 status = HttpStatus.ACCEPTED;
+                System.out.println("들어옹긴 함?222");
             } else {
                 resultMap.put("message", FAIL);
                 status = HttpStatus.ACCEPTED;
@@ -317,13 +328,11 @@ public class UserController {
     }
 
     // 프로필 이미지 추가
-    @PostMapping("/profile/{userId}/profileImg")
-    @ApiOperation(value = "유저 프로필 이미지 추가")
+    @PostMapping("/profile/{userId}")
+    @ApiOperation(value = "유저 프로필 이미지 추가/수정/삭제", notes = "사진을 보낼 경우 - 프로필 사진 업로드&수정 \n null을 보낼 경우 - 프로필 사진 삭제")
     public ResponseEntity<?> addProfileImage(@PathVariable("userId") String userId, @RequestPart MultipartFile pic) throws IOException, SQLException {
         UUID uuid = UUID.randomUUID();
         String profileImg = uuid.toString();
-
-//		String path = "C:/Users/multicampus/Desktop/yazanya/S07P12B310/back/B310_Back/src/main/resources/static/userImg/";
 
         String path = "C:/image/profileImg/";
 
@@ -336,16 +345,16 @@ public class UserController {
         } else {
             System.out.println("폴더 이미 존재함");
         }
+        
         Path imagePath = Paths.get(path + profileImg + '_' + userId);
+        
+        Files.write(imagePath, pic.getBytes());
 
-        Path p = Files.write(imagePath, pic.getBytes());
-
-//		try {
-//			Files.write(imagePath, pic.getBy	tes());
-//		} catch (Exception e) {
-//
-//		}
-        profileService.updateProfileImg(userId, imagePath.toString());
+        if(!pic.isEmpty()) {
+        	profileService.uploadProfileImg(userId, imagePath.toString());
+        } else {
+        	profileService.uploadProfileImg(userId, "./src/main/resources/static/userImg/profile.jpg");
+        }
 
         return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 
@@ -353,7 +362,7 @@ public class UserController {
 
     // 팔로우
     // 팔로우 추가
-    @PostMapping("/profile/{userId}")
+    @PostMapping("/follow/{userId}")
     @ApiOperation("팔로우 추가")
     public ResponseEntity<?> userFollow(HttpServletRequest request, @PathVariable("userId") String followToUserId) throws SQLException {
         String followFromUserId = jwtService.getUserID(request.getHeader("access-token"));
@@ -364,7 +373,7 @@ public class UserController {
     }
 
     // 팔로우 취소
-    @DeleteMapping("/profile/{userId}")
+    @DeleteMapping("/follow/{userId}")
     @ApiOperation(value = "팔로우 취소")
     public ResponseEntity<?> userUnFollow(HttpServletRequest request, @PathVariable("userId") String followToUserId) throws SQLException {
         String followFromUserId = jwtService.getUserID(request.getHeader("access-token"));

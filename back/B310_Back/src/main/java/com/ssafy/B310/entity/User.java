@@ -17,6 +17,7 @@ import org.hibernate.annotations.DynamicInsert;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -25,6 +26,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @DynamicInsert
+@Builder
 @ToString
 @AllArgsConstructor
 public class User {
@@ -62,6 +64,10 @@ public class User {
 	@JoinColumn(name="room_num")
 	@JsonIgnore
 	private Room room;
+	
+	@Column
+	private String refreshToken;
+	
 	
 	// 자기소개
 
