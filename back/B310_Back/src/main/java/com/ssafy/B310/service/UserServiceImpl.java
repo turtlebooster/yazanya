@@ -14,7 +14,7 @@ import com.ssafy.B310.entity.User;
 import com.ssafy.B310.repository.UserRepository;
 
 @Service
-public class 	UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService{
 	
 	@Autowired
 	UserRepository userRepository;
@@ -51,6 +51,7 @@ public class 	UserServiceImpl implements UserService{
 		String hashPw = hashPw(user.getUserPw());
 		System.out.println(hashPw);
 		user.setUserPw(hashPw);
+		user.setProfilePictureLink("/static/userImg/profile.jpg");
 		userRepository.save(user);
 		
 		return 1;
@@ -198,6 +199,15 @@ public class 	UserServiceImpl implements UserService{
         mailService.sendMail(mail);
         
 		return pwd;
+	}
+	
+	// DB에 refresh token 저장
+	public int saveRefreshToken(User user, String refreshToken) throws SQLException {
+		user.setRefreshToken(refreshToken);
+		
+		userRepository.save(user);
+		
+		return 1;
 	}
 
 }
