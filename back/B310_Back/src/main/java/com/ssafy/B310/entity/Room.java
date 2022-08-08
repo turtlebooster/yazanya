@@ -71,7 +71,10 @@ public class Room {
 	private String roomThumbnail;
 
 	@Column
-	private int roomPw;
+	private String roomPw;
+	
+	@Column(columnDefinition = "TINYINT", length=1)
+	private boolean roomHasPw;
 
 	@Column(columnDefinition = "TINYINT", length=1)
 	@ColumnDefault("true")

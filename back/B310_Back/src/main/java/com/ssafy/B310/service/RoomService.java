@@ -36,4 +36,7 @@ public interface RoomService {
 	
 	//방 썸네일 등록하기
 	public long addThumbnail(int roomNum, String filename) throws SQLException;
+	
+	//방 비밀번호 유무  0: 방 이상 1: 비밀번호 있음 2: 비밀번호 없음 
+	public int hasPw(int roomNum) throws SQLException;
 }
