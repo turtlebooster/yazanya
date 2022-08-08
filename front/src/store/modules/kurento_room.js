@@ -78,6 +78,7 @@ export const Room = {
     initSocket(state) {
       console.log('Web Socket Init');
       state.ws = new WebSocket('wss://' + location.host + '/groupcall');
+      // state.ws = new WebSocket('ws://' + 'localhost:8334' + '/groupcall'); // for local test
 
       state.ws.onopen = () => {
         console.log('Web Socket Opened');
@@ -226,7 +227,6 @@ export const Room = {
     },
 
     saveUserInfo({ commit }, payload) {
-      console.log('userInfo', payload);
       commit('setUserInfo', payload);
     },
 

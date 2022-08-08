@@ -184,6 +184,7 @@ export default {
     }
 
     // --------------------- room information ----------------------- //
+    let room_number;
     onBeforeMount(() => {
       // ----------- for room name ↓ ------------ //
       let url = document.URL;
@@ -195,7 +196,7 @@ export default {
       }
 
       // check room number NaN
-      let room_number = url.slice(idx);
+      room_number = url.slice(idx);
       if (isNaN(room_number)) {
         alert('링크가 형식에 맞지 안습니다');
         router.replace('/main');
@@ -214,21 +215,19 @@ export default {
         // gain room info
         let room = await rest_room.getRoomInfo(room_number)
         await store.dispatch('saveRoomInfo', room)
+        console.log("gain Room info...");
 
         // gain user info
         let user = await rest_user.getProfile(store.getters.getUserID)
         await store.dispatch('saveUserInfo', user);
+        console.log("gain User info...");
         
         // connect kurento server
         store.dispatch('joinRoom');
       } catch(error) {
         alert(error);
-        if(store.getters.isEntered) {
-          // when room entered
-          leaveRoom();
-        } else {
-          router.replace('/main');
-        }
+        await rest_room.leaveRoom(room_number);
+        router.replace('/main');
       }
     }
 
