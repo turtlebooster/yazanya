@@ -6,5 +6,5 @@ module.exports = defineConfig({
 const path = require('path');
 
 module.exports = {
-  outputDir: path.resolve(__dirname, '../docker/dist'),
+  outputDir: path.resolve(__dirname, '../back/WebRtc-test/src/main/resources/static'),
 };
