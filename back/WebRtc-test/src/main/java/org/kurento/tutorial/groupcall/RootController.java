@@ -1,4 +1,4 @@
-package com.yeoul.kurento_demo;
+package org.kurento.tutorial.groupcall;
 
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.stereotype.Controller;
@@ -12,4 +12,9 @@ public class RootController implements ErrorController {
     public String error() {
         return "forward:/";
     }
+
+	@Override
+	public String getErrorPath() {
+		return PATH;
+	}
 }
