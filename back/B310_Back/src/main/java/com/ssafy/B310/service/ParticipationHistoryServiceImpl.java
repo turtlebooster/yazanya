@@ -71,13 +71,13 @@ public class ParticipationHistoryServiceImpl implements ParticipationHistoryServ
 				temp.put("userHistory", roomH);
 				List<RoomHashtag> roomHs = roomHashtagRepository.findByRoom(roomH);
 
-				for (RoomHashtag roomHa : roomHs) {
 					tempRoomHsNameList = new ArrayList<>();
+				for (RoomHashtag roomHa : roomHs) {
 //					System.out.println(roomH);
 					String roomHsName = roomHa.getHashtag().getHashtagName();
 					tempRoomHsNameList.add(roomHsName);
-					temp.put("roomHash", tempRoomHsNameList);
 				}
+					temp.put("roomHash", tempRoomHsNameList);
 			realresult.add(temp);
 			}
 
