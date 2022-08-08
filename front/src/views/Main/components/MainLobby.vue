@@ -241,7 +241,6 @@
 
 <script>
 import { ref, computed, nextTick, onBeforeMount } from 'vue';
-// import rest_user from '@/rest/user';
 import rest_room from '@/rest/room';
 
 export default {
