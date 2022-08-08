@@ -3,16 +3,20 @@ package com.ssafy.B310.service;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import com.ssafy.B310.entity.User;
 import com.ssafy.B310.exception.UnauthorizedException;
+import com.ssafy.B310.repository.UserRepository;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -26,7 +30,10 @@ public class JwtServiceImpl implements JwtService {
 
 	private static final String SALT = "yazanyaSecret";
 	private static final int EXPIRE_MINUTES = 60;
-
+	
+	@Autowired
+	UserRepository userRepository;
+	
 	// 토큰 생성
 	@Override
 	public <T> String create(String key, T data, String subject) {
@@ -101,8 +108,14 @@ public class JwtServiceImpl implements JwtService {
 
 	@Override
 	public int getUserNum(String jwt) {
-		Jws<Claims> claims = Jwts.parser().setSigningKey(this.generateKey()).parseClaimsJws(jwt);
-		int userNum = (Integer) claims.getBody().get("userNum");
+		String userId = getUserID(jwt);
+		
+		Optional<User> oUser = userRepository.findByUserId(userId);
+		if (!oUser.isPresent()) {
+			return -1;
+		}
+		
+		int userNum = oUser.get().getUserNum();
 		return userNum;
 	}
 

@@ -98,7 +98,10 @@ public class RoomController {
 	    		  		" }")
     public ResponseEntity<?> createRoom(@RequestBody Room room, HttpServletRequest request) throws SQLException{
     	int userNum = jwtService.getUserNum(request.getHeader("access-token"));
-        int cnt = roomservice.createRoom(room, userNum);
+        int cnt = 0;
+        if (userNum != -1) {
+        	cnt = roomservice.createRoom(room, userNum);        	
+        }
 
         if(cnt!=0) return new ResponseEntity<Integer>(cnt, HttpStatus.OK);
         else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
