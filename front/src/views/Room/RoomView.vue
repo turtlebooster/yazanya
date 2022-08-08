@@ -101,18 +101,18 @@
         <b-button
           class="rounded-circle mx-2"
           :class="[$root.theme ? 'dark' : 'light']"
-          @click="not_impl()"
+          @click="toggleAudio()"
         >
-          <i class="bi bi-mic-fill" style="font-size: 1.3em"></i>
-          <!-- <i class="bi bi-mic-mute-fill"></i> -->
+          <i v-if="isAudioOn" class="bi bi-mic-fill" style="font-size: 1.3em"></i>
+          <i v-if="!isAudioOn" class="bi bi-mic-mute-fill"></i>
         </b-button>
         <b-button
           class="rounded-circle mx-2"
           :class="[$root.theme ? 'dark' : 'light']"
-          @click="not_impl()"
+          @click="toggleVideo()"
         >
-          <i class="bi bi-camera-video-fill" style="font-size: 1.3em"></i>
-          <!-- <i class="bi bi-camera-video-off-fill"></i> -->
+          <i v-if="isVideoOn" class="bi bi-camera-video-fill" style="font-size: 1.3em"></i>
+          <i v-if="!isVideoOn" class="bi bi-camera-video-off-fill"></i>
         </b-button>
         <b-button
           class="rounded-circle mx-2"
@@ -317,6 +317,25 @@ export default {
       })
     })
 
+    // ------------------------- handle audio and video -------------------------- //
+    let isVideoOn = ref(true);
+    let isAudioOn = ref(true);
+
+    function toggleAudio() {
+      isAudioOn.value = !isAudioOn.value;
+      if(store.state.Room.user) {
+        console.log("Audio toggle");
+        store.getters.getParticipants[store.state.Room.user.userNickname].handleAudio(isAudioOn.value);
+      }
+    }
+
+    function toggleVideo() {
+      isVideoOn.value = !isVideoOn.value;
+      if(store.state.Room.user) {
+        store.state.Room.participants[store.state.Room.user.userNickname].handleVideo(isVideoOn.value);
+      }
+    }
+
     return {
       togglePlanner,
       toggleChat,
@@ -341,7 +360,13 @@ export default {
       isPrivateRoom : computed(()=>store.getters.isPrivateRoom),
 
       participants: computed(() => store.state.Room.participants),
-      isConnected: computed(() => store.state.Room.isSocketConnected)
+      isConnected: computed(() => store.state.Room.isSocketConnected),
+
+      isVideoOn,
+      isAudioOn,
+
+      toggleAudio,
+      toggleVideo,
     };
   },
 };
