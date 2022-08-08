@@ -23,6 +23,11 @@ export default {
     });
   },
 
+  signOut: function () {
+    console.log('sign out');
+    return 2;
+  },
+
   login: function (payload) {
     let params = {
       userId: payload.id,
