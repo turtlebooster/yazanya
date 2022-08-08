@@ -64,21 +64,15 @@ export default {
   },
 
   leaveRoom: function (room_num) {
-    console.log('getters ', store.getters['getUserID']);
     let params = {
       // TODO : remove store code part later
       userId: store.getters['getUserID'],
     };
 
-    return new Promise((resolve, reject) => {
-      http
-        .patch(REST_PATH + '/exit/' + room_num, params)
-        .then((response) => {
-          resolve(response);
-        })
-        .catch((error) => {
-          reject(error);
-        });
+    return new Promise((resolve) => {
+      http.patch(REST_PATH + '/exit/' + room_num, params).then((response) => {
+        resolve(response);
+      });
     });
   },
 

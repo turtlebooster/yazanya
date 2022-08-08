@@ -66,28 +66,16 @@ export default {
     let id = ref('');
     let pw = ref('');
 
-    function login() {
-      rest_user
-        .login({ id: id.value, pw: pw.value })
-        .then((response) => {
-          console.log(response);
-          if (response.data['message'] === 'success') {
-            // save login info to local and move
-            store
-              .dispatch('login', {
-                'access-token': response.data['access-token'],
-                'id': id.value,
-              })
-              .then(() => {
-                router.replace('/main');
-              });
-          } else {
-            alert('로그인 실패!');
-          }
-        })
-        .catch(() => {
-          alert('로그인 중 문제가 발생하였습니다.');
-        });
+    async function login() {
+      try {
+        let access_token = await rest_user.login({ id: id.value, pw: pw.value })
+
+        await store.dispatch('login', {'access-token': access_token, 'id': id.value });
+        router.replace('/main');
+      }
+      catch(error) {
+        alert('로그인 중 문제가 발생하였습니다.');
+      }  
     }
 
     onBeforeMount(() => {

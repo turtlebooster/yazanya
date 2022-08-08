@@ -33,7 +33,11 @@ export default {
       http
         .post(REST_PATH + '/login', params)
         .then((response) => {
-          resolve(response);
+          if (response.data.message === 'success') {
+            resolve(response.data['access-token']);
+          } else {
+            reject('로그인 중 문제가 발생하였습니다');
+          }
         })
         .catch((error) => {
           reject(error);

@@ -83,7 +83,7 @@ export default {
         let message = ref('');
         function sendMessage() {
             if(message.value != null) {
-                store.dispatch('sendChat', {senderId: store.state.Room.user.userID, senderName: store.state.Room.user.userNickname, 
+                store.dispatch('sendChat', {senderId: store.state.Room.user.userId, senderName: store.state.Room.user.userNickname, 
                     profile: store.state.Room.user.profilePictureLink, message: message.value});
                 message.value = '';
             }
