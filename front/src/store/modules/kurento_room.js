@@ -60,6 +60,20 @@ export const Room = {
       }
     },
 
+    isAudioEnabled(state) {
+      if (state.room) {
+        return state.room.roomVideo;
+      }
+      return true;
+    },
+
+    isVideoEnabled(state) {
+      if (state.room) {
+        return state.room.roomAudio;
+      }
+      return true;
+    },
+
     // ------------------ User Info ------------------------- //
     getNickname(state) {
       return state.user.userNickname;
@@ -77,7 +91,7 @@ export const Room = {
   mutations: {
     initSocket(state) {
       console.log('Web Socket Init');
-      state.ws = new WebSocket('wss://' + location.host + '/groupcall');
+      state.ws = new WebSocket('wss://i7b310.p.ssafy.io/groupcall');
       // state.ws = new WebSocket('ws://' + 'localhost:8334' + '/groupcall'); // for local test
 
       state.ws.onopen = () => {
