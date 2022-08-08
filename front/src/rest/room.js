@@ -107,4 +107,17 @@ export default {
         });
     });
   },
+
+  creatRoom: function (payload) {
+    return new Promise((resolve, reject) => {
+      http
+        .post(REST_PATH, payload)
+        .then((response) => {
+          resolve(response.data);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
 };
