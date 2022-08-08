@@ -151,10 +151,12 @@ public class RoomController {
     @ApiOperation(value = "방 삭제", 
     			  notes = "전달된 방 번호에 해당하는 방을 삭제")	
     public ResponseEntity<?> removeRoom(HttpServletRequest request, @PathVariable int roomNum) throws SQLException{
-		int requestUserNum = jwtService.getUserNum(request.getHeader("access-token"));
-
-        int cnt = roomservice.removeRoom(roomNum, requestUserNum);
-
+		int userNum = jwtService.getUserNum(request.getHeader("access-token"));
+        int cnt = 0;
+        if (userNum != -1) {
+        	cnt = roomservice.removeRoom(roomNum, userNum);
+        }
+		
         if(cnt==1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
         else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
     }
