@@ -8,10 +8,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -49,7 +48,7 @@ public class User {
 
 	@Column(nullable = false)
 	private int userStatusNum;
-	
+
 	@OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
 	@JsonIgnore
 	private Set<Participation> participationList;
@@ -57,14 +56,12 @@ public class User {
 	@OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
 	@JsonIgnore
 	private Set<Todo> todo;
-	
-	@OneToOne
-	@JoinColumn(name="room_num")
-	@JsonIgnore
-	private Room room;
-	
-	// 자기소개
 
+	@Column
+	@ColumnDefault("0")
+	private int userRoomCount;
+
+	// 자기소개
 	@Column
 	private String profileSelfIntroduce;
 
@@ -86,7 +83,7 @@ public class User {
 	private String profileBelongTo;
 
 	public User(String userId, String userPw, String userName, String userEmail, String userNickname,
-			int userStatusNum) {
+				int userStatusNum) {
 		this.userId = userId;
 		this.userPw = userPw;
 		this.userName = userName;
@@ -94,7 +91,7 @@ public class User {
 		this.userNickname = userNickname;
 		this.userStatusNum = userStatusNum;
 	}
-	
+
 	public User() {
 	}
 
