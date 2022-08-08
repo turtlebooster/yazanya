@@ -2,7 +2,7 @@ import axios from 'axios';
 import store from '../../store';
 
 const http = axios.create({
-  baseURL: 'https://i7b310.p.ssafy.io:8081/B310',
+  baseURL: process.env.VUE_APP_SERVER,
   headers: {
     'content-type': 'application/json; charset=UTF-8',
   },
