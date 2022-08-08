@@ -13,6 +13,7 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -202,7 +203,8 @@ public class RoomController {
     	Room r = roomservice.getRoom(roomNum);
 
         int cnt = 0;
-        if((r.getRoomPw() == room.getRoomPw()) && roomservice.enableJoinRoom(roomNum)) {
+        // (비밀번호가 없거나 일치) 하고 방에 수용인원을 넘지 않았을 경우
+        if((!r.isRoomHasPw() || BCrypt.checkpw(r.getRoomPw(), room.getRoomPw())) && roomservice.enableJoinRoom(roomNum)) {
         	cnt = participationservice.joinRoom(userId, r);
         }
 
@@ -346,4 +348,16 @@ public class RoomController {
     	else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
 
     }
+    
+    @GetMapping("/hasPw/{roomNum}")
+    @ApiOperation(value = "방이 비밀번호 유무", notes = "방 번호에 해당하는 방이 비밀번호를 가졌는지 여부 전달\r\n 비밀번호 있을경우 true \r\n 비밀번호 없을경우 false \r\n 오류 fail")
+    public ResponseEntity<?> getRoomHistory(@PathVariable int roomNum) throws SQLException {
+    	int cnt = roomservice.hasPw(roomNum);
+    	
+    	if (cnt == 1) return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+    	else if (cnt == 2) return new ResponseEntity<Boolean>(false, HttpStatus.OK);
+    	else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
+        
+    }
+    
 }

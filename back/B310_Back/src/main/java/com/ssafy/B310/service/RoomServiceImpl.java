@@ -6,6 +6,8 @@ import java.util.*;
 import com.ssafy.B310.entity.Hashtag;
 import com.ssafy.B310.entity.RoomHashtag;
 import com.ssafy.B310.repository.RoomHashtagRepository;
+
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -46,6 +48,7 @@ public class RoomServiceImpl implements RoomService {
 		if (oUser.isPresent()) {
 			User u = oUser.get();
 			room.setUserNum(userNum);
+			room.setRoomPw(hashPw(room.getRoomPw()));
 			Room newRoom = roomRepository.save(room);
 			u.setUserRoomCount(u.getUserRoomCount() + 1);
 			userRepository.save(u);
@@ -53,24 +56,29 @@ public class RoomServiceImpl implements RoomService {
 		}
 		return 0;
 	}
-
-
+	
+	public String hashPw(String roomPw) {
+		return BCrypt.hashpw(roomPw, BCrypt.gensalt());
+	}
+	
 	@Override
 	public int updateRoom(Room room) throws SQLException {
 		Optional<Room> oRoom = roomRepository.findById(room.getRoomNum()); 
 		
 		if (oRoom.isPresent()) {
 			Room r = oRoom.get();
-			r.setRoomName(room.getRoomName());
-			r.setRoomDescription(room.getRoomDescription());
-			r.setRoomCapacity(room.getRoomCapacity());
-			r.setRoomStudyTime(room.getRoomStudyTime());
-			r.setRoomRestTime(room.getRoomRestTime());
+			if(room.getRoomName() != null) r.setRoomName(room.getRoomName());
+			if (room.getRoomDescription() != null) r.setRoomDescription(room.getRoomDescription());
+			if (room.getRoomCapacity() != 0) r.setRoomCapacity(room.getRoomCapacity());
+			if (room.getRoomStudyTime() != 0) r.setRoomStudyTime(room.getRoomStudyTime());
+			if (room.getRoomRestTime() != 0) r.setRoomRestTime(room.getRoomRestTime());
 			r.setRoomVideo(room.isRoomVideo());
 			r.setRoomSound(room.isRoomSound());
-			r.setRoomPw(room.getRoomPw());
+			r.setRoomHasPw(room.isRoomHasPw());
+			r.setRoomPw(hashPw(room.getRoomPw()));
 //			r.setRoomThumbnail(room.getRoomThumbnail());
 			r.setRoomActive(room.isRoomActive());
+			
 			roomRepository.save(r);
 			return 1;
 		}
@@ -183,6 +191,21 @@ public class RoomServiceImpl implements RoomService {
 	@Override
 	public long addThumbnail(int roomNum, String filename) throws SQLException {
 		return roomQueryRepository.addThumbnailonRoom(roomNum, filename);
+	}
+
+	@Override
+	public int hasPw(int roomNum) throws SQLException {
+		Optional<Room> oRoom = roomRepository.findById(roomNum);
+		
+		if (oRoom.isPresent()) {
+			Room room = oRoom.get();
+			if (room.isRoomHasPw()) {
+				return 1;
+			} else {
+				return 2;
+			}
+		}
+		return 0;
 	}	
 }
 
