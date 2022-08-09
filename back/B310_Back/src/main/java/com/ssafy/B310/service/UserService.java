@@ -21,5 +21,4 @@ public interface UserService {
 	String makeTmpPw(String userId) throws SQLException;
 	String hashPw(String userPw);
 	
-	int saveRefreshToken(User user, String refreshToken) throws SQLException;
 }

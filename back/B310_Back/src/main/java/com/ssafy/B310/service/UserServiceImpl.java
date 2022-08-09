@@ -200,14 +200,5 @@ public class UserServiceImpl implements UserService{
         
 		return pwd;
 	}
-	
-	// DB에 refresh token 저장
-	public int saveRefreshToken(User user, String refreshToken) throws SQLException {
-		user.setRefreshToken(refreshToken);
-		
-		userRepository.save(user);
-		
-		return 1;
-	}
 
 }
