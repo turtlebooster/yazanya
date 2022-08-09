@@ -78,9 +78,6 @@ public class RoomController {
     @Autowired
     ThumbnailService thumbnailService;
 
-//	@Autowired
-//	RoomForcedExit roomForcedExit;
-
 	@Autowired
 	RoomForceExitRepository roomForceExitRepository;
 
@@ -222,20 +219,19 @@ public class RoomController {
 		if (!(!r.isRoomHasPw() || BCrypt.checkpw(room.getRoomPw(), r.getRoomPw()))) {
 			statusCode = 2;
 		}
-		if (!(roomservice.enableJoinRoom(roomNum))) {
+		if (roomservice.enableJoinRoom(roomNum)) {
 			statusCode = 3;
 		}
 		switch (statusCode) {
 			case 1:
 				return new ResponseEntity<String>("failToForcedExitUser", HttpStatus.OK);
+			case 3:
+				return new ResponseEntity<String>("failToFullRoom", HttpStatus.OK);
 
 			case 2:
 
 				return new ResponseEntity<String>("failToPw", HttpStatus.OK);
 
-			case 3:
-				System.out.println(roomservice.enableJoinRoom(roomNum));
-				return new ResponseEntity<String>("failToFullRoom", HttpStatus.OK);
 
 			default:
 				break;
