@@ -209,7 +209,7 @@ public class RoomController {
 
         int cnt = 0;
         // (비밀번호가 없거나 일치) 하고 방에 수용인원을 넘지 않았을 경우
-        if((!r.isRoomHasPw() || BCrypt.checkpw(r.getRoomPw(), room.getRoomPw())) && roomservice.enableJoinRoom(roomNum)) {
+        if((!r.isRoomHasPw() || BCrypt.checkpw(room.getRoomPw(), r.getRoomPw())) && roomservice.enableJoinRoom(roomNum)) {
         	cnt = participationservice.joinRoom(userId, r);
         }
 
