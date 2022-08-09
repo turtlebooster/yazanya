@@ -91,7 +91,7 @@ export const Room = {
   mutations: {
     initSocket(state) {
       console.log('Web Socket Init');
-      state.ws = new WebSocket('wss://i7b310.p.ssafy.io/groupcall');
+      state.ws = new WebSocket(process.env.VUE_APP_WEBSOCKET);
       // state.ws = new WebSocket('ws://' + 'localhost:8334' + '/groupcall'); // for local test
 
       state.ws.onopen = () => {
