@@ -193,7 +193,7 @@ export const Room = {
 
     recieveData(state, data) {
       let recieved = data.split(',');
-      console.log('recieved', recieved);
+      console.log('recieved ', recieved);
 
       if (recieved[0] === 'chat') {
         let message = '';

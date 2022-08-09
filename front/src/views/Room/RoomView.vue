@@ -217,12 +217,10 @@ export default {
         // gain room info
         let room = await rest_room.getRoomInfo(room_number)
         await store.dispatch('saveRoomInfo', room)
-        console.log("gain Room info...");
 
         // gain user info
         let user = await rest_user.getProfile(store.getters.getUserID)
         await store.dispatch('saveUserInfo', user);
-        console.log("gain User info...");
 
         // set UI with Room Info
         isVideoOn.value = store.getters.isVideoEnabled;
@@ -330,7 +328,6 @@ export default {
     function toggleAudio() {
       isAudioOn.value = !isAudioOn.value;
       if(store.state.Room.user) {
-        console.log("Audio toggle");
         store.getters.getParticipants[store.state.Room.user.userNickname].handleAudio(isAudioOn.value);
       }
     }
