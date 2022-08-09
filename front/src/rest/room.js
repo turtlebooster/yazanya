@@ -114,4 +114,20 @@ export default {
         });
     });
   },
+
+  hasRoomPw: function (room_num) {
+    return new Promise((resolve, reject) => {
+      http
+        .get(REST_PATH + '/hasPw/' + room_num)
+        .then((response) => {
+          if (response.data == 'fail') {
+            reject('방 정보를 확인 하는 중 문제가 발생하였습니다');
+          }
+          resolve(response.data);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
 };
