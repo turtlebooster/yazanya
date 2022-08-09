@@ -81,13 +81,13 @@
           >
           <p class="text-center align-middle rounded m-0 px-1" :class="[$root.theme ? 'light' : 'dark']" style="position: absolute; top: 10px; left: 10px; z-index: 2">{{name}}</p>
           <b-dropdown
+            v-if="!(name === userNickname)"
             style="position: absolute; bottom: 10px; right: 10px; z-index: 2; border-radius: 4px;"
             :class="[$root.theme ? 'light-back-only' : 'dark-back-only']"
             size="sm" variant="link" toggle-class="text-decoration-none" no-caret>
             <template #button-content><i class="bi bi-three-dots-vertical" :class="[$root.theme ? 'light-color-only' : 'dark-color-only']"></i></template>
-            <b-dropdown-item href="#">Action</b-dropdown-item>
-            <b-dropdown-item href="#">Another action</b-dropdown-item>
-            <b-dropdown-item href="#">Something else here...</b-dropdown-item>
+            <b-dropdown-item href="#" @click.prevent="kickUser(name)" :disabled="!isHost">강제 퇴장</b-dropdown-item>
+            <b-dropdown-item href="#" @click.prevent="reportUser(name)">신고하기</b-dropdown-item>
           </b-dropdown>
         </div>
       </div>
@@ -128,7 +128,7 @@
         <b-button pill
           class="mx-4 m-1 px-sm-4"
           variant="danger"
-          @click="leaveRoom()"
+          @click="leaveRoom(0)"
         >
           <i class="bi bi-power" style="font-size: 1.3em"></i>
         </b-button>
@@ -154,7 +154,9 @@
 <script>
 import { ref, computed, onBeforeMount, onUpdated } from 'vue';
 import { useRouter } from 'vue-router';
-import { useStore } from 'vuex'
+import { useStore } from 'vuex';
+import { useToast } from 'bootstrap-vue-3';
+import Swal from 'sweetalert2'
 
 import RoomNav from './components/RoomNavbar.vue';
 import ChatSidebar from './components/RoomChatSidebar.vue';
@@ -171,6 +173,54 @@ export default {
   setup() {
     const router = useRouter();
     const store = useStore();
+    
+    // ---------------------- Toast ------------------------- //
+    const toast = useToast();
+    function showWarnToast(title, message) {
+      toast.show(
+        { title: title, body: message},
+        { pos: 'bottom-right', variant:'danger'}
+      )
+    }
+    function showInfoToast(title, message) {
+      toast.show(
+        { title: title, body: message},
+        { pos: 'bottom-right'}
+      )
+    }
+
+    // ---------------- kick and report --------------------- //
+    function kickUser(userNickname) {
+      if(store.getters.isRoomHost) {      
+        store.commit('kickUser', userNickname);
+      }
+    }
+
+    async function reportUser(userNickname) {
+      const { value : text } = await Swal.fire({
+        icon : 'warning',
+        input: 'textarea',
+        title: userNickname + '님을 신고합니다',
+        inputLabel: '신고 당시 상황을 적어주세요',
+        inputAttributes: {
+          resize: 'none',
+          maxlength: '150',
+        },
+        showCancelButton: true,
+      })
+
+      console.debug(text);
+      Swal.fire({
+        icon: 'error',
+        title: '죄송합니다',
+        text: '현재 고객센터는 운영 중이 아닙니다',
+      })
+    }
+
+    store.watch((state, getters) => getters.getLeaveTriggerFlag, (flag) => {
+      // watch kicked or closed room
+      leaveRoom(flag)
+    });
 
     // --------- sidebar sizing event handling  ↓ ----------- //
     const SIDEBAR_WIDTH = 28;
@@ -191,7 +241,7 @@ export default {
       let url = document.URL;
       let idx = url.indexOf('studyroom/') + 10;
       if (idx === -1) {
-        alert('올바르지 않은 방주소입니다');
+        showWarnToast('Failed', '올바르지 않은 방주소입니다');
         router.replace('/main');
         return;
       }
@@ -199,7 +249,7 @@ export default {
       // check room number NaN
       room_number = url.slice(idx);
       if (isNaN(room_number)) {
-        alert('링크가 형식에 맞지 안습니다');
+        showWarnToast('Failed', '올바르지 않은 링크입니다');
         router.replace('/main');
         return;
       }
@@ -209,10 +259,26 @@ export default {
     });
 
     async function enterRoom(room_number) {
+      let isEntered = false;
       try {
-        // TODO : add check room has password
-        await rest_room.joinRoom(room_number, prompt("방의 비밀번호를 입력해주세요"))
+        // check password
+        const hasPw = await rest_room.hasRoomPw(room_number);
+        if(hasPw) {
+            const { value : pw } = await Swal.fire( {
+            title: '비밀번호를 입력해주세요',
+            icon: 'question',
+            input: 'password',
+            inputPlaceholder: '비밀번호를 입력해주세요',
+            inputAttributes: {
+              maxlength: 10,
+              autocapitalize: 'off',
+              autocorrect: 'off'
+            }
+          })
 
+          isEntered = await rest_room.joinRoom(room_number, pw)
+        }
+        
         // gain room info
         let room = await rest_room.getRoomInfo(room_number)
         await store.dispatch('saveRoomInfo', room)
@@ -228,17 +294,75 @@ export default {
         // connect kurento server
         store.dispatch('joinRoom');
       } catch(error) {
-        alert(error);
-        await rest_room.leaveRoom(room_number);
+        showWarnToast('failed', error);
+        if(isEntered) {
+          await rest_room.leaveRoom(room_number);
+        }
         router.replace('/main');
       }
     }
 
-    async function leaveRoom() {
-      // APP Server Socket disconnect
-      //store.dispatch("leaveRoom");
+    /**
+     * 0: usual, 1: room closed, 2: kicked
+     */
+    async function leaveRoom(leaveCase) {
       // REST request
-      await rest_room.leaveRoom(store.state.Room.room.roomNum);
+      await rest_room.leaveRoom(room_number);
+
+      // show alert
+      switch(leaveCase) {
+        case 0:
+          if(store.getters.isRoomHost) {
+            const result = await Swal.fire({
+              icon: 'warning',
+              title: '방을 유지시킨 채로 나가시겠습니까?',
+              showCancelButton: true,
+              confirmButtonText: '네, 유지시키겠습니다',
+              cancelButtonText: '아니요'
+            })
+
+            // delete room
+            if(!result.isConfirmed) {
+              store.commit('sendClosed');
+              try {
+                await rest_room.removeRoom(room_number);
+              } catch (error) {
+                Swal.fire({
+                  icon: 'warning',
+                  title: 'error',
+                })
+              }
+              // wait data channel
+              await Swal.fire({
+                icon: 'success',
+                title: '방을 닫는 중입니다',
+                showConfirmButton: false,
+                timer: 2000,
+              })
+            }
+          }
+          break;
+        case 1:
+          await Swal.fire({
+            icon: 'warning',
+            title: '방장에 의해 방이 닫혔습니다',
+            timer: 3000,
+            backdrop: 'rgba(124, 185, 79, 0.28)',
+          })
+          break;
+        case 2:
+          await Swal.fire({
+            icon: 'error',
+            title:'방에서 강제 퇴장당했습니다',
+            timer: 2500,
+            backdrop: 'rgba(214, 46, 54, 0.28)',
+          })
+          break;
+      }
+
+      // APP Server Socket disconnect
+      // await store.dispatch("leaveRoom");
+      // router.replace('/main');
       location.replace(window.location.origin + '/main');
     }
 
@@ -279,7 +403,7 @@ export default {
      store.dispatch('sendChat', {sender: store.state.Account.userID, message:prompt('채팅 내용')});
     }
     function not_impl() {
-      alert('아직 미구현입니다');
+      showInfoToast('Info', '미구현 기능입니다');
     }
 
     // --------------------- add video on updated participants ----------------------- //
@@ -345,7 +469,6 @@ export default {
       store.dispatch('toggleFilter', isFilterOn.value);
     }
 
-
     return {
       togglePlanner,
       toggleChat,
@@ -382,7 +505,16 @@ export default {
       toggleVideo,
 
       isFilterOn,
-      toggleFilter
+      toggleFilter,
+
+      showWarnToast,
+      showInfoToast,
+
+      kickUser,
+      reportUser,
+
+      isHost : computed(() => store.getters.isRoomHost),
+      userNickname : computed(()=> store.getters.getNickname),
     };
   },
 };
