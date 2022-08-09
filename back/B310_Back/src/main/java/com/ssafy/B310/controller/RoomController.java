@@ -210,17 +210,17 @@ public class RoomController {
 		int statusCode = 0;
 		int cnt = 0;
 		List<RoomForcedExit> fList = roomForceExitRepository.findByRoom_roomName(r.getRoomName());
+		if (!(!r.isRoomHasPw() || BCrypt.checkpw(room.getRoomPw(), r.getRoomPw()))) {
+			statusCode = 2;
+		}
+		if (!roomservice.enableJoinRoom(roomNum)) {
+			statusCode = 3;
+		}
 		for (RoomForcedExit f : fList) {
 			if (f.getUserId().equals(userId)) {
 				isForcedExit = false;
 				statusCode = 1;
 			}
-		}
-		if (!(!r.isRoomHasPw() || BCrypt.checkpw(room.getRoomPw(), r.getRoomPw()))) {
-			statusCode = 2;
-		}
-		if (roomservice.enableJoinRoom(roomNum)) {
-			statusCode = 3;
 		}
 		switch (statusCode) {
 			case 1:
