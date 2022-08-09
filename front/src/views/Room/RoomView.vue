@@ -105,7 +105,7 @@
           :disabled = !isRoomAudioOn
         >
           <i v-if="isAudioOn" class="bi bi-mic-fill" style="font-size: 1.3em"></i>
-          <i v-if="!isAudioOn" class="bi bi-mic-mute-fill"></i>
+          <i v-if="!isAudioOn" class="bi bi-mic-mute-fill" style="font-size: 1.3em"></i>
         </b-button>
         <b-button
           class="rounded-circle mx-2"
@@ -114,15 +114,15 @@
           :disabled = !isRoomVideoOn
         >
           <i v-if="isVideoOn" class="bi bi-camera-video-fill" style="font-size: 1.3em"></i>
-          <i v-if="!isVideoOn" class="bi bi-camera-video-off-fill"></i>
+          <i v-if="!isVideoOn" class="bi bi-camera-video-off-fill" style="font-size: 1.3em"></i>
         </b-button>
         <b-button
           class="rounded-circle mx-2"
           :class="[$root.theme ? 'dark' : 'light']"
-          @click="not_impl()"
+          @click="toggleFilter()"
         >
-          <i class="bi bi-display" style="font-size: 1.3em"></i>
-          <!-- <i class="bi bi-camera-video-off-fill"></i> -->
+          <i v-if="isFilterOn" class="bi bi-emoji-smile-fill" style="font-size: 1.3em;"></i>
+          <i v-if="!isFilterOn" class="bi bi-emoji-sunglasses-fill" style="font-size: 1.3em"></i>
         </b-button>
 
         <b-button pill
@@ -131,7 +131,6 @@
           @click="leaveRoom()"
         >
           <i class="bi bi-power" style="font-size: 1.3em"></i>
-          <!-- <i class="bi bi-camera-video-off-fill"></i> -->
         </b-button>
       </div>
     </div>
@@ -339,6 +338,14 @@ export default {
       }
     }
 
+    // ------------------------- About filter ------------------------- //
+    let isFilterOn = ref(false)
+    function toggleFilter() {
+      isFilterOn.value = !isFilterOn.value
+      store.dispatch('toggleFilter', isFilterOn.value);
+    }
+
+
     return {
       togglePlanner,
       toggleChat,
@@ -373,6 +380,9 @@ export default {
 
       toggleAudio,
       toggleVideo,
+
+      isFilterOn,
+      toggleFilter
     };
   },
 };

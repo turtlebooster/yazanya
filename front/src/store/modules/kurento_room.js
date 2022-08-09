@@ -254,5 +254,12 @@ export const Room = {
       commit('addChat', payload);
       commit('sendChat', payload);
     },
+
+    toggleFilter({ commit }, flag) {
+      var message = {
+        id: flag ? 'filterOn' : 'filterOff',
+      };
+      commit('sendMessage', message);
+    },
   },
 };
