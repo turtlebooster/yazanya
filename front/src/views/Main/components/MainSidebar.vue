@@ -121,6 +121,8 @@ export default {
   color: var(--light-main-color);
   font-size: 12pt;
 
+  margin-bottom: 8px;
+
   border-bottom-left-radius: calc(var(--size-w-side) / 2);
   border-top-left-radius: calc(var(--size-w-side) / 2);
 }
@@ -174,8 +176,10 @@ export default {
   position: relative;
   display: block;
 
+  margin-left: 8px;
+
   height: calc(var(--size-w-side) - 16px);
   line-height: calc(var(--size-w-side) - 16px);
-  font-size: 1.2em;
+  font-size: 1.5em;
 }
 </style>
