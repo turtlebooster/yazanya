@@ -113,7 +113,7 @@ public class RoomServiceImpl implements RoomService {
 				Room r = oRoom.get();
 
 				// 삭제 요청한 사람이 해당 방의 관리자가 아닐경우
-				if (r.getUserNum() == (userNum)) {
+				if (r.getUserNum() != (userNum)) {
 					return 0;
 				}
 
