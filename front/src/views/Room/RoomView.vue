@@ -102,6 +102,7 @@
           class="rounded-circle mx-2"
           :class="[$root.theme ? 'dark' : 'light']"
           @click="toggleAudio()"
+          :disabled = !isRoomAudioOn
         >
           <i v-if="isAudioOn" class="bi bi-mic-fill" style="font-size: 1.3em"></i>
           <i v-if="!isAudioOn" class="bi bi-mic-mute-fill"></i>
@@ -110,6 +111,7 @@
           class="rounded-circle mx-2"
           :class="[$root.theme ? 'dark' : 'light']"
           @click="toggleVideo()"
+          :disabled = !isRoomVideoOn
         >
           <i v-if="isVideoOn" class="bi bi-camera-video-fill" style="font-size: 1.3em"></i>
           <i v-if="!isVideoOn" class="bi bi-camera-video-off-fill"></i>
@@ -221,6 +223,10 @@ export default {
         let user = await rest_user.getProfile(store.getters.getUserID)
         await store.dispatch('saveUserInfo', user);
         console.log("gain User info...");
+
+        // set UI with Room Info
+        isVideoOn.value = store.getters.isVideoEnabled;
+        isAudioOn.value = store.getters.isAudioEnabled;
         
         // connect kurento server
         store.dispatch('joinRoom');
@@ -364,6 +370,9 @@ export default {
 
       isVideoOn,
       isAudioOn,
+
+      isRoomVideoOn : computed(()=> store.getters.isVideoEnabled),
+      isRoomAudioOn : computed(()=> store.getters.isAudioEnabled),
 
       toggleAudio,
       toggleVideo,
