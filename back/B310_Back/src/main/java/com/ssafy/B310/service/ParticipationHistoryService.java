@@ -14,5 +14,5 @@ public interface ParticipationHistoryService {
 	// 유저별 방문했던 방 조회
 
 	@Transactional
-	public List<Map<String, Object>> getRoomHistoryList(String userId) throws SQLException;
+	public Map<String, Object> getRoomHistoryList(String userId) throws SQLException;
 }
