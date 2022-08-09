@@ -32,7 +32,12 @@ public class WebConfig implements WebMvcConfigurer {
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(jwtInterceptor)
 				.order(1)
-				.addPathPatterns("/**");
+				.addPathPatterns("/**")
+				.excludePathPatterns("/v2/api-docs",
+									 "/swagger-resources/**",
+									 "/swagger-ui.html",
+									 "/webjars/**");
+				
 	}
 	
 	@Value("${resource.path}")
@@ -44,10 +49,6 @@ public class WebConfig implements WebMvcConfigurer {
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		WebMvcConfigurer.super.addResourceHandlers(registry);
-		
-		registry
-        .addResourceHandler("/swagger-ui.html")
-        .addResourceLocations("classpath:/META-INF/resources/");
 		
 		registry.addResourceHandler(uploadPath)
 				.addResourceLocations(resourcePath);
