@@ -2,6 +2,12 @@
   <div id="app" class="d-flex flex-column flex-nowrap">
     <router-view />
   </div>
+  <b-container
+    :toast="{root: true}"
+    fluid="sm"
+    position="position-fixed"
+    style="top:50px; left : -200px"
+  ></b-container>
 </template>
 
 <script>
