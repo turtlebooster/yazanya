@@ -12,17 +12,12 @@ export const Room = {
       participants: {},
       isSocketConnected: false,
 
-      chat_list: [
-        {
-          senderId: 'zxcv',
-          senderName: 'James',
-          profile: 'https://placekitten.com/300/300',
-          message: 'Lorem ipsum dolor sit amet,',
-        },
-      ],
+      chat_list: [],
 
       user: null, // current logined
       room: null,
+
+      roomLeaveTriggerFlag: 0, // 0 : nomal, 1 : room closed, 2 : kicked
     };
   },
 
@@ -54,7 +49,7 @@ export const Room = {
 
     isPrivateRoom(state) {
       if (state.room != null) {
-        return state.room.roomPw == 0 ? false : true;
+        return state.room.roomHasPw;
       } else {
         return true;
       }
@@ -76,7 +71,10 @@ export const Room = {
 
     // ------------------ User Info ------------------------- //
     getNickname(state) {
-      return state.user.userNickname;
+      if (state.user != null) {
+        return state.user.userNickname;
+      }
+      return '';
     },
 
     getRoomUserId(state) {
@@ -85,6 +83,21 @@ export const Room = {
       } else {
         return '';
       }
+    },
+
+    isRoomHost(state) {
+      if (
+        state.user != null &&
+        state.room != null &&
+        state.room.userNum == state.user.userNum
+      ) {
+        return true;
+      }
+      return false;
+    },
+
+    getLeaveTriggerFlag(state) {
+      return state.roomLeaveTriggerFlag;
     },
   },
 
@@ -150,6 +163,7 @@ export const Room = {
 
     closeSocket(state) {
       if (state.isSocketConnected) {
+        console.log('close Socket');
         state.isSocketConnected = false;
         state.ws.onclose = () => {};
         state.ws.close();
@@ -187,6 +201,14 @@ export const Room = {
       state.user = data;
     },
 
+    setParticipants(state, data) {
+      state.participants = data;
+    },
+
+    setChatList(state, data) {
+      state.chat_list = data;
+    },
+
     addChat(state, data) {
       state.chat_list.push(data);
     },
@@ -195,19 +217,29 @@ export const Room = {
       let recieved = data.split(',');
       console.log('recieved ', recieved);
 
-      if (recieved[0] === 'chat') {
-        let message = '';
-        for (let i = 4; i < recieved.length; i++) {
-          // recouple splited message
-          message += recieved[i];
-        }
+      let message = '';
+      switch (recieved[0]) {
+        case 'chat':
+          for (let i = 4; i < recieved.length; i++) {
+            // recouple splited message
+            message += recieved[i];
+          }
 
-        this.commit('addChat', {
-          senderId: recieved[1],
-          senderName: recieved[2],
-          profile: recieved[3],
-          message: message,
-        });
+          this.commit('addChat', {
+            senderId: recieved[1],
+            senderName: recieved[2],
+            profile: recieved[3],
+            message: message,
+          });
+          break;
+        case 'kicked':
+          if (recieved[1] === state.user.userNickname) {
+            state.roomLeaveTriggerFlag = 2;
+          }
+          break;
+        case 'closed':
+          state.roomLeaveTriggerFlag = 1;
+          break;
       }
     },
 
@@ -227,6 +259,16 @@ export const Room = {
         );
       }
     },
+
+    kickUser(state, username) {
+      state.participants[state.user.userNickname].rtcPeer.send(
+        'kicked,' + username
+      );
+    },
+
+    sendClosed(state) {
+      state.participants[state.user.userNickname].rtcPeer.send('closed,');
+    },
   },
 
   actions: {
@@ -234,8 +276,8 @@ export const Room = {
       commit('sendMessage', {
         id: 'leaveRoom',
       });
-      commit('disposeAll');
       commit('closeSocket');
+      commit('disposeAll');
     },
 
     saveRoomInfo({ commit }, payload) {
@@ -244,6 +286,14 @@ export const Room = {
 
     saveUserInfo({ commit }, payload) {
       commit('setUserInfo', payload);
+    },
+
+    initRoom({ commit }) {
+      commit('setChatList', []);
+      commit('setParticipants', {});
+
+      commit('setRoomInfo', null);
+      commit('setUserInfo', null);
     },
 
     joinRoom({ commit }) {
