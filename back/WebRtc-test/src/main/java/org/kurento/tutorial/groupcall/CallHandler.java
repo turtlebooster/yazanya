@@ -96,7 +96,6 @@ public class CallHandler extends TextWebSocketHandler {
     	  kickOutMessage.addProperty("id", "kickedOut");
     	  kickOutMessage.addProperty("name", kickOutUserName);
     	  kickOutUser.sendMessage(kickOutMessage);
-    	  room.leave(kickOutUser);
     	  log.info("room '{}' user '{}' kicked out", user.getRoomName(), kickOutUserName);
     	  break;
       case "onIceCandidate":
