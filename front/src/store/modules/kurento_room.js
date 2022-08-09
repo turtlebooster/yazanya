@@ -60,16 +60,16 @@ export const Room = {
       }
     },
 
-    isAudioEnabled(state) {
+    isVideoEnabled(state) {
       if (state.room) {
         return state.room.roomVideo;
       }
       return true;
     },
 
-    isVideoEnabled(state) {
+    isAudioEnabled(state) {
       if (state.room) {
-        return state.room.roomAudio;
+        return state.room.roomSound;
       }
       return true;
     },
@@ -108,7 +108,9 @@ export const Room = {
                 parsedMessage,
                 state.participants,
                 state.user.userNickname,
-                state.room.roomNum
+                state.room.roomNum,
+                state.room.roomVideo,
+                state.room.roomSound
               );
               break;
             case 'newParticipantArrived':
