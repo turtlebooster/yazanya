@@ -108,6 +108,7 @@ public class RoomServiceImpl implements RoomService {
 		// 해당 id의 user가 있으면
 		if (oUser.isPresent()) {
 			User manager = oUser.get();
+			
 			// 해당 방이 있을경우
 			if (oRoom.isPresent()) {
 				Room r = oRoom.get();
