@@ -65,10 +65,6 @@ public class User {
 	@JsonIgnore
 	private Room room;
 	
-	@Column
-	private String refreshToken;
-	
-	
 	// 자기소개
 
 	@Column

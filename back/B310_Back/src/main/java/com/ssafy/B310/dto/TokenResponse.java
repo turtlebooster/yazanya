@@ -1,6 +1,5 @@
 package com.ssafy.B310.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
