@@ -60,28 +60,31 @@ const routes = [
     path: '/account',
     name: 'account',
     redirect: '/account/login',
-    component: () => import('../views/User/UserView.vue'),
+    component: () => import('../views/Account/AccountView.vue'),
     beforeEnter: beforeAuth(false),
     children: [
       {
         path: 'login',
-        name: 'user.login',
-        component: () => import('../views/User/components/UserLogin.vue'),
+        name: 'account.login',
+        component: () => import('../views/Account/components/AccountLogin.vue'),
       },
       {
         path: 'signup',
-        name: 'user.signup',
-        component: () => import('../views/User/components/UserSignup.vue'),
+        name: 'account.signup',
+        component: () =>
+          import('../views/Account/components/AccountSignup.vue'),
       },
       {
         path: 'findid',
-        name: 'user.findid',
-        component: () => import('../views/User/components/UserFindid.vue'),
+        name: 'account.findid',
+        component: () =>
+          import('../views/Account/components/AccountFindid.vue'),
       },
       {
         path: 'findpw',
-        name: 'user.findpw',
-        component: () => import('../views/User/components/UserFindpw.vue'),
+        name: 'account.findpw',
+        component: () =>
+          import('../views/Account/components/AccountFindpw.vue'),
       },
     ],
   },
