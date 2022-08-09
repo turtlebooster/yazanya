@@ -20,11 +20,17 @@ export function Participant(name) {
     return video;
   };
 
-  // managing peer
-  this.pauseVideo = function () {
-    // if (rtcPeer) {
-    //   rtcPeer.stream.
-    // }
+  // managing peer audio and video
+  this.handleAudio = function (flag) {
+    if (this.rtcPeer) {
+      this.rtcPeer.audioEnabled = flag;
+    }
+  };
+  this.handleVideo = function (flag) {
+    if (this.rtcPeer) {
+      console.log('videoEnagled');
+      this.rtcPeer.videoEnabled = flag;
+    }
   };
 
   this.offerToReceiveVideo = function (error, offerSdp) {
