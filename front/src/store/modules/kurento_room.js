@@ -60,6 +60,20 @@ export const Room = {
       }
     },
 
+    isVideoEnabled(state) {
+      if (state.room) {
+        return state.room.roomVideo;
+      }
+      return true;
+    },
+
+    isAudioEnabled(state) {
+      if (state.room) {
+        return state.room.roomSound;
+      }
+      return true;
+    },
+
     // ------------------ User Info ------------------------- //
     getNickname(state) {
       return state.user.userNickname;
@@ -94,7 +108,9 @@ export const Room = {
                 parsedMessage,
                 state.participants,
                 state.user.userNickname,
-                state.room.roomNum
+                state.room.roomNum,
+                state.room.roomVideo,
+                state.room.roomSound
               );
               break;
             case 'newParticipantArrived':
@@ -177,7 +193,7 @@ export const Room = {
 
     recieveData(state, data) {
       let recieved = data.split(',');
-      console.log('recieved', recieved);
+      console.log('recieved ', recieved);
 
       if (recieved[0] === 'chat') {
         let message = '';

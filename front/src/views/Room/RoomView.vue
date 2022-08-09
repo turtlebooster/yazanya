@@ -101,18 +101,20 @@
         <b-button
           class="rounded-circle mx-2"
           :class="[$root.theme ? 'dark' : 'light']"
-          @click="not_impl()"
+          @click="toggleAudio()"
+          :disabled = !isRoomAudioOn
         >
-          <i class="bi bi-mic-fill" style="font-size: 1.3em"></i>
-          <!-- <i class="bi bi-mic-mute-fill"></i> -->
+          <i v-if="isAudioOn" class="bi bi-mic-fill" style="font-size: 1.3em"></i>
+          <i v-if="!isAudioOn" class="bi bi-mic-mute-fill"></i>
         </b-button>
         <b-button
           class="rounded-circle mx-2"
           :class="[$root.theme ? 'dark' : 'light']"
-          @click="not_impl()"
+          @click="toggleVideo()"
+          :disabled = !isRoomVideoOn
         >
-          <i class="bi bi-camera-video-fill" style="font-size: 1.3em"></i>
-          <!-- <i class="bi bi-camera-video-off-fill"></i> -->
+          <i v-if="isVideoOn" class="bi bi-camera-video-fill" style="font-size: 1.3em"></i>
+          <i v-if="!isVideoOn" class="bi bi-camera-video-off-fill"></i>
         </b-button>
         <b-button
           class="rounded-circle mx-2"
@@ -215,12 +217,14 @@ export default {
         // gain room info
         let room = await rest_room.getRoomInfo(room_number)
         await store.dispatch('saveRoomInfo', room)
-        console.log("gain Room info...");
 
         // gain user info
         let user = await rest_user.getProfile(store.getters.getUserID)
         await store.dispatch('saveUserInfo', user);
-        console.log("gain User info...");
+
+        // set UI with Room Info
+        isVideoOn.value = store.getters.isVideoEnabled;
+        isAudioOn.value = store.getters.isAudioEnabled;
         
         // connect kurento server
         store.dispatch('joinRoom');
@@ -317,6 +321,24 @@ export default {
       })
     })
 
+    // ------------------------- handle audio and video -------------------------- //
+    let isVideoOn = ref(true);
+    let isAudioOn = ref(true);
+
+    function toggleAudio() {
+      isAudioOn.value = !isAudioOn.value;
+      if(store.state.Room.user) {
+        store.getters.getParticipants[store.state.Room.user.userNickname].handleAudio(isAudioOn.value);
+      }
+    }
+
+    function toggleVideo() {
+      isVideoOn.value = !isVideoOn.value;
+      if(store.state.Room.user) {
+        store.state.Room.participants[store.state.Room.user.userNickname].handleVideo(isVideoOn.value);
+      }
+    }
+
     return {
       togglePlanner,
       toggleChat,
@@ -341,7 +363,16 @@ export default {
       isPrivateRoom : computed(()=>store.getters.isPrivateRoom),
 
       participants: computed(() => store.state.Room.participants),
-      isConnected: computed(() => store.state.Room.isSocketConnected)
+      isConnected: computed(() => store.state.Room.isSocketConnected),
+
+      isVideoOn,
+      isAudioOn,
+
+      isRoomVideoOn : computed(()=> store.getters.isVideoEnabled),
+      isRoomAudioOn : computed(()=> store.getters.isAudioEnabled),
+
+      toggleAudio,
+      toggleVideo,
     };
   },
 };
