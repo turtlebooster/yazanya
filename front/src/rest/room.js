@@ -52,9 +52,9 @@ export default {
         .post(REST_PATH + '/' + room_num, params)
         .then((response) => {
           if (response.data === 'success') {
-            resolve(response.data);
+            resolve(true);
           } else {
-            reject('방 입장 실패');
+            resolve(false);
           }
         })
         .catch((error) => {
@@ -120,8 +120,24 @@ export default {
       http
         .get(REST_PATH + '/hasPw/' + room_num)
         .then((response) => {
-          if (response.data == 'fail') {
-            reject('방 정보를 확인 하는 중 문제가 발생하였습니다');
+          if (response.data === 'fail') {
+            reject('존재하지 않는 방입니다');
+          }
+          resolve(response.data);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
+
+  removeRoom: function (room_num) {
+    return new Promise((resolve, reject) => {
+      http
+        .delete(REST_PATH + '/' + room_num)
+        .then((response) => {
+          if (response.data === 'fail') {
+            reject('방 삭제 실패');
           }
           resolve(response.data);
         })

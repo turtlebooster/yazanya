@@ -265,6 +265,10 @@ export const Room = {
         'kicked,' + username
       );
     },
+
+    sendClosed(state) {
+      state.participants[state.user.userNickname].rtcPeer.send('closed,');
+    },
   },
 
   actions: {

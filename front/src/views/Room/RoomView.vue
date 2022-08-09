@@ -259,11 +259,10 @@ export default {
     });
 
     async function enterRoom(room_number) {
+      let isEntered = false;
       try {
         // check password
         const hasPw = await rest_room.hasRoomPw(room_number);
-        console.log(hasPw);
-
         if(hasPw) {
             const { value : pw } = await Swal.fire( {
             title: '비밀번호를 입력해주세요',
@@ -277,7 +276,7 @@ export default {
             }
           })
 
-          await rest_room.joinRoom(room_number, pw)
+          isEntered = await rest_room.joinRoom(room_number, pw)
         }
         
         // gain room info
@@ -296,7 +295,9 @@ export default {
         store.dispatch('joinRoom');
       } catch(error) {
         showWarnToast('failed', error);
-        await rest_room.leaveRoom(room_number);
+        if(isEntered) {
+          await rest_room.leaveRoom(room_number);
+        }
         router.replace('/main');
       }
     }
@@ -311,12 +312,42 @@ export default {
       // show alert
       switch(leaveCase) {
         case 0:
+          if(store.getters.isRoomHost) {
+            const result = await Swal.fire({
+              icon: 'warning',
+              title: '방을 유지시킨 채로 나가시겠습니까?',
+              showCancelButton: true,
+              confirmButtonText: '네, 유지시키겠습니다',
+              cancelButtonText: '아니요'
+            })
+
+            // delete room
+            if(!result.isConfirmed) {
+              store.commit('sendClosed');
+              try {
+                await rest_room.removeRoom(room_number);
+              } catch (error) {
+                Swal.fire({
+                  icon: 'warning',
+                  title: 'error',
+                })
+              }
+              // wait data channel
+              await Swal.fire({
+                icon: 'success',
+                title: '방을 닫는 중입니다',
+                showConfirmButton: false,
+                timer: 2000,
+              })
+            }
+          }
           break;
         case 1:
-          Swal.fire({
+          await Swal.fire({
             icon: 'warning',
             title: '방장에 의해 방이 닫혔습니다',
             timer: 3000,
+            backdrop: 'rgba(124, 185, 79, 0.28)',
           })
           break;
         case 2:
@@ -324,6 +355,7 @@ export default {
             icon: 'error',
             title:'방에서 강제 퇴장당했습니다',
             timer: 2500,
+            backdrop: 'rgba(214, 46, 54, 0.28)',
           })
           break;
       }

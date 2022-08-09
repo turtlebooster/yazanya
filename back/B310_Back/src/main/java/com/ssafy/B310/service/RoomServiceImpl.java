@@ -108,12 +108,13 @@ public class RoomServiceImpl implements RoomService {
 		// 해당 id의 user가 있으면
 		if (oUser.isPresent()) {
 			User manager = oUser.get();
+			
 			// 해당 방이 있을경우
 			if (oRoom.isPresent()) {
 				Room r = oRoom.get();
 
 				// 삭제 요청한 사람이 해당 방의 관리자가 아닐경우
-				if (r.getUserNum() == (userNum)) {
+				if (r.getUserNum() != (userNum)) {
 					return 0;
 				}
 
