@@ -93,11 +93,11 @@ public class TodoServiceImpl implements TodoService {
 	public double calAchievement(List<Todo> todoList) {
 		int doneCnt = 0;
 		for (Todo todo : todoList) {
-			if (todo.getTodoProgress() == 1) {
+			if (todo.getTodoProgress() == 2) {
 				doneCnt++;
 			}
 		}
-		return (doneCnt * 100.0) / todoList.size();
+		return Math.floor(((doneCnt * 100.0) / todoList.size()*100)/100.0);
 	}
 
 	@Override

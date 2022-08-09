@@ -43,15 +43,16 @@ public class TodoController {
     @Autowired
     JwtService jwtService;
     
-    @ApiOperation(value="todo 생성", notes="userId[PathVariable] - 누구한테 할 일을 추가할지. todo[ResponseBody] - 무슨 일을 추가할지\n"
+    @ApiOperation(value="todo 생성", notes="userId[HttpServletRequest] - 누구한테 할 일을 추가할지. todo[ResponseBody] - 무슨 일을 추가할지\n"
     		+ "todoNum은 AI이므로 넣을 필요 X\n"
     		+ "{\n\"todoContent\":\"[todo의 상세내용]\""
     		+ "\n\"todoEndTime\":\"[todo의 마감시간]\""
     		+ "\n\"todoName\":\"[todo의 제목]\""
     		+ "\n\"todoProgress\": 0 (아직 못끝냄) or 1 (끝냄)"
     		+ "\n\"todoStartTime\":\"[todo의 시작시간]\"\n}")
-    @PostMapping("/{userId}")
-    public ResponseEntity<?> createTodo(@RequestBody Todo todo, @PathVariable String userId) throws SQLException{
+    @PostMapping()
+    public ResponseEntity<?> createTodo(@RequestBody Todo todo, HttpServletRequest request) throws SQLException{
+		String userId = jwtService.getUserID(request.getHeader("access-token"));
     	int cnt = todoService.createTodo(todo, userId);
     	if (cnt == 1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
     	else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
@@ -138,4 +139,11 @@ public class TodoController {
 		resultMap.put("achievement", todoService.calAchievement(todoList));
 		return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
     }
+
+	@GetMapping("/achievement")
+	public ResponseEntity<?> getAchievement(HttpServletRequest request) throws SQLException {
+		String userId = jwtService.getUserID(request.getHeader("access-token"));
+		List<Todo> todoList = todoService.findTodoByUserId(userId);
+		return new ResponseEntity<Double>(todoService.calAchievement(todoList), HttpStatus.OK);
+	}
 }
