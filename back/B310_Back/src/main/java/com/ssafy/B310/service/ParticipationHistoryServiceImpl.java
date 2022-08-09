@@ -54,53 +54,29 @@ public class ParticipationHistoryServiceImpl implements ParticipationHistoryServ
 	// 유저별 방문했던 방 조회
 	@Transactional
 	@Override
-	public List<Map<String, Object>> getRoomHistoryList(String userId) throws SQLException {
-//		Map<String, Object> result = new HashMap<>();
-//		Map<String, Object> roomData = new HashMap<>();
+	public Map<String, Object> getRoomHistoryList(String userId) throws SQLException {
 		List<String> tempRoomHsNameList;
-		List<Map<String, Object>> realresult = new ArrayList<>();
-
-
+		Map<String, Object> realresult = new HashMap<>();
+		List<Map<String, Object>> lst = new ArrayList();
+		realresult.put("roomList", lst);
 		Map<String, Object> temp;
 
 		List<Room> userHistory = participationHistoryQueryRepository.findParticipationHistoryByUserId(userId);
-		System.out.println(userHistory.size());
-//		for (int i = 0; i < userHistory.size(); i++) {
-			for (Room roomH : userHistory) {
-				temp = new HashMap<>();
-				temp.put("userHistory", roomH);
-				List<RoomHashtag> roomHs = roomHashtagRepository.findByRoom(roomH);
+		for (Room roomH : userHistory) {
+			temp = new HashMap<>();
+			temp.put("userHistory", roomH);
+			List<RoomHashtag> roomHs = roomHashtagRepository.findByRoom(roomH);
 
-					tempRoomHsNameList = new ArrayList<>();
-				for (RoomHashtag roomHa : roomHs) {
-//					System.out.println(roomH);
-					String roomHsName = roomHa.getHashtag().getHashtagName();
-					tempRoomHsNameList.add(roomHsName);
-				}
-					temp.put("roomHash", tempRoomHsNameList);
-			realresult.add(temp);
+			tempRoomHsNameList = new ArrayList<>();
+			for (RoomHashtag roomHa : roomHs) {
+				String roomHsName = roomHa.getHashtag().getHashtagName();
+				tempRoomHsNameList.add(roomHsName);
 			}
-
-//
-//		}
-//		for (Room roomH:userHistory) {
-//			List<Object> resultList = new ArrayList<>();
-//		}
-//		List<String> roomHsNameList = new ArrayList<>();
-//
-//		roomData.put("userHistory", userHistory);
-//		for (Room r : userHistory) {
-//			List<RoomHashtag> roomHs = roomHashtagRepository.findByRoom(r);
-//
-//			for (RoomHashtag roomH : roomHs) {
-//				System.out.println(roomH);
-//				String roomHsName = roomH.getHashtag().getHashtagName();
-//				roomHsNameList.add(roomHsName);
-//				roomData.put("roomHash", roomHsNameList);
-//			}
-//
-//		}
+			temp.put("roomHash", tempRoomHsNameList);
+			lst.add(temp);
+		}
 		return realresult;
 	}
+
 }
 
