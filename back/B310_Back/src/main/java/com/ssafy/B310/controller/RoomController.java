@@ -213,30 +213,46 @@ public class RoomController {
 		if (!(!r.isRoomHasPw() || BCrypt.checkpw(room.getRoomPw(), r.getRoomPw()))) {
 			statusCode = 2;
 		}
-		if (roomservice.enableJoinRoom(roomNum)) {
+		System.out.println("failToPw");
+
+		System.out.println(!roomservice.enableJoinRoom(roomNum));
+		System.out.println(roomservice.enableJoinRoom(roomNum));
+		if (!roomservice.enableJoinRoom(roomNum)) {
 			statusCode = 3;
 		}
+		System.out.println("failToFullRoom");
+
+
 		for (RoomForcedExit f : fList) {
 			if (f.getUserId().equals(userId)) {
 				isForcedExit = false;
 				statusCode = 1;
 			}
+			System.out.println("failToForcedExitUser");
+
 		}
 		switch (statusCode) {
 			case 1:
+				System.out.println("failToForcedExitUser");
 				return new ResponseEntity<String>("failToForcedExitUser", HttpStatus.OK);
 			case 3:
+				System.out.println("failToFullRoom");
 				return new ResponseEntity<String>("failToFullRoom", HttpStatus.OK);
 			case 2:
+				System.out.println("failToPw");
 				return new ResponseEntity<String>("failToPw", HttpStatus.OK);
 			default:
 				break;
 		}
+		System.out.println("11111111111111111111111111");
 		cnt = participationservice.joinRoom(userId, r);
+		System.out.println(cnt);
 		if (cnt == 1) {
+			System.out.println("addParticipation");
 			roomservice.addParticipation(r);
+			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 		}
-		return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+		return new ResponseEntity<String>("alreadyParticipateUser", HttpStatus.OK);
 	}
     
     @PostMapping("/hashtag")
