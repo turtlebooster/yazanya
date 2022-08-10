@@ -219,7 +219,7 @@ public class RoomServiceImpl implements RoomService {
 				RoomForcedExit forcedExitUser = new RoomForcedExit(userNickname, room);
 				roomForceExitRepository.save(forcedExitUser);
 				String userId = oUser.get().getUserId();
-				participationService.exitRoom(userId, room.getRoomNum());
+//				participationService.exitRoom(userId, room.getRoomNum());
 
 				return 1;
 			} else return 0;
