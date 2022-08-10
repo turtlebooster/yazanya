@@ -117,6 +117,8 @@ public class UserController {
                     accessToken = jwtTokenProvider.createAccessToken(user.getUserId());
                     refreshToken = jwtTokenProvider.createRefreshToken(user.getUserId());
                     auth.refreshUpdate(refreshToken);   //DB Refresh 토큰 갱신
+                    
+                    authRepository.save(auth);
                 }
                 
                 resultMap.put("token", TokenResponse.builder()
@@ -136,6 +138,15 @@ public class UserController {
         }
         return new ResponseEntity<Map<String, Object>>(resultMap, status);
     }
+    
+    
+//    // Access token 재발급
+//    @PostMapping("/issue")
+//    public ResponseEntity<?> issueAccessToken() throws Exception {
+//    	
+//    }
+    
+    
     
     // 유저리스트 조회 - GET
     @GetMapping

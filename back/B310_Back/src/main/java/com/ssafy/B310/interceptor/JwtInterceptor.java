@@ -9,6 +9,7 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import com.ssafy.B310.annotation.NoJwt;
+import com.ssafy.B310.dto.TokenResponse;
 import com.ssafy.B310.jwt.JwtTokenProvider;
 
 @Component
@@ -32,12 +33,22 @@ public class JwtInterceptor implements HandlerInterceptor {
         	System.out.println("[JwtInterceptor] accessToken : " + accessToken);
             return true;
         }
+        
+        TokenResponse tokenResponse = jwtService.issueAccessToken(request);
+        
+        if(tokenResponse == null) {
+        	response.setStatus(401);
+        	response.setHeader("access-token", accessToken);
+        	response.setHeader("refresh-token", refreshToken);
+        	response.setHeader("msg", "Check the tokens.");
+        	return false;
+        }
+        
+        response.setHeader("access-token", tokenResponse.getACCESS_TOKEN());
+    	response.setHeader("refresh-token", tokenResponse.getREFRESH_TOKEN());
+    	response.setHeader("msg", "access-token refreshed");
+    	return true;
 
-        response.setStatus(401);
-        response.setHeader("access-token", accessToken);
-        response.setHeader("refresh-token", refreshToken);
-        response.setHeader("msg", "Check the tokens.");
-        return false;
 	}
 	
     private boolean checkAnnotation(Object handler, Class cls){
