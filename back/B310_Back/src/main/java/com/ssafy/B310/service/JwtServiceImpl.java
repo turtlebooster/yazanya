@@ -31,7 +31,7 @@ public class JwtServiceImpl implements JwtService {
 
 	public static final Logger logger = LoggerFactory.getLogger(JwtServiceImpl.class);
 
-	private static final String SALT = "yazanyaSecret";
+	private static final String SALT = "yazanyaAccess";
 	private static final int EXPIRE_MINUTES = 60;
 	
 	@Autowired
@@ -41,7 +41,7 @@ public class JwtServiceImpl implements JwtService {
 	// private static final int EXPIRE_MINUTES = 1;
 	
 	private String REFRESH_KEY = "yazanyaRefresh";
-	private String SECRET_KEY = "yazanyaSecret";
+	private String SECRET_KEY = "yazanyaAccess";
 
 	// Access 토큰 생성
 	@Override
