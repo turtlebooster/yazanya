@@ -109,9 +109,15 @@ public class UserController {
                 
                 Auth auth = Auth.builder()
             			.user(loginUser)
+            			.accessToken(accessToken)
             			.refreshToken(refreshToken)
             			.build();
-            	
+                
+                Auth alreayAuth = authRepository.findByuser_userId(user.getUserId()).get();
+                if(alreayAuth != null) {
+                	System.out.println("들어왔나요?");
+                	authRepository.delete(alreayAuth);
+                }
             	authRepository.save(auth);
     
                 resultMap.put("token", TokenResponse.builder()

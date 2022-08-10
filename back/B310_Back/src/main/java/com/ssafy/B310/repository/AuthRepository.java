@@ -12,4 +12,5 @@ import com.ssafy.B310.entity.Auth;
 @Repository
 public interface AuthRepository extends JpaRepository<Auth, Integer> {
 	Optional<Auth> findByuser_userId(String userId);
+	int deleteByuser_userId(String userId);
 }
