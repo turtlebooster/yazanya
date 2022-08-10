@@ -96,7 +96,7 @@ public class UserController {
     // 로그인 요청 처리 - POST /user/login
     @NoJwt
     @PostMapping("/login")
-    @ApiOperation(value = "로그인", notes = "{\\n\\\"userId\\\" : {String}, \\n \\\"userPw\\\": {String} \n}")
+//    @ApiOperation(value = "로그인", notes = "{\\n\\\"userId\\\" : {String}, \\n \\\"userPw\\\": {String} \n}")
     public ResponseEntity<Map<String, Object>> login(@RequestBody User user) {
     	    	
         Map<String, Object> resultMap = new HashMap<>();
@@ -139,14 +139,14 @@ public class UserController {
     
     // 유저리스트 조회 - GET
     @GetMapping
-    @ApiOperation(value = "유저 리스트 조회")
+//    @ApiOperation(value = "유저 리스트 조회")
     public ResponseEntity<List<User>> selectUserList() throws Exception {
         return new ResponseEntity<List<User>>(userService.selectUserList(), HttpStatus.OK);
     }
 
     // 수정하기
     @PutMapping("/update")
-    @ApiOperation(value = "유저 정보 수정", notes = "{\n\"userPw\" : {String: 유저비밀번호}, \n \"userNickName\": {String: 유저닉네임} \n} \n을 수정한다.")
+    @ApiOperation(value = "유저 정보 수정", notes = "{\n\"userPw\" : {String: 유저비밀번호}, \n \"userNickname\": {String: 유저닉네임} \n} \n을 수정한다.")
     public ResponseEntity<?> updateUser(@RequestBody User user) throws SQLException {
         int cnt = userService.updateUser(user);
 

@@ -9,23 +9,18 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import com.ssafy.B310.annotation.NoJwt;
-import com.ssafy.B310.entity.User;
-import com.ssafy.B310.service.JwtService;
-import com.ssafy.B310.service.UserService;
+import com.ssafy.B310.jwt.JwtTokenProvider;
 
 @Component
 public class JwtInterceptor implements HandlerInterceptor {
 	
 	@Autowired
-	JwtService jwtService;
-	
-	@Autowired
-	UserService userService;
-	
+	JwtTokenProvider jwtService;
 	
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
+		System.out.println("들어오나요 여기에?");
 		boolean check = checkAnnotation(handler, NoJwt.class);
         if(check) return true;
        
@@ -33,12 +28,14 @@ public class JwtInterceptor implements HandlerInterceptor {
         String accessToken = request.getHeader("access-token"); 
         
         if (accessToken != null && jwtService.isValidAccessToken(accessToken)) {
+        	System.out.println("[JwtInterceptor] refreshToken : " + refreshToken);
+        	System.out.println("[JwtInterceptor] accessToken : " + accessToken);
             return true;
         }
 
         response.setStatus(401);
-        response.setHeader("ACCESS_TOKEN", accessToken);
-        response.setHeader("REFRESH_TOKEN", refreshToken);
+        response.setHeader("access-token", accessToken);
+        response.setHeader("refresh-token", refreshToken);
         response.setHeader("msg", "Check the tokens.");
         return false;
 	}

@@ -30,8 +30,8 @@ public class JwtServiceImpl implements JwtService {
 	private static final String SALT = "yazanyaSecret";
 	private static final int EXPIRE_MINUTES = 1;
 	
-	private String REFRESH_KEY = "ref";
-	private String SECRET_KEY = "sec";
+	private String REFRESH_KEY = "yazanyaRefresh";
+	private String SECRET_KEY = "yazanyaSecret";
 
 	// Access 토큰 생성
 	@Override

@@ -35,11 +35,11 @@ public class WebConfig implements WebMvcConfigurer {
 				.addPathPatterns("/**");
 	}
 //	
-//	@Value("${resource.path}")
-//	private String resourcePath;
-//
-//	@Value("${upload.path}")
-//	private String uploadPath;
+	@Value("${resource.path}")
+	private String resourcePath;
+
+	@Value("${upload.path}")
+	private String uploadPath;
 	
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -49,7 +49,7 @@ public class WebConfig implements WebMvcConfigurer {
         .addResourceHandler("/swagger-ui.html")
         .addResourceLocations("classpath:/META-INF/resources/");
 		
-		registry.addResourceHandler("/resources/**")
-				.addResourceLocations("classpath:/static/");
+		registry.addResourceHandler(uploadPath)
+				.addResourceLocations(resourcePath);
 	}
 }
