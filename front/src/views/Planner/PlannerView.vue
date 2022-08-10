@@ -1,6 +1,3 @@
-<!--https://getbootstrap.com/docs/5.2/examples/ 좀 보고와라-->
-<!--https://getbootstrap.com/docs/5.2/examples/masonry/ 좀 보고와라-->
-
 <template>
   <div class="main-planner">
     <div class="d-flex flex-column align-items-center" style="padding: 8px">
@@ -26,15 +23,11 @@
             :key="index"
             :class="`widget col-${widget.column}`"
           >
-            <div
+            <component
+              :is="componentList[widget.type]"
               class="widget-template outer"
               v-b-modal="`modal-${widget.type}`"
-            >
-              <component
-                :is="componentList[widget.type]"
-                class="widget-component"
-              ></component>
-            </div>
+            ></component>
           </div>
         </div>
       </div>
@@ -64,11 +57,11 @@ export default {
     const state = reactive({
       widgetList: [
         {
-          type: 3,
+          type: 4,
           column: 4,
         },
         {
-          type: 4,
+          type: 3,
           column: 4,
         },
         {
@@ -77,7 +70,7 @@ export default {
         },
         {
           type: 2,
-          column: 6,
+          column: 4,
         },
         {
           type: 1,
@@ -85,7 +78,7 @@ export default {
         },
         {
           type: 0,
-          column: 12,
+          column: 4,
         },
       ],
     });
@@ -199,12 +192,5 @@ a:link {
   -webkit-transform: scale(1.1); /*  크롬 */
   -moz-transform: scale(1.1); /* FireFox */
   -o-transform: scale(1.1); /* Opera */
-}
-
-.widget-component {
-  padding: 8px;
-  position: absolute;
-  width: 100%;
-  height: 100%;
 }
 </style>
