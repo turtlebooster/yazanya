@@ -68,8 +68,8 @@ public class UserController {
     private static final String SUCCESS = "success";
     private static final String FAIL = "fail";
 
-    @Autowired
-    JwtService jwtService;
+//    @Autowired
+//    JwtService jwtService;
 
     @Autowired
     UserService userService;
@@ -348,7 +348,7 @@ public class UserController {
     @PutMapping("/profile/{userId}")
     @ApiOperation(value = "프로필 항목을 수정한다.", notes = "\"{\n\\\"profileSelfIntroduce\\\" : {String: 자기소개}\n}")
     public ResponseEntity<?> updateProfile(HttpServletRequest request, @RequestBody User user, @PathVariable("userId") String userId) throws SQLException {
-        String requestUserId = jwtService.getUserID(request.getHeader("access-token"));
+        String requestUserId = jwtTokenProvider.getUserID(request.getHeader("access-token"));
         if (requestUserId.equals(userId)) {
             int cnt = profileService.updateProfile(userId, user);
 
@@ -409,7 +409,7 @@ public class UserController {
     @PostMapping("/follow/{userId}")
     @ApiOperation("팔로우 추가")
     public ResponseEntity<?> userFollow(HttpServletRequest request, @PathVariable("userId") String followToUserId) throws SQLException {
-        String followFromUserId = jwtService.getUserID(request.getHeader("access-token"));
+        String followFromUserId = jwtTokenProvider.getUserID(request.getHeader("access-token"));
 
         Follow follow = followService.follow(followToUserId, followFromUserId);
 
@@ -420,7 +420,7 @@ public class UserController {
     @DeleteMapping("/follow/{userId}")
     @ApiOperation(value = "팔로우 취소")
     public ResponseEntity<?> userUnFollow(HttpServletRequest request, @PathVariable("userId") String followToUserId) throws SQLException {
-        String followFromUserId = jwtService.getUserID(request.getHeader("access-token"));
+        String followFromUserId = jwtTokenProvider.getUserID(request.getHeader("access-token"));
 
         followService.deleteByFollowToUserAndFollowFromUser(followToUserId, followFromUserId);
         return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
