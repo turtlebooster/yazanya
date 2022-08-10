@@ -213,7 +213,7 @@ public class RoomController {
 		if (!(!r.isRoomHasPw() || BCrypt.checkpw(room.getRoomPw(), r.getRoomPw()))) {
 			statusCode = 2;
 		}
-		if (!roomservice.enableJoinRoom(roomNum)) {
+		if (roomservice.enableJoinRoom(roomNum)) {
 			statusCode = 3;
 		}
 		for (RoomForcedExit f : fList) {
@@ -227,12 +227,8 @@ public class RoomController {
 				return new ResponseEntity<String>("failToForcedExitUser", HttpStatus.OK);
 			case 3:
 				return new ResponseEntity<String>("failToFullRoom", HttpStatus.OK);
-
 			case 2:
-
 				return new ResponseEntity<String>("failToPw", HttpStatus.OK);
-
-
 			default:
 				break;
 		}
@@ -240,7 +236,7 @@ public class RoomController {
 		if (cnt == 1) {
 			roomservice.addParticipation(r);
 		}
-			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+		return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 	}
     
     @PostMapping("/hashtag")
