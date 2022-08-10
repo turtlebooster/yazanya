@@ -22,7 +22,7 @@
         height: '98%',
       }"
     >
-      <!-- TODO planner components -->
+      <planner-sidebar/>
 
     </div>
 
@@ -79,7 +79,7 @@
             <template #button-content><i class="bi bi-three-dots-vertical" :class="[$root.theme ? 'light-color-only' : 'dark-color-only']"></i></template>
             <b-dropdown-item href="#" @click.prevent="ya_zanya(name)"><i class="bi bi-alarm-fill" style="color: #8e2b80; font-style: normal; font-size:1.2em;">&nbsp;야! 자냐?</i></b-dropdown-item>
             <b-dropdown-divider></b-dropdown-divider>
-            <b-dropdown-item href="#" @click.prevent="kickUser(name)" :disabled="!isHost"><i class="bi bi-indent" style="color: #d15253; font-style: normal;">&nbsp;강제 퇴장</i></b-dropdown-item>
+            <b-dropdown-item v-if="isHost" href="#" @click.prevent="kickUser(name)"><i class="bi bi-indent" style="color: #d15253; font-style: normal;">&nbsp;강제 퇴장</i></b-dropdown-item>
             <b-dropdown-item href="#" @click.prevent="reportUser(name)"><i class="bi bi-exclamation-diamond" style="color: #b2b56f; font-style: normal;">&nbsp;신고하기</i></b-dropdown-item>
           </b-dropdown>
         </div>
@@ -141,7 +141,7 @@
       <chat-sidebar :isSidebarOn="chat_width"/>
     </div>
   </div>
-  </div>
+</div>
 </template>
 
 <script>
@@ -153,6 +153,7 @@ import Swal from 'sweetalert2'
 
 import RoomNav from './components/RoomNavbar.vue';
 import ChatSidebar from './components/RoomChatSidebar.vue';
+import PlannerSidebar from './components/RoomPlannerSidebar.vue';
 
 import rest_room from '@/rest/room';
 import rest_user from '@/rest/user';
@@ -161,6 +162,7 @@ export default {
   components: {
     RoomNav,
     ChatSidebar,
+    PlannerSidebar,
   },
 
   setup() {
@@ -192,8 +194,20 @@ export default {
               cancelButtonText: '아차, 실수'
             })
 
+      
       if(result.isConfirmed && store.getters.isRoomHost) {      
         store.commit('kickUser', userNickname);
+      }
+
+      try {
+        await rest_room.kickUser(userNickname, store.state.Room.room.roomNum);
+      } catch(error) {
+        Swal.fire({
+          icon: 'warning',
+          title: error,
+          showConfirmButton: false,
+          timer: 2000
+        })
       }
     }
 
@@ -401,10 +415,11 @@ export default {
               title: '방을 유지시킨 채로 \n나가시겠습니까?',
               showCancelButton: true,
               confirmButtonText: '네, 유지시키겠습니다',
-              cancelButtonText: '아니요'
+              cancelButtonText: '아니요',
+              backdrop: false
             })
             // delete room
-            if(!result.isConfirmed && result.dismiss !== Swal.DismissReason.backdrop) {
+            if(!result.isConfirmed) {
               store.commit('sendClosed');
               try {
                 await rest_room.removeRoom(room_number);

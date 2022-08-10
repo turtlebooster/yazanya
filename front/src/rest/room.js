@@ -158,4 +158,27 @@ export default {
         });
     });
   },
+
+  // /room/forceExit
+  kickUser: function (user_name, room_num) {
+    let params = {
+      userNickname: user_name,
+      roomNum: room_num + '',
+    };
+
+    return new Promise((resolve, reject) => {
+      http
+        .post(REST_PATH + '/forceExit', params)
+        .then((response) => {
+          if (response.data === 'success') {
+            resolve(true);
+          } else {
+            reject('강퇴 중 서버연결에 문제가 생겼습니다.');
+          }
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
 };
