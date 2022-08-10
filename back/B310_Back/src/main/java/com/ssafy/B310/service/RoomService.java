@@ -39,4 +39,6 @@ public interface RoomService {
 	
 	//방 비밀번호 유무  0: 방 이상 1: 비밀번호 있음 2: 비밀번호 없음 
 	public int hasPw(int roomNum) throws SQLException;
+
+	public int forcedExitUser(String reqUserId,String userId, String roomName) throws SQLException;
 }

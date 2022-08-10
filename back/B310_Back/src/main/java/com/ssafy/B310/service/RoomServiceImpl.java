@@ -3,42 +3,39 @@ package com.ssafy.B310.service;
 import java.sql.SQLException;
 import java.util.*;
 
-import com.ssafy.B310.entity.Hashtag;
-import com.ssafy.B310.entity.RoomHashtag;
-import com.ssafy.B310.repository.RoomHashtagRepository;
+import com.ssafy.B310.entity.*;
+import com.ssafy.B310.repository.*;
 
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import com.ssafy.B310.entity.Room;
-import com.ssafy.B310.entity.User;
-import com.ssafy.B310.repository.RoomQueryRepository;
-import com.ssafy.B310.repository.RoomRepository;
-import com.ssafy.B310.repository.UserRepository;
 import com.ssafy.B310.specification.RoomSpecification;
 
 import javax.transaction.Transactional;
 
 @Service
 public class RoomServiceImpl implements RoomService {
-	
+
 	@Autowired
 	RoomRepository roomRepository;
 	RoomSpecification roomSpecification;
-	
+
 	@Autowired
 	RoomQueryRepository roomQueryRepository;
-	
+
 	@Autowired
 	UserRepository userRepository;
 
 	@Autowired
 	RoomHashtagRepository roomHashtagRepository;
 
-//	@Autowired
-//	RoomHashtag roomHashtag;
+	@Autowired
+	RoomForceExitRepository roomForceExitRepository;
+
+	@Autowired
+	ParticipationService participationService;
 
 	@Transactional
 	@Override
@@ -56,18 +53,18 @@ public class RoomServiceImpl implements RoomService {
 		}
 		return 0;
 	}
-	
+
 	public String hashPw(String roomPw) {
 		return BCrypt.hashpw(roomPw, BCrypt.gensalt());
 	}
-	
+
 	@Override
 	public int updateRoom(Room room) throws SQLException {
-		Optional<Room> oRoom = roomRepository.findById(room.getRoomNum()); 
-		
+		Optional<Room> oRoom = roomRepository.findById(room.getRoomNum());
+
 		if (oRoom.isPresent()) {
 			Room r = oRoom.get();
-			if(room.getRoomName() != null) r.setRoomName(room.getRoomName());
+			if (room.getRoomName() != null) r.setRoomName(room.getRoomName());
 			if (room.getRoomDescription() != null) r.setRoomDescription(room.getRoomDescription());
 			if (room.getRoomCapacity() != 0) r.setRoomCapacity(room.getRoomCapacity());
 			if (room.getRoomStudyTime() != 0) r.setRoomStudyTime(room.getRoomStudyTime());
@@ -78,7 +75,7 @@ public class RoomServiceImpl implements RoomService {
 			r.setRoomPw(hashPw(room.getRoomPw()));
 //			r.setRoomThumbnail(room.getRoomThumbnail());
 			r.setRoomActive(room.isRoomActive());
-			
+
 			roomRepository.save(r);
 			return 1;
 		}
@@ -91,9 +88,9 @@ public class RoomServiceImpl implements RoomService {
 		int video = params.get("video");
 		int sound = params.get("sound");
 		int fullcheck = params.get("fullcheck");
-		
+
 		Specification<Room> spec = (root, query, ct) -> null;
-		
+
 		spec = spec.and(roomSpecification.videoSetting(video));
 		spec = spec.and(roomSpecification.soundeSetting(sound));
 		spec = spec.and(roomSpecification.isFull(fullcheck));
@@ -130,13 +127,12 @@ public class RoomServiceImpl implements RoomService {
 
 	@Override
 	public Room getRoom(int roomNum) throws SQLException {
-		Optional<Room> oRoom = roomRepository.findById(roomNum); 
+		Optional<Room> oRoom = roomRepository.findById(roomNum);
 		// 해당 방이 있을경우
 		if (oRoom.isPresent()) {
 			Room r = oRoom.get();
 			return r;
-		}
-		else return null;
+		} else return null;
 	}
 
 	// 해쉬태그 추천 목록
@@ -150,11 +146,11 @@ public class RoomServiceImpl implements RoomService {
 			roomList = roomRepository.findAll();
 			result.put("roomList", roomList);
 		}
-		for (Room r: roomList) {
+		for (Room r : roomList) {
 			int roomN = r.getRoomNum();
 			List<RoomHashtag> roomHs = roomHashtagRepository.findByRoom(r);
 
-			for (RoomHashtag roomH: roomHs) {
+			for (RoomHashtag roomH : roomHs) {
 				System.out.println(roomH);
 				String roomHsName = roomH.getHashtag().getHashtagName();
 				roomHsNameList.add(roomHsName);
@@ -166,7 +162,7 @@ public class RoomServiceImpl implements RoomService {
 //		return roomList;
 		return result;
 	}
-	
+
 	//유저 입장할 때 participation 1 증가
 	@Override
 	public void addParticipation(Room room) throws SQLException {
@@ -177,14 +173,14 @@ public class RoomServiceImpl implements RoomService {
 	@Override
 	public void decreaseParticipation(Room room) throws SQLException {
 		roomQueryRepository.decreaseParticipationCount(room);
-		
+
 	}
 
 	@Override
 	public boolean enableJoinRoom(int roomNum) throws SQLException {
 		Room room = roomRepository.findById(roomNum).get();
-		
-		if(room.isRoomActive() && (room.getRoomCapacity() > room.getRoomParticipationCount()))
+
+		if (room.isRoomActive() && (room.getRoomCapacity() > room.getRoomParticipationCount()))
 			return true;
 		else return false;
 	}
@@ -197,7 +193,7 @@ public class RoomServiceImpl implements RoomService {
 	@Override
 	public int hasPw(int roomNum) throws SQLException {
 		Optional<Room> oRoom = roomRepository.findById(roomNum);
-		
+
 		if (oRoom.isPresent()) {
 			Room room = oRoom.get();
 			if (room.isRoomHasPw()) {
@@ -207,6 +203,23 @@ public class RoomServiceImpl implements RoomService {
 			}
 		}
 		return 0;
-	}	
+	}
+
+	@Override
+	public int forcedExitUser(String reqUserId, String userId, String roomName) throws SQLException {
+		Optional<Room> oRoom = roomRepository.findByRoomName(roomName);
+		Optional<User> oUser = userRepository.findByUserId(userId);
+		Optional<User> oReqUser = userRepository.findByUserId(reqUserId);
+		if (oReqUser.isPresent() && oRoom.isPresent() && oUser.isPresent()) {
+			if (oRoom.get().getUserNum() == oReqUser.get().getUserNum()) {
+				Room room = oRoom.get();
+				RoomForcedExit forcedExitUser = new RoomForcedExit(userId, room);
+				roomForceExitRepository.save(forcedExitUser);
+				participationService.exitRoom(userId, room.getRoomNum());
+
+				return 1;
+			} else return 0;
+		} else return 0;
+	}
 }
 

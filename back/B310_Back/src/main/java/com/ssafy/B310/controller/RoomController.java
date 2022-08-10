@@ -13,6 +13,8 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.ssafy.B310.entity.*;
+import com.ssafy.B310.repository.RoomForceExitRepository;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,11 +34,6 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.ssafy.B310.entity.Hashtag;
-import com.ssafy.B310.entity.Room;
-import com.ssafy.B310.entity.RoomHashtag;
-import com.ssafy.B310.entity.RoomThumbnail;
-import com.ssafy.B310.entity.User;
 import com.ssafy.B310.service.HashtagService;
 import com.ssafy.B310.service.JwtService;
 import com.ssafy.B310.service.ParticipationHistoryService;
@@ -80,6 +77,9 @@ public class RoomController {
     
     @Autowired
     ThumbnailService thumbnailService;
+
+	@Autowired
+	RoomForceExitRepository roomForceExitRepository;
 
     @PostMapping
     @ApiOperation(value = "방 생성", 
@@ -198,29 +198,53 @@ public class RoomController {
     @Transactional
     @PostMapping("/{roomNum}")
     @ApiOperation(value = "방 입장", 
-    			  notes = "방 비밀번호가 일치할 경우 success\n" +
-    					  "방 비밀번호가 다를 경우 fail \n" +
+    			  notes = "방 자리가 남아있고, 강퇴 유저가 아니며, 방 비밀번호가 일치하거나 비밀번호가 없는 경우 success\n" +
+    					  "방 비밀번호가 다를 경우 failToPw \n" +
+						  "방이 풀방일 경우 failToFullRoom \n" +
+						  "강퇴 당한 유저일 경우 failToForcedExitUser \n" +
+						  "이미 다른 방에 입장해 있는 유저일 경우 alreadyParticipateUser\n" +
+
     					  "{\r\n" + 
-    					  "  	roomPw : (방 비밀번호 / 없을경우(0))\r\n" + 
+    					  "  	roomPw : (방 비밀번호 / 없을경우(입력x))\r\n" +
     					  "}")	
     public ResponseEntity<?> joinRoom(@RequestBody Room room, @PathVariable int roomNum, HttpServletRequest request) throws SQLException {
-    	String userId = jwtService.getUserID(request.getHeader("access-token"));
-    	Room r = roomservice.getRoom(roomNum);
+		String userId = jwtService.getUserID(request.getHeader("access-token"));
+		Room r = roomservice.getRoom(roomNum);
+		int statusCode = 0;
+		int cnt = 0;
+		List<RoomForcedExit> fList = roomForceExitRepository.findByRoom_roomName(r.getRoomName());
+		if (r.isRoomHasPw()) {
+			if (!BCrypt.checkpw(room.getRoomPw(), r.getRoomPw())) {
+				statusCode = 2;
+			}
+		}
+		if (!(roomservice.enableJoinRoom(roomNum))) {
+			statusCode = 3;
+		}
+		for (RoomForcedExit f : fList) {
+			if (f.getUserId().equals(userId)) {
+				statusCode = 1;
+			}
+		}
+		switch (statusCode) {
+			case 1:
+				return new ResponseEntity<String>("failToForcedExitUser", HttpStatus.OK);
+			case 3:
+				return new ResponseEntity<String>("failToFullRoom", HttpStatus.OK);
+			case 2:
+				return new ResponseEntity<String>("failToPw", HttpStatus.OK);
+			default:
+				break;
+		}
+		cnt = participationservice.joinRoom(userId, r);
+		if (cnt == 1) {
+			roomservice.addParticipation(r);
+			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+		}
+		return new ResponseEntity<String>("alreadyParticipateUser", HttpStatus.OK);
+	}
 
-        int cnt = 0;
-        // (비밀번호가 없거나 일치) 하고 방에 수용인원을 넘지 않았을 경우
-        if((!r.isRoomHasPw() || BCrypt.checkpw(room.getRoomPw(), r.getRoomPw())) && roomservice.enableJoinRoom(roomNum)) {
-        	cnt = participationservice.joinRoom(userId, r);
-        }
 
-        if(cnt==1) {
-        	roomservice.addParticipation(r);
-        	return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
-        }
-        else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
-
-    }
-    
     @PostMapping("/hashtag")
     @ApiOperation(value = "방에 대한 해쉬태그 정보 추가")
     @ApiImplicitParams({
@@ -313,7 +337,6 @@ public class RoomController {
     			  notes = "이전에 방문했던 방 목록 전달")
     public ResponseEntity<?> getRoomHistory(HttpServletRequest request) throws SQLException {
         String userId = jwtService.getUserID(request.getHeader("access-token"));
-        System.out.println(userId);
         return new ResponseEntity<>(participationHistoryService.getRoomHistoryList(userId), HttpStatus.OK);
     }
 
@@ -364,5 +387,22 @@ public class RoomController {
     	else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
         
     }
+
+
+	@ApiOperation(value = "유저 강제퇴장",
+			notes = "해당 방의 유저 목록에서 유저 제거 및 강제퇴장목록에 기록\r\n" +
+					"{\r\n" +
+					"  userId : (유저 아이디)\r\n" +
+					" roomName: (방 제목)\r\n" +
+					"}")
+	@PostMapping("/forceExit")
+	public ResponseEntity<?> forceExit(HttpServletRequest request, @RequestBody Map<String, String> params) throws SQLException {
+		String userId = params.get("userId");
+		String roomName = params.get("roomName");
+		String reqUserId = jwtService.getUserID(request.getHeader("access-token"));
+		int cnt = roomservice.forcedExitUser(reqUserId, userId, roomName);
+		if (cnt == 1) {return new ResponseEntity<Boolean>(true, HttpStatus.OK);}
+		else return new ResponseEntity<Boolean>(false, HttpStatus.OK);
+	}
     
 }
