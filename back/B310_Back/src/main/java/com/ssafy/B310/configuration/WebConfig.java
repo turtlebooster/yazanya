@@ -28,17 +28,16 @@ public class WebConfig implements WebMvcConfigurer {
 				.allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH");		
 	}
 
-	@Override
-	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(jwtInterceptor)
-				.order(1)
-				.addPathPatterns("/**")
-				.excludePathPatterns("/v2/api-docs",
-									 "/swagger-resources/**",
-									 "/swagger-ui.html",
-									 "/webjars/**");
-				
-	}
+//	@Override
+//	public void addInterceptors(InterceptorRegistry registry) {
+//		registry.addInterceptor(jwtInterceptor)
+//				.order(1)
+//				.addPathPatterns("/**")
+//				.excludePathPatterns("/v2/api-docs",
+//									 "/swagger-resources/**",
+//									 "/swagger-ui.html",
+//									 "/webjars/**");
+//	}
 	
 	@Value("${resource.path}")
 	private String resourcePath;
