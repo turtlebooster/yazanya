@@ -1,22 +1,42 @@
 <template>
-  <div
-    class="d-flex justify-content-center align-items-center vw-100 vh-100 user-view"
-  >
+  <div class="account-view">
+    <!-- Navbar -->
+    <div class="main-header">
+      <main-navbar />
+    </div>
+
     <router-view />
   </div>
 </template>
 
 <script>
+import MainNavbar from '@/views/Main/components/MainNavbar.vue';
+import { onBeforeMount } from 'vue';
+
 export default {
-  setup() {},
+  setup() {
+    onBeforeMount(() => {
+      // setting
+      console.log('작동함');
+      document.documentElement.style.setProperty('--size-h-header', '40px');
+      document.documentElement.style.setProperty('--size-w-side', '64px');
+    });
+  },
+
+  components: {
+    MainNavbar,
+  },
 };
 </script>
 
 <style scoped>
-* {
-  font-family: NanumGothic !important;
+.main-header {
+  /* background: var(--sub-color-r); */
+  min-height: var(--size-h-header);
 }
-.user-view {
-  background-image: url('../../assets/book_user.jpg');
+
+.account-view {
+  height: 100vh;
+  width: 100vw;
 }
 </style>
