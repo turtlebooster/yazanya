@@ -42,7 +42,7 @@ export default {
     });
   },
 
-  joinRoom: function (room_num, roomPw = 0) {
+  joinRoom: function (room_num, roomPw = '') {
     let params = {
       roomPw: roomPw,
     };
@@ -51,10 +51,22 @@ export default {
       http
         .post(REST_PATH + '/' + room_num, params)
         .then((response) => {
-          if (response.data === 'success') {
-            resolve(true);
-          } else {
-            resolve(false);
+          switch (response.data) {
+            case 'success':
+              resolve(true);
+              break;
+            case 'failToForcedExitUser':
+              reject('강제 퇴장당한 방에는 입장 할 수 없습니다');
+              break;
+            case 'failToFullRoom':
+              reject('방 인원이 가득찼습니다');
+              break;
+            case 'failToPw':
+              reject('비밀번호가 틀렸습니다');
+              break;
+            case 'alreadyParticipateUser':
+              reject('이미 방에 입장중입니다');
+              break;
           }
         })
         .catch((error) => {

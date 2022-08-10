@@ -23,15 +23,7 @@
       }"
     >
       <!-- TODO planner components -->
-      <p>TODO planner components</p>
-      <button @click="test()" class="m-2">increase member</button>
-      <button @click="test2()" class="m-2"> send message </button>
 
-      {{ Object.keys(participants).length }}
-
-      <div v-for="(value, name) in participants" :key="name">
-        {{ name }}   
-      </div>
     </div>
 
     <!-- Video Content -->
@@ -309,7 +301,6 @@ export default {
       audio.play();
     }
 
-
     // --------------- sidebar sizing event handling  ↓ --------------- //
     const SIDEBAR_WIDTH = 28;
     const planner_width = ref(0);
@@ -382,10 +373,14 @@ export default {
         // connect kurento server
         store.dispatch('joinRoom');
       } catch(error) {
-        showWarnToast('failed', error);
         if(isEntered) {
           await rest_room.leaveRoom(room_number);
         }
+        Swal.fire({
+            icon: 'warning',
+            title: error,
+            timer: 3000,
+          })
         router.replace('/main');
       }
     }
@@ -477,21 +472,6 @@ export default {
     }
     var each_video_width = computed(()=> cal_video_wh(true));
     var each_video_height = computed(()=> cal_video_wh(false));
-    
-
-    // --------------------- for debugging ------------------------ //
-    async function test() {
-      let temp_id = prompt("유저 이름", "제임스");
-      await store.dispatch('saveRoomInfo', { roomNum : 11})
-      await store.dispatch('saveUserInfo', { userID : temp_id, userNickname : temp_id, profilePictureLink : "https://placekitten.com/300/300" });
-      store.dispatch('joinRoom');
-    }
-    function test2() {
-     store.dispatch('sendChat', {sender: store.state.Account.userID, message:prompt('채팅 내용')});
-    }
-    function not_impl() {
-      showInfoToast('Info', '미구현 기능입니다');
-    }
 
     // --------------------- add video on updated participants ----------------------- //
     var members = ref({});
@@ -565,13 +545,7 @@ export default {
       leaveRoom,
       members,
 
-      // for test
-      test,
-      test2,
-      not_impl,
-
       video_plane,
-
       nMember,
       each_video_width,
       each_video_height,
