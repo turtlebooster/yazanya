@@ -1,6 +1,7 @@
 package com.ssafy.B310.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -13,10 +14,9 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.ssafy.B310.entity.*;
-import com.ssafy.B310.repository.RoomForceExitRepository;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +34,14 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.ssafy.B310.annotation.NoJwt;
+import com.ssafy.B310.entity.Hashtag;
+import com.ssafy.B310.entity.Room;
+import com.ssafy.B310.entity.RoomForcedExit;
+import com.ssafy.B310.entity.RoomHashtag;
+import com.ssafy.B310.entity.RoomThumbnail;
+import com.ssafy.B310.entity.User;
+import com.ssafy.B310.repository.RoomForceExitRepository;
 import com.ssafy.B310.service.HashtagService;
 import com.ssafy.B310.service.JwtService;
 import com.ssafy.B310.service.ParticipationHistoryService;
@@ -80,6 +88,9 @@ public class RoomController {
 
 	@Autowired
 	RoomForceExitRepository roomForceExitRepository;
+	
+	@Value("${thumbnailImg.path}")
+    String thumbnailImgPath;
 
     @PostMapping
     @ApiOperation(value = "방 생성", 
@@ -340,14 +351,14 @@ public class RoomController {
         return new ResponseEntity<>(participationHistoryService.getRoomHistoryList(userId), HttpStatus.OK);
     }
 
-    @PostMapping("/addThumbnail/{roomNum}")
+    @PostMapping("/Thumbnail/{roomNum}")
     @ApiOperation(value = "방 썸네일 추가", notes = "방 썸네일 이미지 저장")
     public ResponseEntity<?> addThumbnail(@PathVariable int roomNum, @RequestPart MultipartFile thumbnail) throws Exception {
-    	
+    	System.out.println("들어왔니??");
     	UUID uuid = UUID.randomUUID();
-    	String fileId = uuid.toString();
+    	String thumbnailImg = uuid.toString();
     	
-    	String path = "C:/image/";
+    	String path = thumbnailImgPath;
     	
     	File makeFolder = new File(path);
     	
@@ -358,23 +369,32 @@ public class RoomController {
     	} else {
     		System.out.println("폴더 이미 존재함");
     	}
-    	
-    	Path imagePath = Paths.get(path + fileId);
+    	String imageName = thumbnailImg + "." + thumbnail.getContentType().split("/")[1];
+    	Path imagePath = Paths.get(path + imageName);
     	
     	Files.write(imagePath, thumbnail.getBytes());
     	
     	RoomThumbnail tn = new RoomThumbnail();
-    	tn.setThumbnailId(fileId);
+    	tn.setThumbnailId(thumbnailImg);
     	tn.setThumbnailName(thumbnail.getOriginalFilename());
-    	tn.setThumnailPath(imagePath.toString());
+    	tn.setThumnailPath(imageName);
     	
     	thumbnailService.saveFile(tn);
     	
-    	long result = roomservice.addThumbnail(roomNum, fileId);
+    	long result = roomservice.addThumbnail(roomNum, imageName);
     	
     	if(result != 0) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
     	else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
 
+    }
+    
+    // Thumbnail 이미지 이름 불러오기
+    @NoJwt
+    @GetMapping("/Thumbnail/{roomNum}")
+    @ApiOperation(value = "유저 프로필 이미지 이름 조회", notes = "유저 Id에 해당하는 이미지 이름을 가져옴\r\n이미지 베이스 URL 뒤에 해당 이미지명을 넣으면 이미지 조회 가능")
+    public ResponseEntity<?> showProfileImage(@PathVariable int roomNum) throws IOException, SQLException {
+        String imageName = roomservice.getRoom(roomNum).getRoomThumbnail();
+		return new ResponseEntity<String>(imageName, HttpStatus.OK);
     }
     
     @GetMapping("/hasPw/{roomNum}")
