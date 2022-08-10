@@ -421,9 +421,11 @@ public class RoomController {
 		String userNickname = params.get("userNickname");
 		int roomNum = Integer.parseInt(params.get("roomNum"));
 		String reqUserId = jwtService.getUserID(request.getHeader("access-token"));
+		
+		
 		int cnt = roomservice.forcedExitUser(reqUserId, userNickname, roomNum);
-		if (cnt == 1) {return new ResponseEntity<Boolean>(true, HttpStatus.OK);}
-		else return new ResponseEntity<Boolean>(false, HttpStatus.OK);
+		if (cnt == 1) {return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);}
+		else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
 	}
     
 }
