@@ -56,6 +56,9 @@ public class Room {
 	@Column
 	private LocalDateTime roomStartTime;
 
+//	@Column
+//	private String roomForceExitUser;
+
 	//방 썸네일 사진 링크
 	@Column
 	private String roomThumbnail;
@@ -98,4 +101,8 @@ public class Room {
 	@OneToMany(mappedBy = "room", cascade = CascadeType.REMOVE)
 	@JsonIgnore
 	private Set<RoomHashtag> roomHashtag;
+
+	@OneToMany(mappedBy = "room")
+	@JsonIgnore
+	private Set<RoomForcedExit> roomForcedExits;
 }
