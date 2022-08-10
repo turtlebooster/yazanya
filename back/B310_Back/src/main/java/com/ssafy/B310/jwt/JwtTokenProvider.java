@@ -22,9 +22,9 @@ import lombok.RequiredArgsConstructor;
 public class JwtTokenProvider {
 
     @Value("${secret.access}")
-    private String SECRET_KEY;// = "sec";
+    private String SECRET_KEY;
     @Value("${secret.refresh}")
-    private String REFRESH_KEY;// = "ref";
+    private String REFRESH_KEY;
 
     private final long ACCESS_TOKEN_VALID_TIME = 1 * 60 * 1000L;   // 1분
     private final long REFRESH_TOKEN_VALID_TIME = 60 * 60 * 24 * 7 * 1000L;   // 1주
@@ -67,17 +67,17 @@ public class JwtTokenProvider {
 
     // Request의 Header에서 token 값을 가져옵니다. "X-AUTH-TOKEN" : "TOKEN값'
     public String resolveAccessToken(HttpServletRequest request) {
-        return request.getHeader("ACCESS_TOKEN");
+        return request.getHeader("access-token");
     }
 
     public String resolveRefreshToken(HttpServletRequest request) {
-        return request.getHeader("REFRESH_TOKEN");
+        return request.getHeader("refresh-token");
     }
 
-    //Refresh 토큰의 DB상의 인덱스 번호를 해시로 받음
-    public Long resolveRefreshIndexToken(HttpServletRequest request) {
-        return Long.parseLong(request.getHeader("REFRESH_TOKEN_INDEX"));
-    }
+//    //Refresh 토큰의 DB상의 인덱스 번호를 해시로 받음
+//    public Long resolveRefreshIndexToken(HttpServletRequest request) {
+//        return Long.parseLong(request.getHeader("REFRESH_TOKEN_INDEX"));
+//    }
 
     public Claims getClaimsFormToken(String token) {
         return Jwts.parser()
