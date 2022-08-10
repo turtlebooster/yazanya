@@ -108,7 +108,7 @@ public class UserController {
                 String refreshToken = jwtTokenProvider.createRefreshToken(user.getUserId());
                 
                 Auth auth = Auth.builder()
-            			.user(user)
+            			.user(loginUser)
             			.refreshToken(refreshToken)
             			.build();
             	
