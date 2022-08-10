@@ -25,9 +25,8 @@ public class Room {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int roomNum;
 
-	@Column(nullable = false, unique = true)
+	@Column(nullable = false)
 	private String roomName;
-
 
 	@Column
 	private String roomDescription;
@@ -56,10 +55,6 @@ public class Room {
 	@Column
 	private LocalDateTime roomStartTime;
 
-//	@Column
-//	private String roomForceExitUser;
-
-	//방 썸네일 사진 링크
 	@Column
 	private String roomThumbnail;
 
@@ -73,6 +68,9 @@ public class Room {
 	@ColumnDefault("true")
 	private boolean roomActive;
 
+	@Column
+	private int userNum;
+
 	@PrePersist
 	public void roomStartTime() {
 		this.roomStartTime = LocalDateTime.now();
@@ -81,14 +79,6 @@ public class Room {
 	public Room() {
 
 	}
-
-//	@OneToOne
-//	@JoinColumn(name="user_num")
-//	@JsonIgnore
-//	private User manager;
-
-	@Column
-	private int userNum;
 
 	@OneToMany(mappedBy = "room", cascade = CascadeType.REMOVE)
 	@JsonIgnore
@@ -102,7 +92,7 @@ public class Room {
 	@JsonIgnore
 	private Set<RoomHashtag> roomHashtag;
 
-	@OneToMany(mappedBy = "room")
+	@OneToMany(mappedBy = "room", cascade = CascadeType.REMOVE)
 	@JsonIgnore
 	private Set<RoomForcedExit> roomForcedExits;
 }
