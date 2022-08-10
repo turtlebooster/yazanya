@@ -19,7 +19,6 @@ import com.ssafy.B310.dto.TokenResponse;
 import com.ssafy.B310.entity.User;
 import com.ssafy.B310.repository.AuthRepository;
 import com.ssafy.B310.repository.UserRepository;
-import com.ssafy.B310.service.JwtServiceImpl;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -40,7 +39,7 @@ public class JwtTokenProvider {
 	UserRepository userRepository;
 	
 	
-	public static final Logger logger = LoggerFactory.getLogger(JwtServiceImpl.class);
+	public static final Logger logger = LoggerFactory.getLogger(JwtTokenProvider.class);
 
     @Value("${secret.access}")
     private String SECRET_KEY;
@@ -173,6 +172,19 @@ public class JwtTokenProvider {
 		String userId = (String) claims.getBody().get("userId");
 		return userId;
 	}
+	
+	public int getUserNum(String jwt) {
+		String userId = getUserID(jwt);
+		
+		Optional<User> oUser = userRepository.findByUserId(userId);
+		if (!oUser.isPresent()) {
+			return -1;
+		}
+		
+		int userNum = oUser.get().getUserNum();
+		return userNum;
+	}
+
 	
 	private byte[] generateKey() {
 		byte[] key = null;

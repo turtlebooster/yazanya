@@ -41,9 +41,9 @@ import com.ssafy.B310.entity.RoomForcedExit;
 import com.ssafy.B310.entity.RoomHashtag;
 import com.ssafy.B310.entity.RoomThumbnail;
 import com.ssafy.B310.entity.User;
+import com.ssafy.B310.jwt.JwtTokenProvider;
 import com.ssafy.B310.repository.RoomForceExitRepository;
 import com.ssafy.B310.service.HashtagService;
-import com.ssafy.B310.service.JwtService;
 import com.ssafy.B310.service.ParticipationHistoryService;
 import com.ssafy.B310.service.ParticipationService;
 import com.ssafy.B310.service.RoomHashtagService;
@@ -81,7 +81,7 @@ public class RoomController {
     RoomHashtagService roomHashtagService;
     
     @Autowired
-    JwtService jwtService;
+    JwtTokenProvider jwtService;
     
     @Autowired
     ThumbnailService thumbnailService;

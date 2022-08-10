@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.ssafy.B310.entity.Todo;
-import com.ssafy.B310.service.JwtService;
+import com.ssafy.B310.jwt.JwtTokenProvider;
 import com.ssafy.B310.service.TodoService;
 import com.ssafy.B310.service.UserService;
 
@@ -41,7 +41,7 @@ public class TodoController {
     @Autowired
     UserService userService;
     @Autowired
-    JwtService jwtService;
+    JwtTokenProvider jwtService;
     
     @ApiOperation(value="todo 생성", notes="userId[HttpServletRequest] - 누구한테 할 일을 추가할지. todo[ResponseBody] - 무슨 일을 추가할지\n"
     		+ "todoNum은 AI이므로 넣을 필요 X\n"
