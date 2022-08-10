@@ -56,17 +56,12 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping("/user")
 @CrossOrigin("*")
-//@SpringBootApplication(exclude = SecurityAutoConfiguration.class)
 public class UserController {
-
 
     public static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     private static final String SUCCESS = "success";
     private static final String FAIL = "fail";
-
-//    @Autowired
-//    JwtService jwtService;
 
     @Autowired
     UserService userService;
@@ -92,6 +87,19 @@ public class UserController {
     @Value("${profileImg.path}")
     String profileImgPath;
     
+    //Access Token 재발급
+    @NoJwt
+    @PostMapping("/issue")
+    public ResponseEntity<?> issueAccessToken(HttpServletRequest request) throws Exception {    	
+    	TokenResponse response =  jwtTokenProvider.issueAccessToken(request);
+    	
+    	//Refresh Token은 유효해서 새로 Access Token을 발급한 경우
+    	if(response != null) {
+    		return new ResponseEntity<String>(response.getACCESS_TOKEN(), HttpStatus.OK);   
+    	}
+    	//Refresh Token도 유통기한 지났음
+    	return new ResponseEntity<String>(FAIL, HttpStatus.OK);   	
+    }
 
     // 로그인 요청 처리 - POST /user/login
     @NoJwt
