@@ -64,6 +64,11 @@ const routes = [
     beforeEnter: beforeAuth(false),
     children: [
       {
+        path: 'sign',
+        name: 'account.sign',
+        component: () => import('../views/Account/components/AccountSign.vue'),
+      },
+      {
         path: 'login',
         name: 'account.login',
         component: () => import('../views/Account/components/AccountLogin.vue'),
