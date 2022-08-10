@@ -168,7 +168,7 @@ public class JwtTokenProvider {
     }
     
 	public String getUserID(String jwt) {
-		Jws<Claims> claims = Jwts.parser().setSigningKey(this.generateKey()).parseClaimsJws(jwt);
+		Jws<Claims> claims = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(jwt);
 		String userId = (String) claims.getBody().get("userId");
 		return userId;
 	}
