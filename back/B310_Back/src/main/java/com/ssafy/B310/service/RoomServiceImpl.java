@@ -114,6 +114,7 @@ public class RoomServiceImpl implements RoomService {
 				if (r.getUserNum() != (userNum)) {
 					return 0;
 				}
+				System.out.println("dddddddddddddd");
 
 				manager.setUserRoomCount(manager.getUserRoomCount() - 1);
 				userRepository.save(manager);
