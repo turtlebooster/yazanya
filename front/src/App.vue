@@ -3,10 +3,10 @@
     <router-view />
   </div>
   <b-container
-    :toast="{root: true}"
+    :toast="{ root: true }"
     fluid="sm"
     position="position-fixed"
-    style="top:50px; left : -200px"
+    style="top: 50px; left: -200px"
   ></b-container>
 </template>
 
@@ -122,5 +122,58 @@ export default {
 
 .app-contents::-webkit-scrollbar {
   display: none; /* Chrome, Safari, Opera 스크롤 지우는 코드 */
+}
+
+.outer {
+  box-shadow: 4px 4px 10px -1px rgba(0, 0, 0, 0.25),
+    -4px -4px 10px -1px rgba(255, 255, 255, 0.25);
+}
+
+.inner {
+  box-shadow: inset 4px 4px 10px -1px rgba(0, 0, 0, 0.25),
+    inset -4px -4px 10px -1px rgba(255, 255, 255, 0.25);
+}
+
+.liner {
+  height: 2px;
+  width: 80%;
+  border-radius: 1px;
+  background: var(--light-sub-color);
+}
+
+.spacer {
+  height: 24px;
+}
+
+.search {
+  height: 40px;
+  width: 80%;
+  flex-wrap: nowrap;
+
+  background-color: var(--light-main-color);
+  border-radius: 24px;
+  padding: 10px;
+}
+
+.search_input {
+  width: 100px;
+  height: 32px;
+  color: black;
+  /* color: white; */
+  border: 0;
+  outline: 0;
+  background: none;
+
+  padding: 0 10px;
+  flex-grow: 1;
+  flex-shrink: 1;
+  caret-color: var(--theme-color);
+
+  overflow: hidden;
+}
+
+.search:hover > .search_icon {
+  background: var(--theme-color);
+  color: white;
 }
 </style>
