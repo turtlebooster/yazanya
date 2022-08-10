@@ -17,7 +17,8 @@ export const Room = {
       user: null, // current logined
       room: null,
 
-      roomLeaveTriggerFlag: 0, // 0 : nomal, 1 : room closed, 2 : kicked
+      roomLeaveTriggerFlag: 0, // 0 : normal, 1 : room closed, 2 : kicked
+      yaZanyaTrigger: {}, // code (0: normal, 1 : sent alarm, 2 : sent answer), sender : sent user
     };
   },
 
@@ -98,6 +99,10 @@ export const Room = {
 
     getLeaveTriggerFlag(state) {
       return state.roomLeaveTriggerFlag;
+    },
+
+    getYaZanyaTriggerCode(state) {
+      return state.yaZanyaTrigger.code;
     },
   },
 
@@ -224,7 +229,6 @@ export const Room = {
             // recouple splited message
             message += recieved[i];
           }
-
           this.commit('addChat', {
             senderId: recieved[1],
             senderName: recieved[2],
@@ -239,6 +243,12 @@ export const Room = {
           break;
         case 'closed':
           state.roomLeaveTriggerFlag = 1;
+          break;
+        case 'YaZanya':
+          if (recieved[1] === state.user.userNickname) {
+            state.yaZanyaTrigger = { code: recieved[2], sender: recieved[3] };
+            console.log('triggered', state.yaZanyaTrigger);
+          }
           break;
       }
     },
@@ -261,13 +271,31 @@ export const Room = {
     },
 
     kickUser(state, username) {
+      // kicked, username
       state.participants[state.user.userNickname].rtcPeer.send(
         'kicked,' + username
       );
     },
 
     sendClosed(state) {
+      // closed,
       state.participants[state.user.userNickname].rtcPeer.send('closed,');
+    },
+
+    sendYaZanya(state, data) {
+      // YaZanya, 0 : call or 1 : answer, target, myname
+      state.participants[state.user.userNickname].rtcPeer.send(
+        'YaZanya,' +
+          data.target +
+          ',' +
+          data.flag +
+          ',' +
+          state.user.userNickname
+      );
+    },
+
+    setYaZanya(state, data) {
+      state.yaZanyaTrigger = data;
     },
   },
 
