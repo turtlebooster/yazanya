@@ -9,7 +9,6 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,8 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -46,7 +44,6 @@ import com.ssafy.B310.jwt.JwtTokenProvider;
 import com.ssafy.B310.repository.AuthRepository;
 import com.ssafy.B310.service.FollowService;
 import com.ssafy.B310.service.HashtagService;
-import com.ssafy.B310.service.JwtService;
 import com.ssafy.B310.service.ProfileService;
 import com.ssafy.B310.service.UserHashtagService;
 import com.ssafy.B310.service.UserService;
@@ -91,6 +88,9 @@ public class UserController {
     
     @Autowired
     JwtTokenProvider jwtTokenProvider;
+    
+    @Value("${profileImg.path}")
+    String profileImgPath;
     
 
     // 로그인 요청 처리 - POST /user/login
@@ -353,7 +353,7 @@ public class UserController {
         UUID uuid = UUID.randomUUID();
         String profileImg = uuid.toString();
 
-        String path = "C:/image/profileImg/";
+        String path = profileImgPath;
 
         File makeFolder = new File(path);
 
@@ -365,20 +365,31 @@ public class UserController {
             System.out.println("폴더 이미 존재함");
         }
         
-        Path imagePath = Paths.get(path + profileImg + '_' + userId);
+        String imageName = profileImg + '_' + userId + "." + pic.getContentType().split("/")[1];
+        Path imagePath = Paths.get(path + imageName);
         
         Files.write(imagePath, pic.getBytes());
 
         if(!pic.isEmpty()) {
-        	profileService.uploadProfileImg(userId, imagePath.toString());
+        	profileService.uploadProfileImg(userId, imageName);
         } else {
-        	profileService.uploadProfileImg(userId, "./src/main/resources/static/userImg/profile.jpg");
+        	profileService.uploadProfileImg(userId, "profile.png");
         }
 
         return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 
     }
-
+    
+    // 프로필 이미지 이름 불러오기
+    @NoJwt
+    @GetMapping("/profile/img/{userId}")
+    @ApiOperation(value = "유저 프로필 이미지 이름 조회", notes = "유저 Id에 해당하는 이미지 이름을 가져옴\r\n이미지 베이스 URL 뒤에 해당 이미지명을 넣으면 이미지 조회 가능")
+    public ResponseEntity<?> showProfileImage(@PathVariable("userId") String userId) throws IOException, SQLException {
+        String imageName = profileService.getProfile(userId).getProfilePictureLink();
+		return new ResponseEntity<String>(imageName, HttpStatus.OK);
+    }
+    
+    
     // 팔로우
     // 팔로우 추가
     @PostMapping("/follow/{userId}")
