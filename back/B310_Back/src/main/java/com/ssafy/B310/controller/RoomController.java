@@ -337,7 +337,6 @@ public class RoomController {
     			  notes = "이전에 방문했던 방 목록 전달")
     public ResponseEntity<?> getRoomHistory(HttpServletRequest request) throws SQLException {
         String userId = jwtService.getUserID(request.getHeader("access-token"));
-        System.out.println(userId);
         return new ResponseEntity<>(participationHistoryService.getRoomHistoryList(userId), HttpStatus.OK);
     }
 
@@ -389,6 +388,13 @@ public class RoomController {
         
     }
 
+
+	@ApiOperation(value = "유저 강제퇴장",
+			notes = "해당 방의 유저 목록에서 유저 제거 및 강제퇴장목록에 기록\r\n" +
+					"{\r\n" +
+					"  userId : (유저 아이디)\r\n" +
+					" roomName: (방 제목)\r\n" +
+					"}")
 	@PostMapping("/forceExit")
 	public ResponseEntity<?> forceExit(HttpServletRequest request, @RequestBody Map<String, String> params) throws SQLException {
 		String userId = params.get("userId");
