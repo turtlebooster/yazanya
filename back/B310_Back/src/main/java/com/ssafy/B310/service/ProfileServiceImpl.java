@@ -37,8 +37,9 @@ public class ProfileServiceImpl implements ProfileService{
         return null;
     }
 
+    //프로필 사진 업로드
     @Override
-    public int updateProfileImg(String userId, String imgPath) throws SQLException {
+    public int uploadProfileImg(String userId, String imgPath) throws SQLException {
         Optional<User> oUser = userRepository.findByUserId(userId);
         if (oUser.isPresent()) {
             User u = oUser.get();
@@ -49,6 +50,4 @@ public class ProfileServiceImpl implements ProfileService{
         }
         return 0;
     }
-
-
 }

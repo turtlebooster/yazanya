@@ -64,9 +64,8 @@
             <i class="bi bi-list text-center" style="font-size: 2em"></i>
           </a>
           <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-            <li><a class="dropdown-item" href="#">Action</a></li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
+            <li><a class="dropdown-item" href="#">방 정보</a></li>
+            <li><a class="dropdown-item" href="#">튜토리얼</a></li>
           </ul>
         </div>
       </div>
@@ -86,8 +85,10 @@
             :class="[$root.theme ? 'light-back-only' : 'dark-back-only']"
             size="sm" variant="link" toggle-class="text-decoration-none" no-caret>
             <template #button-content><i class="bi bi-three-dots-vertical" :class="[$root.theme ? 'light-color-only' : 'dark-color-only']"></i></template>
-            <b-dropdown-item href="#" @click.prevent="kickUser(name)" :disabled="!isHost">강제 퇴장</b-dropdown-item>
-            <b-dropdown-item href="#" @click.prevent="reportUser(name)">신고하기</b-dropdown-item>
+            <b-dropdown-item href="#" @click.prevent="ya_zanya(name)"><i class="bi bi-alarm-fill" style="color: #8e2b80; font-style: normal; font-size:1.2em;">&nbsp;야! 자냐?</i></b-dropdown-item>
+            <b-dropdown-divider></b-dropdown-divider>
+            <b-dropdown-item href="#" @click.prevent="kickUser(name)" :disabled="!isHost"><i class="bi bi-indent" style="color: #d15253; font-style: normal;">&nbsp;강제 퇴장</i></b-dropdown-item>
+            <b-dropdown-item href="#" @click.prevent="reportUser(name)"><i class="bi bi-exclamation-diamond" style="color: #b2b56f; font-style: normal;">&nbsp;신고하기</i></b-dropdown-item>
           </b-dropdown>
         </div>
       </div>
@@ -190,8 +191,16 @@ export default {
     }
 
     // ---------------- kick and report --------------------- //
-    function kickUser(userNickname) {
-      if(store.getters.isRoomHost) {      
+    async function kickUser(userNickname) {
+      const result = await Swal.fire({
+              icon: 'warning',
+              title: userNickname + '님을 강퇴하시겠습니까?',
+              showCancelButton: true,
+              confirmButtonText: '나가',
+              cancelButtonText: '아차, 실수'
+            })
+
+      if(result.isConfirmed && store.getters.isRoomHost) {      
         store.commit('kickUser', userNickname);
       }
     }
@@ -222,7 +231,86 @@ export default {
       leaveRoom(flag)
     });
 
-    // --------- sidebar sizing event handling  ↓ ----------- //
+    // -------------------- alarm Ya-ZaNya ---------------------------- //
+    let ya_zanya_cooltime = ref(false);
+    async function ya_zanya(userNickname) {
+      if(ya_zanya_cooltime.value) {
+        // limit cool time
+        Swal.fire({ title: '야! 자냐? 는 2분마다 사용할 수 있습니다', timer: 2000 })
+        return;
+      }
+      const result = await Swal.fire({
+              icon: 'warning',
+              title: userNickname + '님에게 야! 자냐? 를 \n시전하시겠습니까?',
+              text: '공부를 방해할 수도 있습니다...',
+              showCancelButton: true,
+              confirmButtonText: '야! 자냐?',
+              cancelButtonText: '아니오'
+            })
+
+      if(result.isConfirmed) {
+        ya_zanya_cooltime.value = true;
+        store.commit('sendYaZanya', { target: userNickname, flag: 1});
+        setTimeout(()=> {
+          // reset cooltime
+          ya_zanya_cooltime.value = false;
+        }, 120000);
+      }
+    }
+
+    store.watch((state, getters) => getters.getYaZanyaTriggerCode, (code) => {
+      console.log("yazanya watched", code);
+
+      // watch ya zanya
+      if(code == 1) {
+        play_ya_zanya();
+        Swal.fire({
+          icon:'question',
+          title: '야! 자냐?',
+          showConfirmButton: false,
+          showCancelButton: true, 
+          cancelButtonColor: '#d33',
+          cancelButtonText: '안잔다',
+          timer: 10000,
+          timerProgressBar: true,
+        }).then((result) => {
+          if(result.dismiss === Swal.DismissReason.timer) {
+            // time over
+            store.commit('sendYaZanya', { target: store.state.Room.yaZanyaTrigger.sender, flag: 3});
+          } else {
+            // send not sleep
+            store.commit('sendYaZanya', { target: store.state.Room.yaZanyaTrigger.sender, flag: 2});
+          }
+          store.commit('setYaZanya', { code: 0 });
+        })
+      } else if (code == 2) {
+        // recevied not sleep
+        Swal.fire({
+          icon: 'success',
+          title: '안잔다고 합니다~',
+          showConfirmButton: false,
+          timer: 2000
+        });
+        store.commit('setYaZanya', { code: 0 });
+      } else if(code == 3) {
+        // recevied not sleep
+        Swal.fire({
+          icon: 'error',
+          title: '자는 중인 것 같습니다',
+          showConfirmButton: false,
+          timer: 2000
+        });
+        store.commit('setYaZanya', { code: 0 });
+      }
+    });
+
+    function play_ya_zanya() {
+      let audio = new Audio(require('@/assets/audio/ya.mp3'));
+      audio.play();
+    }
+
+
+    // --------------- sidebar sizing event handling  ↓ --------------- //
     const SIDEBAR_WIDTH = 28;
     const planner_width = ref(0);
     const chat_width = ref(SIDEBAR_WIDTH);
@@ -315,14 +403,13 @@ export default {
           if(store.getters.isRoomHost) {
             const result = await Swal.fire({
               icon: 'warning',
-              title: '방을 유지시킨 채로 나가시겠습니까?',
+              title: '방을 유지시킨 채로 \n나가시겠습니까?',
               showCancelButton: true,
               confirmButtonText: '네, 유지시키겠습니다',
               cancelButtonText: '아니요'
             })
-
             // delete room
-            if(!result.isConfirmed) {
+            if(!result.isConfirmed && result.dismiss !== Swal.DismissReason.backdrop) {
               store.commit('sendClosed');
               try {
                 await rest_room.removeRoom(room_number);
@@ -515,6 +602,8 @@ export default {
 
       isHost : computed(() => store.getters.isRoomHost),
       userNickname : computed(()=> store.getters.getNickname),
+
+      ya_zanya,
     };
   },
 };

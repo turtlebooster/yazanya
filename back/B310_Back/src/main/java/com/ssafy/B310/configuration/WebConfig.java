@@ -38,7 +38,7 @@ public class WebConfig implements WebMvcConfigurer {
 									 "/webjars/**");
 				
 	}
-	
+//	
 	@Value("${resource.path}")
 	private String resourcePath;
 

@@ -9,21 +9,18 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.ssafy.B310.entity.*;
-import com.ssafy.B310.service.*;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,24 +31,35 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.ssafy.B310.annotation.NoJwt;
+import com.ssafy.B310.dto.TokenResponse;
+import com.ssafy.B310.entity.Auth;
+import com.ssafy.B310.entity.Follow;
 import com.ssafy.B310.entity.Hashtag;
 import com.ssafy.B310.entity.User;
 import com.ssafy.B310.entity.UserHashtag;
+import com.ssafy.B310.jwt.JwtTokenProvider;
+import com.ssafy.B310.repository.AuthRepository;
+import com.ssafy.B310.service.FollowService;
 import com.ssafy.B310.service.HashtagService;
 import com.ssafy.B310.service.JwtService;
+import com.ssafy.B310.service.ProfileService;
 import com.ssafy.B310.service.UserHashtagService;
 import com.ssafy.B310.service.UserService;
 
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 
 
 @RestController
 @RequestMapping("/user")
 @CrossOrigin("*")
+//@SpringBootApplication(exclude = SecurityAutoConfiguration.class)
 public class UserController {
 
 
@@ -60,8 +68,8 @@ public class UserController {
     private static final String SUCCESS = "success";
     private static final String FAIL = "fail";
 
-    @Autowired
-    JwtService jwtService;
+//    @Autowired
+//    JwtService jwtService;
 
     @Autowired
     UserService userService;
@@ -77,20 +85,40 @@ public class UserController {
 
     @Autowired
     FollowService followService;
+    
+    @Autowired
+    AuthRepository authRepository;
+    
+    @Autowired
+    JwtTokenProvider jwtTokenProvider;
+    
 
     // 로그인 요청 처리 - POST /user/login
     @NoJwt
     @PostMapping("/login")
-    @ApiOperation(value = "로그인", notes = "{\\n\\\"userId\\\" : {String}, \\n \\\"userPw\\\": {String} \n}")
+//    @ApiOperation(value = "로그인", notes = "{\\n\\\"userId\\\" : {String}, \\n \\\"userPw\\\": {String} \n}")
     public ResponseEntity<Map<String, Object>> login(@RequestBody User user) {
+    	    	
         Map<String, Object> resultMap = new HashMap<>();
         HttpStatus status = null;
         try {
             User loginUser = userService.login(user);
-            if (loginUser != null) {
-                String token = jwtService.create("userId", loginUser.getUserId(), "access-token");
-                logger.debug("로그인 토큰정보 : {}", token);
-                resultMap.put("access-token", token);
+            if (loginUser != null) {      
+                String accessToken = jwtTokenProvider.createAccessToken(user.getUserId());
+                String refreshToken = jwtTokenProvider.createRefreshToken(user.getUserId());
+                
+                Auth auth = Auth.builder()
+            			.user(loginUser)
+            			.refreshToken(refreshToken)
+            			.build();
+            	
+            	authRepository.save(auth);
+    
+                resultMap.put("token", TokenResponse.builder()
+                		.ACCESS_TOKEN(accessToken)
+                		.REFRESH_TOKEN(refreshToken)
+                		.build());
+                
                 resultMap.put("message", SUCCESS);
                 status = HttpStatus.ACCEPTED;
             } else {
@@ -104,17 +132,17 @@ public class UserController {
         }
         return new ResponseEntity<Map<String, Object>>(resultMap, status);
     }
-
+    
     // 유저리스트 조회 - GET
     @GetMapping
-    @ApiOperation(value = "유저 리스트 조회")
+//    @ApiOperation(value = "유저 리스트 조회")
     public ResponseEntity<List<User>> selectUserList() throws Exception {
         return new ResponseEntity<List<User>>(userService.selectUserList(), HttpStatus.OK);
     }
 
     // 수정하기
     @PutMapping("/update")
-    @ApiOperation(value = "유저 정보 수정", notes = "{\n\"userPw\" : {String: 유저비밀번호}, \n \"userNickName\": {String: 유저닉네임} \n} \n을 수정한다.")
+    @ApiOperation(value = "유저 정보 수정", notes = "{\n\"userPw\" : {String: 유저비밀번호}, \n \"userNickname\": {String: 유저닉네임} \n} \n을 수정한다.")
     public ResponseEntity<?> updateUser(@RequestBody User user) throws SQLException {
         int cnt = userService.updateUser(user);
 
@@ -153,11 +181,13 @@ public class UserController {
     @NoJwt
     @PostMapping("/regist")
     @ApiOperation(value = "회원가입", notes = "{\n \"userId\": {String:유저아이디},\n \"userPw\":{String:유저비밀번호},\n \"userEmail\":{String:유저이메일},\n \"userName\":{String:유저이름},\n \"userNickName\":{String:유저닉네임}\n}")
-    public ResponseEntity<?> registUser(@RequestBody User user) throws SQLException {
+    public ResponseEntity<?> registUser(@RequestBody User user) throws SQLException {    	
         int cnt = userService.registUser(user);
-
+        
         // 상태 코드만으로 구분
-        if (cnt == 1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+        if (cnt == 1) 
+        	return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+        
         else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
     }
 
@@ -293,7 +323,7 @@ public class UserController {
     @PutMapping("/profile/{userId}")
     @ApiOperation(value = "프로필 항목을 수정한다.", notes = "\"{\n\\\"profileSelfIntroduce\\\" : {String: 자기소개}\n}")
     public ResponseEntity<?> updateProfile(HttpServletRequest request, @RequestBody User user, @PathVariable("userId") String userId) throws SQLException {
-        String requestUserId = jwtService.getUserID(request.getHeader("access-token"));
+        String requestUserId = jwtTokenProvider.getUserID(request.getHeader("access-token"));
         if (requestUserId.equals(userId)) {
             int cnt = profileService.updateProfile(userId, user);
 
@@ -317,13 +347,11 @@ public class UserController {
     }
 
     // 프로필 이미지 추가
-    @PostMapping("/profile/{userId}/profileImg")
-    @ApiOperation(value = "유저 프로필 이미지 추가")
+    @PostMapping("/profile/{userId}")
+    @ApiOperation(value = "유저 프로필 이미지 추가/수정/삭제", notes = "사진을 보낼 경우 - 프로필 사진 업로드&수정 \n null을 보낼 경우 - 프로필 사진 삭제")
     public ResponseEntity<?> addProfileImage(@PathVariable("userId") String userId, @RequestPart MultipartFile pic) throws IOException, SQLException {
         UUID uuid = UUID.randomUUID();
         String profileImg = uuid.toString();
-
-//		String path = "C:/Users/multicampus/Desktop/yazanya/S07P12B310/back/B310_Back/src/main/resources/static/userImg/";
 
         String path = "C:/image/profileImg/";
 
@@ -336,16 +364,16 @@ public class UserController {
         } else {
             System.out.println("폴더 이미 존재함");
         }
+        
         Path imagePath = Paths.get(path + profileImg + '_' + userId);
+        
+        Files.write(imagePath, pic.getBytes());
 
-        Path p = Files.write(imagePath, pic.getBytes());
-
-//		try {
-//			Files.write(imagePath, pic.getBy	tes());
-//		} catch (Exception e) {
-//
-//		}
-        profileService.updateProfileImg(userId, imagePath.toString());
+        if(!pic.isEmpty()) {
+        	profileService.uploadProfileImg(userId, imagePath.toString());
+        } else {
+        	profileService.uploadProfileImg(userId, "./src/main/resources/static/userImg/profile.jpg");
+        }
 
         return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 
@@ -353,10 +381,10 @@ public class UserController {
 
     // 팔로우
     // 팔로우 추가
-    @PostMapping("/profile/{userId}")
+    @PostMapping("/follow/{userId}")
     @ApiOperation("팔로우 추가")
     public ResponseEntity<?> userFollow(HttpServletRequest request, @PathVariable("userId") String followToUserId) throws SQLException {
-        String followFromUserId = jwtService.getUserID(request.getHeader("access-token"));
+        String followFromUserId = jwtTokenProvider.getUserID(request.getHeader("access-token"));
 
         Follow follow = followService.follow(followToUserId, followFromUserId);
 
@@ -364,10 +392,10 @@ public class UserController {
     }
 
     // 팔로우 취소
-    @DeleteMapping("/profile/{userId}")
+    @DeleteMapping("/follow/{userId}")
     @ApiOperation(value = "팔로우 취소")
     public ResponseEntity<?> userUnFollow(HttpServletRequest request, @PathVariable("userId") String followToUserId) throws SQLException {
-        String followFromUserId = jwtService.getUserID(request.getHeader("access-token"));
+        String followFromUserId = jwtTokenProvider.getUserID(request.getHeader("access-token"));
 
         followService.deleteByFollowToUserAndFollowFromUser(followToUserId, followFromUserId);
         return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
