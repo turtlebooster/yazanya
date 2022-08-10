@@ -38,8 +38,9 @@ export default {
       http
         .post(REST_PATH + '/login', params)
         .then((response) => {
+          console.log(response);
           if (response.data.message === 'success') {
-            resolve(response.data['access-token']);
+            resolve(response.data.token);
           } else {
             reject('로그인 중 문제가 발생하였습니다');
           }
