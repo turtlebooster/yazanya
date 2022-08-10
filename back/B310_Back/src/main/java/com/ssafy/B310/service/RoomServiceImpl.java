@@ -31,14 +31,11 @@ public class RoomServiceImpl implements RoomService {
 	@Autowired
 	RoomHashtagRepository roomHashtagRepository;
 
-//	@Autowired
-//	RoomForcedExit roomForcedExit;
-
 	@Autowired
 	RoomForceExitRepository roomForceExitRepository;
 
-//	@Autowired
-//	RoomHashtag roomHashtag;
+	@Autowired
+	ParticipationService participationService;
 
 	@Transactional
 	@Override
@@ -217,8 +214,8 @@ public class RoomServiceImpl implements RoomService {
 				Room room = oRoom.get();
 				RoomForcedExit forcedExitUser = new RoomForcedExit(userId, room);
 				roomForceExitRepository.save(forcedExitUser);
-//				room.setRoomForceExitUser(userId);
-//				roomRepository.save(room);
+				participationService.exitRoom(userId, room.getRoomNum());
+
 				return 1;
 			} else return 0;
 		} else return 0;

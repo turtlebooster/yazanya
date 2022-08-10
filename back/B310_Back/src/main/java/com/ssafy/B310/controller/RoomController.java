@@ -198,63 +198,53 @@ public class RoomController {
     @Transactional
     @PostMapping("/{roomNum}")
     @ApiOperation(value = "방 입장", 
-    			  notes = "방 비밀번호가 일치할 경우 success\n" +
-    					  "방 비밀번호가 다를 경우 fail \n" +
+    			  notes = "방 자리가 남아있고, 강퇴 유저가 아니며, 방 비밀번호가 일치하거나 비밀번호가 없는 경우 success\n" +
+    					  "방 비밀번호가 다를 경우 failToPw \n" +
+						  "방이 풀방일 경우 failToFullRoom \n" +
+						  "강퇴 당한 유저일 경우 failToForcedExitUser \n" +
+						  "이미 다른 방에 입장해 있는 유저일 경우 alreadyParticipateUser\n" +
+
     					  "{\r\n" + 
-    					  "  	roomPw : (방 비밀번호 / 없을경우(0))\r\n" + 
+    					  "  	roomPw : (방 비밀번호 / 없을경우(입력x))\r\n" +
     					  "}")	
     public ResponseEntity<?> joinRoom(@RequestBody Room room, @PathVariable int roomNum, HttpServletRequest request) throws SQLException {
 		String userId = jwtService.getUserID(request.getHeader("access-token"));
 		Room r = roomservice.getRoom(roomNum);
-		boolean isForcedExit = true;
 		int statusCode = 0;
 		int cnt = 0;
 		List<RoomForcedExit> fList = roomForceExitRepository.findByRoom_roomName(r.getRoomName());
-		if (!(!r.isRoomHasPw() || BCrypt.checkpw(room.getRoomPw(), r.getRoomPw()))) {
-			statusCode = 2;
+		if (r.isRoomHasPw()) {
+			if (!BCrypt.checkpw(room.getRoomPw(), r.getRoomPw())) {
+				statusCode = 2;
+			}
 		}
-		System.out.println("failToPw");
-
-		System.out.println(!roomservice.enableJoinRoom(roomNum));
-		System.out.println(roomservice.enableJoinRoom(roomNum));
-		if (!roomservice.enableJoinRoom(roomNum)) {
+		if (!(roomservice.enableJoinRoom(roomNum))) {
 			statusCode = 3;
 		}
-		System.out.println("failToFullRoom");
-
-
 		for (RoomForcedExit f : fList) {
 			if (f.getUserId().equals(userId)) {
-				isForcedExit = false;
 				statusCode = 1;
 			}
-			System.out.println("failToForcedExitUser");
-
 		}
 		switch (statusCode) {
 			case 1:
-				System.out.println("failToForcedExitUser");
 				return new ResponseEntity<String>("failToForcedExitUser", HttpStatus.OK);
 			case 3:
-				System.out.println("failToFullRoom");
 				return new ResponseEntity<String>("failToFullRoom", HttpStatus.OK);
 			case 2:
-				System.out.println("failToPw");
 				return new ResponseEntity<String>("failToPw", HttpStatus.OK);
 			default:
 				break;
 		}
-		System.out.println("11111111111111111111111111");
 		cnt = participationservice.joinRoom(userId, r);
-		System.out.println(cnt);
 		if (cnt == 1) {
-			System.out.println("addParticipation");
 			roomservice.addParticipation(r);
 			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 		}
 		return new ResponseEntity<String>("alreadyParticipateUser", HttpStatus.OK);
 	}
-    
+
+
     @PostMapping("/hashtag")
     @ApiOperation(value = "방에 대한 해쉬태그 정보 추가")
     @ApiImplicitParams({
