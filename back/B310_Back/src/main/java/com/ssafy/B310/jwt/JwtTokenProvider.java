@@ -1,5 +1,6 @@
 package com.ssafy.B310.jwt;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Base64;
 import java.util.Date;
 
@@ -7,11 +8,16 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.DatatypeConverter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.ssafy.B310.service.JwtServiceImpl;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -20,6 +26,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Component
 public class JwtTokenProvider {
+	
+	public static final Logger logger = LoggerFactory.getLogger(JwtServiceImpl.class);
 
     @Value("${secret.access}")
     private String SECRET_KEY;
@@ -146,4 +154,25 @@ public class JwtTokenProvider {
             return false;
         }
     }
+    
+	public String getUserID(String jwt) {
+		Jws<Claims> claims = Jwts.parser().setSigningKey(this.generateKey()).parseClaimsJws(jwt);
+		String userId = (String) claims.getBody().get("userId");
+		return userId;
+	}
+	
+	private byte[] generateKey() {
+		byte[] key = null;
+		try {
+			key = SECRET_KEY.getBytes("UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			if (logger.isInfoEnabled()) {
+				e.printStackTrace();
+			} else {
+				logger.error("Making JWT Key Error ::: {}", e.getMessage());
+			}
+		}
+		return key;
+	}
+    
 }
