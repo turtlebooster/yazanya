@@ -17,7 +17,6 @@ import com.ssafy.B310.interceptor.JwtInterceptor;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-
 	@Autowired
 	JwtInterceptor jwtInterceptor;
 
