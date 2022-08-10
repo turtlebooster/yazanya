@@ -66,8 +66,8 @@ public class Room {
 	@Column
 	private LocalDateTime roomStartTime;
 
-	@Column
-	private String roomForceExitUser;
+//	@Column
+//	private String roomForceExitUser;
 
 	//방 썸네일 사진 링크
 	@Column
