@@ -114,11 +114,11 @@ public class RoomServiceImpl implements RoomService {
 				if (r.getUserNum() != (userNum)) {
 					return 0;
 				}
-				System.out.println("dddddddddddddd");
 
 				manager.setUserRoomCount(manager.getUserRoomCount() - 1);
 				userRepository.save(manager);
 				roomRepository.deleteById(roomNum);
+				roomForceExitRepository.deleteByRoom_roomNum(roomNum);
 				return 1;
 			}
 		}
@@ -181,7 +181,9 @@ public class RoomServiceImpl implements RoomService {
 	public boolean enableJoinRoom(int roomNum) throws SQLException {
 		Room room = roomRepository.findById(roomNum).get();
 
-		if (room.isRoomActive() && (room.getRoomCapacity() > room.getRoomParticipationCount()))
+//		if (room.isRoomActive() && (room.getRoomCapacity() > room.getRoomParticipationCount()))
+		if (room.getRoomCapacity() > room.getRoomParticipationCount())
+
 			return true;
 		else return false;
 	}
@@ -207,15 +209,16 @@ public class RoomServiceImpl implements RoomService {
 	}
 
 	@Override
-	public int forcedExitUser(String reqUserId, String userId, String roomName) throws SQLException {
-		Optional<Room> oRoom = roomRepository.findByRoomName(roomName);
-		Optional<User> oUser = userRepository.findByUserId(userId);
+	public int forcedExitUser(String reqUserId, String userNickname, int roomNum) throws SQLException {
+		Optional<Room> oRoom = roomRepository.findById(roomNum);
+		Optional<User> oUser = userRepository.findByUserNickname(userNickname);
 		Optional<User> oReqUser = userRepository.findByUserId(reqUserId);
 		if (oReqUser.isPresent() && oRoom.isPresent() && oUser.isPresent()) {
 			if (oRoom.get().getUserNum() == oReqUser.get().getUserNum()) {
 				Room room = oRoom.get();
-				RoomForcedExit forcedExitUser = new RoomForcedExit(userId, room);
+				RoomForcedExit forcedExitUser = new RoomForcedExit(userNickname, room);
 				roomForceExitRepository.save(forcedExitUser);
+				String userId = oUser.get().getUserId();
 				participationService.exitRoom(userId, room.getRoomNum());
 
 				return 1;

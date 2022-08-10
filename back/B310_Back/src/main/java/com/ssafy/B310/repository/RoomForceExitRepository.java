@@ -14,4 +14,8 @@ public interface RoomForceExitRepository extends JpaRepository<RoomForcedExit, I
 
     @Transactional
     List<RoomForcedExit> findByRoom_roomName(String roomName);
+
+    @Transactional
+    int deleteByRoom_roomNum(int roomNum);
+
 }

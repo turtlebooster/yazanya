@@ -230,6 +230,7 @@ public class RoomController {
 			}
 		}
 		if (!(roomservice.enableJoinRoom(roomNum))) {
+			System.out.println(!(roomservice.enableJoinRoom(roomNum)));
 			statusCode = 3;
 		}
 		for (RoomForcedExit f : fList) {
@@ -413,14 +414,14 @@ public class RoomController {
 			notes = "해당 방의 유저 목록에서 유저 제거 및 강제퇴장목록에 기록\r\n" +
 					"{\r\n" +
 					"  userId : (유저 아이디)\r\n" +
-					" roomName: (방 제목)\r\n" +
+					" roomNum: (방 제목)\r\n" +
 					"}")
 	@PostMapping("/forceExit")
 	public ResponseEntity<?> forceExit(HttpServletRequest request, @RequestBody Map<String, String> params) throws SQLException {
-		String userId = params.get("userId");
-		String roomName = params.get("roomName");
+		String userNickname = params.get("userNickname");
+		int roomNum = Integer.parseInt(params.get("roomNum"));
 		String reqUserId = jwtService.getUserID(request.getHeader("access-token"));
-		int cnt = roomservice.forcedExitUser(reqUserId, userId, roomName);
+		int cnt = roomservice.forcedExitUser(reqUserId, userNickname, roomNum);
 		if (cnt == 1) {return new ResponseEntity<Boolean>(true, HttpStatus.OK);}
 		else return new ResponseEntity<Boolean>(false, HttpStatus.OK);
 	}
