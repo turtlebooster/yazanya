@@ -414,7 +414,7 @@ public class RoomController {
 			notes = "해당 방의 유저 목록에서 유저 제거 및 강제퇴장목록에 기록\r\n" +
 					"{\r\n" +
 					"  userId : (유저 아이디)\r\n" +
-					" roomNum: (방 제목)\r\n" +
+					" roomNum: (방 번호) (문자열로 보내야함)\r\n" +
 					"}")
 	@PostMapping("/forceExit")
 	public ResponseEntity<?> forceExit(HttpServletRequest request, @RequestBody Map<String, String> params) throws SQLException {
