@@ -103,28 +103,22 @@ public class UserController {
         HttpStatus status = null;
         try {
             User loginUser = userService.login(user);
-            if (loginUser != null) {
-            	Auth auth = authRepository.findByuser_userId(loginUser.getUserId()).get();
-            	System.out.println("auth는" + auth);
-            	String accessToken = "";
-            	String refreshToken = auth.getRefreshToken();   //DB에서 가져온 Refresh 토큰
+            if (loginUser != null) {      
+                String accessToken = jwtTokenProvider.createAccessToken(user.getUserId());
+                String refreshToken = jwtTokenProvider.createRefreshToken(user.getUserId());
                 
-            	//refresh 토큰은 유효 할 경우
-                if (jwtTokenProvider.isValidRefreshToken(refreshToken)) {
-                    accessToken = jwtTokenProvider.createAccessToken(user.getUserId()); //Access Token 새로 만들어서 줌
-                } else {
-                    //둘 다 새로 발급
-                    accessToken = jwtTokenProvider.createAccessToken(user.getUserId());
-                    refreshToken = jwtTokenProvider.createRefreshToken(user.getUserId());
-                    auth.refreshUpdate(refreshToken);   //DB Refresh 토큰 갱신
-                    
-                    authRepository.save(auth);
-                }
-                
+                Auth auth = Auth.builder()
+            			.user(user)
+            			.refreshToken(refreshToken)
+            			.build();
+            	
+            	authRepository.save(auth);
+    
                 resultMap.put("token", TokenResponse.builder()
                 		.ACCESS_TOKEN(accessToken)
                 		.REFRESH_TOKEN(refreshToken)
                 		.build());
+                
                 resultMap.put("message", SUCCESS);
                 status = HttpStatus.ACCEPTED;
             } else {
@@ -138,15 +132,6 @@ public class UserController {
         }
         return new ResponseEntity<Map<String, Object>>(resultMap, status);
     }
-    
-    
-//    // Access token 재발급
-//    @PostMapping("/issue")
-//    public ResponseEntity<?> issueAccessToken() throws Exception {
-//    	
-//    }
-    
-    
     
     // 유저리스트 조회 - GET
     @GetMapping
@@ -196,34 +181,13 @@ public class UserController {
     @NoJwt
     @PostMapping("/regist")
     @ApiOperation(value = "회원가입", notes = "{\n \"userId\": {String:유저아이디},\n \"userPw\":{String:유저비밀번호},\n \"userEmail\":{String:유저이메일},\n \"userName\":{String:유저이름},\n \"userNickName\":{String:유저닉네임}\n}")
-    public ResponseEntity<?> registUser(@RequestBody User user) throws SQLException {
-    	Map<String, Object> resultMap = new HashMap<>();
-    	
+    public ResponseEntity<?> registUser(@RequestBody User user) throws SQLException {    	
         int cnt = userService.registUser(user);
         
         // 상태 코드만으로 구분
-        if (cnt == 1) {
-        	String accessToken = jwtTokenProvider.createAccessToken(user.getUserId());
-        	String refreshToken = jwtTokenProvider.createRefreshToken(user.getUserId());
-        	Auth auth = Auth.builder()
-        			.user(user)
-        			.refreshToken(refreshToken)
-        			.build();
-        	
-        	Auth savedAuth = authRepository.save(auth);
-        	
-        	if(savedAuth == null) cnt = 0;
-        	
-        	resultMap.put("token", TokenResponse.builder()
-                    .ACCESS_TOKEN(accessToken)
-                    .REFRESH_TOKEN(refreshToken)
-                    .build());
-        	
-        	resultMap.put("message", SUCCESS);
-        	return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
-        }
-        	
-        	
+        if (cnt == 1) 
+        	return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+        
         else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
     }
 
