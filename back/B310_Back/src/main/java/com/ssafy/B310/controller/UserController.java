@@ -115,7 +115,6 @@ public class UserController {
                 
                 if(authRepository.findByuser_userId(user.getUserId()).isPresent()) {
                 	Auth alreadyAuth = authRepository.findByuser_userId(user.getUserId()).get();
-                	System.out.println("들어왔나요?");
                 	authRepository.delete(alreadyAuth);
                 }
             	authRepository.save(auth);
