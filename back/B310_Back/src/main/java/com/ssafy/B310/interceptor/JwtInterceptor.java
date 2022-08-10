@@ -21,7 +21,10 @@ public class JwtInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		// System.out.println("들어오나요 여기에?");
+		if(request.getMethod().equals("OPTIONS")) {
+    		return true;
+    	}
+
 		boolean check = checkAnnotation(handler, NoJwt.class);
         if(check) return true;
        
