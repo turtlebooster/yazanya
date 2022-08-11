@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService{
 		String hashPw = hashPw(user.getUserPw());
 		System.out.println(hashPw);
 		user.setUserPw(hashPw);
-		user.setProfilePictureLink("/static/userImg/profile.jpg");
+		user.setProfilePictureLink("profile.png");
 		userRepository.save(user);
 		
 		return 1;
