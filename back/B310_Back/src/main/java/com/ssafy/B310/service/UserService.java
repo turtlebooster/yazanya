@@ -8,7 +8,7 @@ import com.ssafy.B310.entity.User;
 public interface UserService {
 
 	List<User> selectUserList() throws SQLException;
-	User login(User user) throws SQLException;
+	String  login(User user) throws SQLException;
 	int registUser(User user) throws SQLException;
 	int updateUser(User user) throws SQLException;
 	int deleteUser(User user) throws SQLException;

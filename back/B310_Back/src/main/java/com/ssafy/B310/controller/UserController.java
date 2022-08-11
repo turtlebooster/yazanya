@@ -13,6 +13,7 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.ssafy.B310.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +68,9 @@ public class UserController {
     UserService userService;
 
     @Autowired
+    UserRepository userRepository;
+
+    @Autowired
     UserHashtagService userHashtagService;
 
     @Autowired
@@ -109,9 +113,11 @@ public class UserController {
     	    	
         Map<String, Object> resultMap = new HashMap<>();
         HttpStatus status = null;
+        String id = user.getUserId();
         try {
-            User loginUser = userService.login(user);
-            if (loginUser != null) {      
+            String result = userService.login(user);
+            if (result.equals(id)) {
+                User loginUser = userRepository.findByUserId(result).get();
                 String accessToken = jwtTokenProvider.createAccessToken(user.getUserId());
                 String refreshToken = jwtTokenProvider.createRefreshToken(user.getUserId());
                 
@@ -133,9 +139,13 @@ public class UserController {
                 
                 resultMap.put("message", SUCCESS);
                 status = HttpStatus.ACCEPTED;
-            } else {
-                resultMap.put("message", FAIL);
+            } else if (result.equals("pwErr")){
+                resultMap.put("message", "pwErr");
                 status = HttpStatus.ACCEPTED;
+            } else if (result.equals("noId")) {
+                resultMap.put("message", "noId");
+                status = HttpStatus.ACCEPTED;
+
             }
         } catch (Exception e) {
             logger.error("로그인 실패 : {}", e);
