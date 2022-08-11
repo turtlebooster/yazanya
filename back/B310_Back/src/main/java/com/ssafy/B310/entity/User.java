@@ -77,7 +77,6 @@ public class User {
 	private String profilePictureLink;
 
 	// 총 공부 시간(분 기준)
-
 	@Column
 	private int profileTotalStudyTime;
 
@@ -88,6 +87,10 @@ public class User {
 	// 소속
 	@Column
 	private String profileBelongTo;
+	
+	// 플래너 배치 설정
+	@Column(columnDefinition = "varchar(20) default '0,1,2'")
+	private String profilePlannerSet;
 
 	public User(String userId, String userPw, String userName, String userEmail, String userNickname,
 				int userStatusNum) {
