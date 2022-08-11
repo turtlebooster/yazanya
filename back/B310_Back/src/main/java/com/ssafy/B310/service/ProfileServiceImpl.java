@@ -1,6 +1,7 @@
 package com.ssafy.B310.service;
 
 import com.ssafy.B310.entity.User;
+import com.ssafy.B310.repository.UserQueryRepository;
 import com.ssafy.B310.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,9 @@ import java.util.Optional;
 public class ProfileServiceImpl implements ProfileService{
     @Autowired
     UserRepository userRepository;
+    
+    @Autowired
+    UserQueryRepository userQueryRepo;
 
     @Override
     public int updateProfile(String userId, User user) {
@@ -32,6 +36,9 @@ public class ProfileServiceImpl implements ProfileService{
         Optional<User> oUser = userRepository.findByUserId(userId);
         if (oUser.isPresent()) {
             User u = oUser.get();
+            
+            userQueryRepo.setRank(u);
+            
             return u;
         }
         return null;
