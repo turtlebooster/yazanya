@@ -89,8 +89,8 @@ public class UserController {
     
     //Access Token 재발급
     @NoJwt
-    @PostMapping("/issue")
-    public ResponseEntity<?> issueAccessToken(HttpServletRequest request) throws Exception {    	
+    @PostMapping("/auth")
+    public ResponseEntity<?> issueAccessToken(HttpServletRequest request) throws Exception {	
     	TokenResponse response =  jwtTokenProvider.issueAccessToken(request);
     	
     	//Refresh Token은 유효해서 새로 Access Token을 발급한 경우

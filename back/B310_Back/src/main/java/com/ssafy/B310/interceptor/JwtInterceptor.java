@@ -52,8 +52,8 @@ public class JwtInterceptor implements HandlerInterceptor {
 //    	response.setHeader("refresh-token", tokenResponse.getREFRESH_TOKEN());
 //    	response.setHeader("msg", "access-token refreshed");
         System.out.println("access token 불일치 ---> 통과 XXXXXX");
+        response.setStatus(401);
     	return false;
-
 	}
 	
     private boolean checkAnnotation(Object handler, Class cls){
