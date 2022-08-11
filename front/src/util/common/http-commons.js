@@ -26,7 +26,9 @@ http.interceptors.response.use(
   (response) => {
     return response;
   },
-  (error) => {
+  async (error) => {
+    console.log(error);
+
     const {
       config,
       response: { status },
@@ -36,18 +38,22 @@ http.interceptors.response.use(
     const refreshToken = store.getters['getRefreshToken'];
 
     if (status === 401) {
-      axios({
+      let response = await axios({
         method: 'post',
-        url: `${process.env.VUE_APP_SERVER}/auth`, // TODO : change
-        data: { refreshToken },
-      }).then((response) => {
-        const accessToken = response.data['access-token'];
-        store.commit('SET_ACCESS_TOKEN', accessToken);
-
-        // set newly accesstoken
-        originalRequest.headers = { 'access-token': accessToken };
-        return axios(originalRequest);
+        url: `${process.env.VUE_APP_SERVER}/user/auth`, // TODO : change
+        headers: {
+          'refresh-token': refreshToken,
+        },
       });
+      if (response.data === 'fail') {
+        return Promise.reject('로그인이 해제되었습니다');
+      }
+      const accessToken = response.data;
+      store.commit('SET_ACCESS_TOKEN', accessToken);
+
+      // set newly accesstoken
+      originalRequest.headers = { 'access-token': accessToken };
+      return axios(originalRequest);
     }
     return Promise.reject(error);
   }
