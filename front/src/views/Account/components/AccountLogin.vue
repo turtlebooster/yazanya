@@ -95,18 +95,11 @@ export default {
 
     async function login() {
       try {
-        let access_token = await rest_user.login({
-          id: id.value,
-          pw: pw.value,
-        });
-
-        await store.dispatch('login', {
-          'access-token': access_token,
-          'id': id.value,
-        });
+        let tokens = await rest_user.login({ id: id.value, pw: pw.value })
+        await store.dispatch('login', {'access-token': tokens.access_TOKEN, 'refresh-token': tokens.refresh_TOKEN, id: id.value });
         router.replace('/main');
       } catch (error) {
-        alert('로그인 중 문제가 발생하였습니다.');
+        alert(error);
       }
     }
 
