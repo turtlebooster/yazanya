@@ -64,7 +64,7 @@ public class ParticipationHistoryServiceImpl implements ParticipationHistoryServ
 		List<Room> userHistory = participationHistoryQueryRepository.findParticipationHistoryByUserId(userId);
 		for (Room roomH : userHistory) {
 			temp = new HashMap<>();
-			temp.put("userHistory", roomH);
+			temp.put("room", roomH);
 			List<RoomHashtag> roomHs = roomHashtagRepository.findByRoom(roomH);
 
 			tempRoomHsNameList = new ArrayList<>();

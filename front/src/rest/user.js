@@ -38,7 +38,6 @@ export default {
       http
         .post(REST_PATH + '/login', params)
         .then((response) => {
-          console.log(response);
           if (response.data.message === 'success') {
             resolve(response.data.token);
           } else {

@@ -38,7 +38,6 @@ public class JwtInterceptor implements HandlerInterceptor {
         System.out.println("access token 불일치 ---> 통과 XXXXXX");
         response.setStatus(401);
     	return false;
-
 	}
 	
     private boolean checkAnnotation(Object handler, Class cls){
