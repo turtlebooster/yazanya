@@ -26,7 +26,7 @@ const routes = [
   {
     path: '/main',
     component: () => import('../views/Main/MainView.vue'),
-    beforeEnter: beforeAuth(true),
+    // beforeEnter: beforeAuth(true),
     children: [
       {
         path: '',

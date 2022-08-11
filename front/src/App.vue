@@ -8,8 +8,11 @@
 export default {
   setup() {
     // get theme flag from local
-    let theme = JSON.parse(localStorage.getItem('theme'));
-    return { theme };
+    let theme = JSON.parse(localStorage.getItem('theme')) == undefined ? true : JSON.parse(localStorage.getItem('theme'));
+    let sidebar = JSON.parse(localStorage.getItem('sidebar') == undefined ? true : JSON.parse(localStorage.getItem('sidebar')));
+    sidebar ? document.documentElement.style.setProperty('--size-w-side-hover', '64px')
+      : document.documentElement.style.setProperty('--size-w-side-hover', '200px');
+    return { theme, sidebar };
   },
 };
 </script>
