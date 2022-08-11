@@ -431,5 +431,11 @@ public class UserController {
 
 		return new ResponseEntity<List<User>>(followService.followList(userId), HttpStatus.OK);
 	}
+
+    @GetMapping("/profile/{userId}/follower")
+    public ResponseEntity<?> followerList (@PathVariable("userId") String userId) throws SQLException {
+
+        return new ResponseEntity<List<User>>(followService.followerList(userId), HttpStatus.OK);
+    }
 }
 

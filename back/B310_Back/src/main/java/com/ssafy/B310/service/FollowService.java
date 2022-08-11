@@ -12,4 +12,6 @@ public interface FollowService {
     public void deleteByFollowToUserAndFollowFromUser(String followToUserId, String followFromUserId);
 
     public List<User> followList(String userId);
+
+    public List<User> followerList(String userId);
 }
