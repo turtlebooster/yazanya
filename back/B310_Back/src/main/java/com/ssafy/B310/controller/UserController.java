@@ -402,6 +402,16 @@ public class UserController {
 
     }
     
+    @PutMapping("/profile/planner")
+    @ApiOperation(value = "플래너 순서 세팅 변경", notes = "숫자,숫자,숫자 형태로 세팅 저장\r\n{\r\n\"profilePlannerSet\" : \"0,1,2\"\r\n}")
+    public ResponseEntity<?> updatePlannerSet(@RequestBody User user, HttpServletRequest request) throws SQLException{
+    	String userId = jwtTokenProvider.getUserID(request.getHeader("access-token"));
+    	int cnt = profileService.updatePlannerSet(userId, user.getProfilePlannerSet());
+    	
+    	if (cnt == 1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+    	else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
+    }
+    
     // 팔로우
     // 팔로우 추가
     @PostMapping("/follow/{userId}")
