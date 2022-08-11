@@ -1,18 +1,19 @@
 <template>
   <div class="widget-template">
     <div class="widget-component">
-      <div class="widget-component-icon">
-        <span><i class="bi bi-trophy-fill"></i></span>
-      </div>
       <div class="widget-component-detail">
-        <div>총 공부 시간</div>
-        <div style="font-size: 16pt">15시간 45분 02초</div>
+        <div>타이머</div>
       </div>
     </div>
 
     <!-- modal -->
-    <b-modal id="modal-planner-total" centered title="총 공부 시간">
-      <p class="my-4">대충 공부한 거 내용</p>
+    <b-modal
+      class="widget-component-modal"
+      id="modal-planner-timer"
+      centered
+      title="타이머 세팅"
+    >
+      <p class="my-4">타이머</p>
     </b-modal>
   </div>
 </template>
@@ -26,7 +27,6 @@ export default {};
   width: 100%;
   height: 100%;
   padding: 16px;
-  background: linear-gradient(-30deg, #b576f6, #9a4fe9);
 }
 
 .widget-component * {
