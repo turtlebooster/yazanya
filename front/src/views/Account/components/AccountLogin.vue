@@ -99,6 +99,7 @@ export default {
         await store.dispatch('login', {'access-token': tokens.access_TOKEN, 'refresh-token': tokens.refresh_TOKEN, id: id.value });
         router.replace('/main');
       } catch (error) {
+        console.error(error);
         alert(error);
       }
     }

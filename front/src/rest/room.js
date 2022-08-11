@@ -93,7 +93,7 @@ export default {
       http
         .get(REST_PATH + '/recommend?hashtagNum=' + tagArr)
         .then((response) => {
-          resolve(response.data);
+          resolve(response.data.roomList);
         })
         .catch((error) => {
           reject(error);
@@ -106,7 +106,7 @@ export default {
       http
         .get(REST_PATH + '/history')
         .then((response) => {
-          resolve(response.data);
+          resolve(response.data.roomList);
         })
         .catch((error) => {
           reject(error);
