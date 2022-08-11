@@ -1,5 +1,5 @@
 <template>
-  <div class="main-alarm">
+  <div class="main-alarm" :class="[$root.theme ? 'light' : 'dark']">
     <div class="container d-flex flex-column align-items-center">
       <div v-for="alarm in state.alarmList" :key="alarm.alarmNum">
         <div class="alarm-form">

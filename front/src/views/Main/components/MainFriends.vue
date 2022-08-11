@@ -1,7 +1,7 @@
 <!-- opgg 나 오버워치 친구창 참고할 것 -->
 
 <template>
-  <div class="main-friends">
+  <div class="main-friends" :class="[$root.theme ? 'light' : 'dark']">
     <div class="container d-flex flex-column align-items-center">
       <div v-for="friend in state.friendList" :key="friend.userNum">
         <div class="friend-form">

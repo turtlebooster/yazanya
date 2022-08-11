@@ -1,12 +1,15 @@
 <template>
   <div class="calendar d-flex flex-column">
-    <button
+    <!-- <button
       type="button"
       class="btn-close align-self-end"
       aria-label="Close"
-    ></button>
+    ></button> -->
 
-    <div>대충 달력</div>
+    <div>
+      <v-calendar is-expanded/>
+      <!-- <v-date-picker v-model="date" />  -->
+    </div>
 
     <!-- modal -->
     <b-modal id="modal-0" centered title="달력">
@@ -16,7 +19,11 @@
 </template>
 
 <script>
-export default {};
+
+export default {
+ 
+}
+
 </script>
 
 <style></style>

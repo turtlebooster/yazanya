@@ -1,5 +1,5 @@
 <template>
-  <div class="main-lobby">
+  <div class="main-lobby" :class="[$root.theme ? 'light' : 'dark']">
     <div class="d-flex flex-column align-items-center" style="padding: 8px">
       <div class="spacer"></div>
 
@@ -330,8 +330,29 @@ export default {
 
 <style scoped>
 .main-lobby {
-  background-color: var(--light-main-color);
+  /* background-color: var(--light-main-color); */
   height: 100%;
+}
+
+.outer {
+  box-shadow: 4px 4px 10px -1px rgba(0, 0, 0, 0.25),
+    -4px -4px 10px -1px rgba(255, 255, 255, 0.25);
+}
+
+.inner {
+  box-shadow: inset 4px 4px 10px -1px rgba(0, 0, 0, 0.25),
+    inset -4px -4px 10px -1px rgba(255, 255, 255, 0.25);
+}
+
+.liner {
+  height: 2px;
+  width: 80%;
+  border-radius: 1px;
+  background: var(--light-sub-color);
+}
+
+.spacer {
+  height: 24px;
 }
 
 .search {

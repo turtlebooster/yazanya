@@ -1,19 +1,19 @@
 <template>
   <div class="main-view d-flex flex-column">
     <!-- Navbar -->
-    <div class="main-header">
+    <div class="main-header" >
       <main-navbar />
     </div>
 
     <!-- Container -->
     <div class="main-container d-flex flex-grow-1 flex-shrink-1">
       <!-- Side -->
-      <div class="main-side">
+      <div class="main-side" :class="[$root.theme ? 'light' : 'dark']">
         <main-sidebar />
       </div>
 
       <!-- Contents -->
-      <div class="main-contents flex-grow-1">
+      <div class="main-contents flex-grow-1" :class="[$root.theme ? 'light' : 'dark']">
         <router-view />
       </div>
     </div>
