@@ -402,16 +402,6 @@ public class UserController {
 
     }
     
-    // 프로필 이미지 이름 불러오기
-    @NoJwt
-    @GetMapping("/profile/img/{userId}")
-    @ApiOperation(value = "유저 프로필 이미지 이름 조회", notes = "유저 Id에 해당하는 이미지 이름을 가져옴\r\n이미지 베이스 URL 뒤에 해당 이미지명을 넣으면 이미지 조회 가능")
-    public ResponseEntity<?> showProfileImage(@PathVariable("userId") String userId) throws IOException, SQLException {
-        String imageName = profileService.getProfile(userId).getProfilePictureLink();
-		return new ResponseEntity<String>(imageName, HttpStatus.OK);
-    }
-    
-    
     // 팔로우
     // 팔로우 추가
     @PostMapping("/follow/{userId}")
