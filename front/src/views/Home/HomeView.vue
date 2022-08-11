@@ -19,12 +19,6 @@
             >
               로그인
             </button>
-            <button
-              style="background-color: var(--light-sub-color)"
-              @click="pageSignup"
-            >
-              회원가입
-            </button>
           </span>
         </div>
       </div>

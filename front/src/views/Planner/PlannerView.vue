@@ -26,7 +26,7 @@
             <component
               :is="componentList[widget]"
               class="widget-template outer"
-              v-b-modal="`modal-${widget}`"
+              v-b-modal="`modal-${componentNameList[widget]}`"
             ></component>
           </div>
         </div>
@@ -43,6 +43,7 @@ import PlannerTodo from './components/PlannerTodo.vue';
 import PlannerTotal from './components/PlannerTotal.vue';
 import PlannerRank from './components/PlannerRank.vue';
 import PlannerStatus from './components/PlannerStatus.vue';
+import PlannerTimer from './components/PlannerTimer.vue';
 
 export default {
   setup() {
@@ -53,18 +54,20 @@ export default {
       PlannerTotal,
       PlannerRank,
       PlannerStatus, // 5
+      PlannerTimer,
     ];
 
     const componentNameList = [
-      'planner-calender',
+      'planner-calendar',
       'planner-progress',
       'planner-todo',
       'planner-total',
       'planner-rank',
       'planner-status',
+      'planner-timer',
     ];
 
-    const widgetList = ref([4, 3, 5, 2, 1, 0]);
+    const widgetList = ref([6, 4, 3, 5, 2, 1, 0]);
 
     return { componentList, componentNameList, widgetList };
   },
