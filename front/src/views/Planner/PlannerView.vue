@@ -180,7 +180,7 @@ a:link {
   margin-bottom: 32px;
   margin-left: auto;
   margin-right: auto;
-  height: 200px;
+  height: 240px;
 
   transition-duration: 0.2s;
 }

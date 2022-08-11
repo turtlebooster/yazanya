@@ -1,5 +1,5 @@
 <template>
-  <div class="main-sidebar">
+  <div class="main-sidebar" :class="[$root.theme ? 'light' : 'dark']">
     <router-link to="/main/setting/profile">
       <img
         :src="require(`@/assets/avatar/0.jpg`)"
@@ -108,7 +108,7 @@ export default {
 }
 
 .main-sidebar:hover {
-  width: calc(var(--size-w-side) * 2.5);
+  width: calc(var(--size-w-side-hover) - 16px);
   box-shadow: 8px 0px 8px white;
 }
 
