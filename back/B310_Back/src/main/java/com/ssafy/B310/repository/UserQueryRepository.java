@@ -23,13 +23,10 @@ public class UserQueryRepository {
 	
 	public void setRank(User userR) {
 		int totalUser = queryFactory.selectFrom(user).fetch().size();
-		
-		System.out.println("totalUsercount : " + totalUser);
-		
+				
 		List<User> list = queryFactory.selectFrom(user).orderBy(user.profileTotalStudyTime.desc()).fetch();
 		
 		double grade = (list.indexOf(userR) / (double)totalUser) * 100;
-		System.out.println(grade);
 		
 		if(grade <= 5) {
 			userR.setProfileRank("마스터");
