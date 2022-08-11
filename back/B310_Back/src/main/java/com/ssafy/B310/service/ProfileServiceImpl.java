@@ -57,4 +57,17 @@ public class ProfileServiceImpl implements ProfileService{
         }
         return 0;
     }
+    
+    // 플래너 세팅 수정
+	@Override
+	public int updatePlannerSet(String userId, String profilePlannerSet) throws SQLException {
+        Optional<User> oUser = userRepository.findByUserId(userId);
+        if (oUser.isPresent()) {
+            User u = oUser.get();
+            u.setProfilePlannerSet(profilePlannerSet);     
+            userRepository.save(u);
+            return 1;
+        }
+        return 0;
+	}
 }
