@@ -29,8 +29,9 @@ public class ImageController {
 	public String showprofile(@PathVariable long userNum) {
 		String profileImg;
 		try {
-			profileImg = "redirect:/image/profile/" + userRepository.findById(userNum).get().getProfilePictureLink();
+			profileImg = userRepository.findById(userNum).get().getProfilePictureLink();
 			if (profileImg.equalsIgnoreCase("null") || profileImg == null || profileImg.trim().equals("")) return "redirect:/image/thumbnail/study.jpg";
+			profileImg = "redirect:/image/profile/" + profileImg;
 		} catch (Exception e) {
 			return "redirect:/image/profile/profile.png";
 		}
@@ -43,8 +44,9 @@ public class ImageController {
 	public String showthumbnail(@PathVariable int roomNum) {
 		String thumbnailImg;
 		try {
-			thumbnailImg = "redirect:/image/thumbnail/" + RoomRepository.findById(roomNum).get().getRoomThumbnail();
+			thumbnailImg = RoomRepository.findById(roomNum).get().getRoomThumbnail();
 			if (thumbnailImg.equalsIgnoreCase("null") || thumbnailImg == null || thumbnailImg.trim().equals("")) return "redirect:/image/thumbnail/study.jpg";
+			thumbnailImg = "redirect:/image/thumbnail/" + thumbnailImg;
 		} catch (Exception e) {
 			return "redirect:/image/thumbnail/study.jpg";
 		}
