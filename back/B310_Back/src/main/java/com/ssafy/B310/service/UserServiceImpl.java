@@ -30,18 +30,21 @@ public class UserServiceImpl implements UserService{
 	MailService mailService;
 	
 	@Override
-	public User login(User user) throws SQLException {
+	public String login(User user) throws SQLException {
 		Optional<User> oUser = userRepository.findByUserId(user.getUserId());
 		
 		// 해당 id의 user가 있으면
 		if (oUser.isPresent()) {
 			User u = oUser.get();
-			if(BCrypt.checkpw(user.getUserPw(), u.getUserPw())) {
-				return u;
+			// 비밀번호가 틀리면
+			if(!BCrypt.checkpw(user.getUserPw(), u.getUserPw())) {
+				return "pwErr";
 			}
+			String userId = u.getUserId();
+			return userId;
 		}
-		// 해당 id의 user가 없거나, 비밀번호가 맞지 않으면
-		return null;
+		// 해당 id의 user가 없으면
+		return "noId";
 	}
 
 	@Override
