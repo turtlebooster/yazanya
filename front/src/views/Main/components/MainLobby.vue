@@ -13,7 +13,7 @@
 
       <!-- room history -->
       <div style="width: 90%; font-size: 24px; font-weight: bold">
-        나의 공부방
+        이전 참여했던 방
       </div>
       <div class="spacer"></div>
 
@@ -21,13 +21,13 @@
         <div class="row">
           <div
             v-for="room in roomHistory"
-            :key="room.roomNum"
+            :key="room.room.roomNum"
             class="room col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2"
           >
             <!-- room -->
             <div class="room-template outer">
               <router-link
-                :to="`/studyroom/${room.roomNum}`"
+                :to="`/studyroom/${room.room.roomNum}`"
                 class="room-component d-flex flex-column"
               >
                 <!-- thumbnail -->
@@ -41,7 +41,7 @@
                       text-align: center;
                     "
                   >
-                    {{ room.roomNum }}
+                    {{ room.room.roomNum }}
                   </div>
                 </div>
 
@@ -61,14 +61,15 @@
                   >
                     <!-- title -->
                     <div style="font-size: 16pt; font-weight: bold">
-                      {{ room.roomName }}
-                    </div>
-
-                    <!-- detail -->
-                    <div style="font-size: 10pt">
-                      {{ room.roomDescription }}
+                      {{ room.room.roomName }}
                     </div>
                   </div>
+                </div>
+
+                <div class="d-flex">
+                  <b-badge v-for="(hash, index) in room.roomHash" :key="index" pill
+                    class="mx-1 mt-2"
+                    style="background: #cdeaf0 !important;">#{{hash}}</b-badge>
                 </div>
               </router-link>
             </div>
@@ -181,13 +182,13 @@
         <div class="row">
           <div
             v-for="room in roomRecommend"
-            :key="room.roomNum"
+            :key="room.room.roomNum"
             class="room col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2"
           >
             <!-- room -->
             <div class="room-template outer">
               <router-link
-                :to="`/studyroom/${room.roomNum}`"
+                :to="`/studyroom/${room.room.roomNum}`"
                 class="room-component d-flex flex-column"
               >
                 <!-- thumbnail -->
@@ -201,7 +202,7 @@
                       text-align: center;
                     "
                   >
-                    {{ room.roomNum }}
+                    {{ room.room.roomNum }}
                   </div>
                 </div>
 
@@ -221,14 +222,14 @@
                   >
                     <!-- title -->
                     <div style="font-size: 16pt; font-weight: bold">
-                      {{ room.roomName }}
-                    </div>
-
-                    <!-- detail -->
-                    <div style="font-size: 10pt">
-                      {{ room.roomDescription }}
+                      {{ room.room.roomName }}
                     </div>
                   </div>
+                </div>
+                <div class="d-flex">
+                  <b-badge v-for="(hash, index) in room.roomHash" :key="index" pill
+                    class="mx-1 mt-2"
+                    style="background: #cdeaf0 !important;">#{{hash}}</b-badge>
                 </div>
               </router-link>
             </div>
@@ -245,8 +246,40 @@ import rest_room from '@/rest/room';
 
 export default {
   setup() {
-    const form = ref(null);
+    // --------------------- load Room list ------------------------ //
+    const roomHistory = ref();
+    const roomRecommend = ref();
 
+    onBeforeMount(() => {
+      init();
+    });
+
+    async function init() {
+      roomHistory.value = await rest_room.getRoomHistoryList('');
+      roomRecommend.value = await rest_room.getRoomRecommendList('');
+
+      console.log("history", roomHistory.value);
+      console.log("recommend", roomRecommend.value);
+    }
+
+    // ------------------------ modal control ---------------------------- //
+    const isShow = ref(false);
+    function openModal() {
+      isShow.value = true;
+    }
+
+    function closeModal() {
+      isShow.value = false;
+    }
+
+    function resetModal() {
+      newRoom.value.roomName = '';
+      newRoom.value.roomDescription = '';
+      newRoom.value.roomPw = '';
+    }
+
+    // ---------------------- make room ---------------------------- //
+    const form = ref(null);
     const validation = ref({
       name: computed(() => newRoom.value.roomName.length > 0),
       desc: computed(() => newRoom.value.roomDescription.length > 0),
@@ -268,29 +301,6 @@ export default {
       roomActive: true,
     });
 
-    const isShow = ref(false);
-    const roomHistory = ref();
-    const roomRecommend = ref();
-
-    async function init() {
-      roomHistory.value = await rest_room.getRoomHistoryList('');
-      roomRecommend.value = await rest_room.getRoomRecommendList('');
-    }
-
-    function openModal() {
-      isShow.value = true;
-    }
-
-    function closeModal() {
-      isShow.value = false;
-    }
-
-    function resetModal() {
-      newRoom.value.roomName = '';
-      newRoom.value.roomDescription = '';
-      newRoom.value.roomPw = '';
-    }
-
     async function makeRoom() {
       // Exit when the form isn't valid
       if (
@@ -305,10 +315,6 @@ export default {
       init();
       closeModal();
     }
-
-    onBeforeMount(() => {
-      init();
-    });
 
     return {
       form,
