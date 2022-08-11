@@ -1,6 +1,7 @@
 package com.ssafy.B310.service;
 
 import java.sql.SQLException;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -66,6 +67,11 @@ public class ParticipationServiceImpl implements ParticipationService {
         List<Participation> joinedUser = participationRepository.findByRoom(room);
         for (Participation participation : joinedUser)
             if (Objects.equals(participation.getUser().getUserId(), userId)) {
+            	// 유저 누적 시간 갱신
+            	User user = userRepository.findByUserId(userId).get();
+            	Duration addTime = Duration.between(participation.getParticipationEnterTime(), LocalDateTime.now());
+            	user.setProfileTotalStudyTime(user.getProfileTotalStudyTime() + (int)(addTime.getSeconds() / 60));    
+            	userRepository.save(user);
                 participationRepository.delete(participation);
                 return 1;
             }
