@@ -55,10 +55,10 @@ public class FollowServiceImpl implements FollowService {
         followRepository.deleteByFollowToUserAndFollowFromUser(followToUser, followFromUser);
     }
 
-//    @Override
-//    public List<User> followList(String userId) {
-//        Optional<User> oUser = userRepository.findByUserId(userId);
-//        User user = oUser.get();
-//        return followRepository.findByFollowToUser(user);
-//    }
+    @Override
+    public List<User> followList(String userId) {
+        Optional<User> oUser = userRepository.findByUserId(userId);
+        User user = oUser.get();
+        return followRepository.findByFollowToUser(user);
+    }
 }
