@@ -21,12 +21,12 @@
           <div
             v-for="(widget, index) in widgetList"
             :key="index"
-            :class="`widget col-${widget.column}`"
+            class="widget col-12 col-md-6 col-xl-4"
           >
             <component
-              :is="componentList[widget.type]"
+              :is="componentList[widget]"
               class="widget-template outer"
-              v-b-modal="`modal-${widget.type}`"
+              v-b-modal="`modal-${widget}`"
             ></component>
           </div>
         </div>
@@ -36,10 +36,10 @@
 </template>
 
 <script>
-import { reactive, toRefs } from 'vue';
+import { ref } from 'vue';
 import PlannerCalender from './components/PlannerCalendar.vue';
 import PlannerProgress from './components/PlannerProgress.vue';
-import PlannerTode from './components/PlannerTodo.vue';
+import PlannerTodo from './components/PlannerTodo.vue';
 import PlannerTotal from './components/PlannerTotal.vue';
 import PlannerRank from './components/PlannerRank.vue';
 import PlannerStatus from './components/PlannerStatus.vue';
@@ -47,43 +47,26 @@ import PlannerStatus from './components/PlannerStatus.vue';
 export default {
   setup() {
     const componentList = [
-      PlannerCalender,
+      PlannerCalender, // 0
       PlannerProgress,
-      PlannerTode,
+      PlannerTodo,
       PlannerTotal,
       PlannerRank,
-      PlannerStatus,
+      PlannerStatus, // 5
     ];
-    const state = reactive({
-      widgetList: [
-        {
-          type: 4,
-          column: 4,
-        },
-        {
-          type: 3,
-          column: 4,
-        },
-        {
-          type: 5,
-          column: 4,
-        },
-        {
-          type: 2,
-          column: 4,
-        },
-        {
-          type: 1,
-          column: 4,
-        },
-        {
-          type: 0,
-          column: 4,
-        },
-      ],
-    });
 
-    return { componentList, ...toRefs(state) };
+    const componentNameList = [
+      'planner-calender',
+      'planner-progress',
+      'planner-todo',
+      'planner-total',
+      'planner-rank',
+      'planner-status',
+    ];
+
+    const widgetList = ref([4, 3, 5, 2, 1, 0]);
+
+    return { componentList, componentNameList, widgetList };
   },
 };
 </script>
