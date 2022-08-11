@@ -389,15 +389,6 @@ public class RoomController {
 
     }
     
-    // Thumbnail 이미지 이름 불러오기
-    @NoJwt
-    @GetMapping("/Thumbnail/{roomNum}")
-    @ApiOperation(value = "유저 프로필 이미지 이름 조회", notes = "유저 Id에 해당하는 이미지 이름을 가져옴\r\n이미지 베이스 URL 뒤에 해당 이미지명을 넣으면 이미지 조회 가능")
-    public ResponseEntity<?> showProfileImage(@PathVariable int roomNum) throws IOException, SQLException {
-        String imageName = roomservice.getRoom(roomNum).getRoomThumbnail();
-		return new ResponseEntity<String>(imageName, HttpStatus.OK);
-    }
-    
     @GetMapping("/hasPw/{roomNum}")
     @ApiOperation(value = "방이 비밀번호 유무", notes = "방 번호에 해당하는 방이 비밀번호를 가졌는지 여부 전달\r\n 비밀번호 있을경우 true \r\n 비밀번호 없을경우 false \r\n 오류 fail")
     public ResponseEntity<?> getRoomHistory(@PathVariable int roomNum) throws SQLException {
