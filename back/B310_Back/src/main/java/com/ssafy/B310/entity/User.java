@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
@@ -58,6 +59,10 @@ public class User {
 	@OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
 	@JsonIgnore
 	private Set<Todo> todo;
+	
+	@OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
+	@JsonIgnore
+	private Auth auth;
 
 	@Column
 	@ColumnDefault("0")

@@ -117,7 +117,6 @@ public class UserController {
                 
                 Auth auth = Auth.builder()
             			.user(loginUser)
-            			.accessToken(accessToken)
             			.refreshToken(refreshToken)
             			.build();
                 
