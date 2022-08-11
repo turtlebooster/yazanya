@@ -12,4 +12,6 @@ public interface ProfileService {
     User getProfile(String userId) throws SQLException;
 
     int uploadProfileImg(String userId, String imgPath) throws SQLException;
+
+	int updatePlannerSet(String userId, String profilePlannerSet) throws SQLException;
     }
