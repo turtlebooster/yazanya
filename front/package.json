@@ -15,6 +15,7 @@
     "core-js": "^3.8.3",
     "kurento-utils": "^6.16.0",
     "sweetalert2": "^11.4.26",
+    "v-calendar": "^3.0.0-alpha.8",
     "vee-validate": "^4.6.2",
     "vue": "^3.2.13",
     "vue-router": "^4.0.13",

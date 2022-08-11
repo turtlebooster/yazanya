@@ -7,19 +7,28 @@
     ></button> -->
 
     <div>
-      <v-calendar is-expanded />
-      <!-- <v-date-picker v-model="date" />  -->
+      <!-- <v-calendar is-expanded/> -->
+      <v-date-picker is-expanded mode="date" v-model="date" /> 
     </div>
 
     <!-- modal -->
-    <b-modal id="modal-planner-calendar" centered title="달력">
-      <p class="my-4">달력 세부 사항</p>
+    <b-modal id="modal-0" centered title="달력">
+      <p class="my-4">{{date}}</p>
+      <!-- <v-calendar is-expanded /> -->
+      <!-- <v-date-picker v-model="date" />  -->
     </b-modal>
   </div>
 </template>
 
 <script>
-export default {};
+import { ref } from 'vue';
+export default {
+  setup() {
+    let date = ref();
+    
+    return { date }
+  }
+}
 </script>
 
 <style></style>

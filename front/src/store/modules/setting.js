@@ -1,35 +1,41 @@
 export const Setting = {
     state: {
         toggle: {
+            modeToggle: localStorage.getItem('theme'),
             sidebarToggle: localStorage.getItem('sidebar'),
-            modeToggle: localStorage.getItem('theme')
         }
     },
     getters: {
+        getModeToggle: function(state) {
+            return state.toggle.modeToggle;
+        },
         getSidebarToggle: function(state) {
             return state.toggle.sidebarToggle;
         },
-        getModeToggle: function(state) {
-            return state.toggle.modeToggle;
-        }
     },
     mutations: {
-        setSidebarToggle: function(state) {
-            if (state.toggle.sidebarToggle == "fix") {
-                state.toggle.sidebarToggle = "nofix"
-            }
-            else if (state.toggle.sidebarToggle == "nofix") {
-                state.toggle.sidebarToggle = "fix"
-            }
-        },
         setModeToggle: function(state) {
-            if (state.toggle.sidebarToggle) {
-                state.toggle.sidebarToggle = false;
+            if (state.toggle.modeToggle) {
+                state.toggle.modeToggle = false;
             }
             else {
-                state.toggle.sidebarToggle = true;
+                state.toggle.modeToggle = true;
             }
-        }
+        },
+        setSidebarToggle: function(state) {
+            // if (state.toggle.sidebarToggle == "fix") {
+            //     state.toggle.sidebarToggle = "nofix"
+            // }
+            // else if (state.toggle.sidebarToggle == "nofix") {
+            //     state.toggle.sidebarToggle = "fix"
+            // }
+            if (state.toggle.sidebarToggle) {
+                state.toggle.sidebarToggle = false
+            }
+            else {
+                state.toggle.sidebarToggle = true
+            }
+        },
     },
     actions: {
         setSidebarToggle: function(context) {

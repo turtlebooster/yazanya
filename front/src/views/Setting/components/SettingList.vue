@@ -1,17 +1,25 @@
 <template>
-  <div class="list" :class="[$root.theme ? 'light' : 'dark']">
-    <div>
-      프로필
+  <div class="list d-flex flex-column" :class="[$root.theme ? 'light' : 'dark']">
+    <div class="d-flex justify-content-center" style="font-size:2rem">
+      설정
     </div>
-    <div>
-      <span>화면 모드</span>
-      <button @click="modeToggleLight">라이트 모드</button>
-      <button @click="modeToggleDark">다크 모드</button>
+    <div class="row">
+      <div class="col-3">
+        <span>화면 모드</span> 
+      </div>
+      <div class="col-6">
+        <button id="btn" :class="[ $root.theme ? 'on' : 'off']" @click="modeToggleLight">라이트 모드</button>
+        <button id="btn" :class="[ $root.theme ? 'off' : 'on']" @click="modeToggleDark">다크 모드</button>
+      </div>
     </div>
-    <div>
-      <span>사이드바</span>
-      <button @click="sideToggleFix">고정</button>
-      <button @click="sideToggleNoFix">고정 ㄴㄴ</button>
+    <div class="row">
+      <div class="col-3">
+        <span>사이드바</span>
+      </div>
+      <div class="col-6">
+        <button id="btn" :class="[ $root.sidebar ? 'on' : 'off' ]" @click="sideToggleFix">고정</button>
+        <button id="btn" :class="[ $root.sidebar ? 'off' : 'on' ]" @click="sideToggleNoFix">확장</button>
+      </div>
     </div>
   </div>
 </template>
@@ -23,53 +31,37 @@ import { useStore } from 'vuex'
 export default {
   setup() {
     const store = useStore();
-    localStorage.setItem('sidebar', 'fix')
-    var sideToggle = ref(localStorage.getItem('sidebar'));
     var modeToggle = ref(localStorage.getItem('theme'));
+    var sideToggle = ref(localStorage.getItem('sidebar'));
     
-    if (sideToggle.value == null) {
-      sideToggle.value = 'fix';
-      localStorage.setItem('sidebar', true);
-    }
-
-    if (modeToggle.value == null) {
-      modeToggle.value = true;
-      localStorage.setItem('theme', true);
-    }
-
-    console.dir('local : ' + localStorage.getItem('theme'));
-    // console.dir('root : ' + this.$root.theme);
-    function sideToggleFix() {
-      sideToggle.value = "fix"
-      store.dispatch('setSidebarToggle')
-      localStorage.setItem('sidebar',JSON.stringify(sideToggle.value))
-      document.documentElement.style.setProperty('--size-w-side-hover', '64px');
-    }
-
-    function sideToggleNoFix() {
-      sideToggle.value = "nofix"
-      store.dispatch('setSidebarToggle')
-      localStorage.setItem('sidebar',JSON.stringify(sideToggle.value))
-      document.documentElement.style.setProperty('--size-w-side-hover', '200px');
-    }
-
     function modeToggleLight() {
       modeToggle.value = true
       store.dispatch('setModeToggle')
       localStorage.setItem('theme',JSON.stringify(modeToggle.value))
-      console.log(modeToggle.value)
       location.reload()
-      // console.log(store.state.toggle.modeToggle)
     }
 
     function modeToggleDark() {
       modeToggle.value = false
       store.dispatch('setModeToggle')
       localStorage.setItem('theme',JSON.stringify(modeToggle.value))
-      console.log(modeToggle.value)
       location.reload()
-      // console.log(store.state.toggle.modeToggle)
     }
+
+    function sideToggleFix() {
+      sideToggle.value = true
+      store.dispatch('setSidebarToggle')
+      localStorage.setItem('sidebar',JSON.stringify(sideToggle.value))
+      location.reload()
+    }
+
+    function sideToggleNoFix() {
+      sideToggle.value = false
+      store.dispatch('setSidebarToggle')
+      localStorage.setItem('sidebar',JSON.stringify(sideToggle.value))
+      location.reload()
+    }
+
     return {
       sideToggleFix,
       sideToggleNoFix,
@@ -82,6 +74,40 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+  * {
+    font-family: Koverwatch !important;
+    font-size: 1.5rem;
+  }
+  .row {
+    margin-bottom: 8px;
+  }
+  .col-3 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .col-6 {
+    display: flex;
+    align-items: center;
+  }
+  #btn {
+    border: none;
+    border-radius: 40px;
+    width: 200px;
+    height: 40px;
+    margin: 8px;
+  }
+  #btn:hover {
+    background-color: var(--theme-color);
+  }
+  .on {
+    background-color: var(--theme-color);
+    color: white;
+  }
 
+  .off {
+    background-color: gray;
+    color: white;
+  }
 </style>
