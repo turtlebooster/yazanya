@@ -82,8 +82,8 @@ public class User {
 	private int profileTotalStudyTime;
 
 	// 랭크
-	@Column
-	private int profileRank;
+	@Column(columnDefinition = "varchar(20) default '아이언'")
+	private String profileRank;
 
 	// 소속
 	@Column
