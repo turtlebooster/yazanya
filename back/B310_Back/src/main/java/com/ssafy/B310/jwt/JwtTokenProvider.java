@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.ssafy.B310.annotation.NoJwt;
 import com.ssafy.B310.dto.TokenResponse;
 import com.ssafy.B310.entity.User;
 import com.ssafy.B310.repository.AuthRepository;
@@ -53,7 +54,7 @@ public class JwtTokenProvider {
     @PostConstruct
     protected void init() {
         System.out.println("SECRET_KEY: "+SECRET_KEY);
-        System.out.println("REFRESH_KEY = " + REFRESH_KEY);
+        System.out.println("REFRESH_KEY: " + REFRESH_KEY);
         SECRET_KEY = Base64.getEncoder().encodeToString(SECRET_KEY.getBytes());
         REFRESH_KEY = Base64.getEncoder().encodeToString(REFRESH_KEY.getBytes());
     }
@@ -199,7 +200,6 @@ public class JwtTokenProvider {
 		}
 		return key;
 	}
-	
 	
 	public TokenResponse issueAccessToken(HttpServletRequest request){
         String accessToken = resolveAccessToken(request);
