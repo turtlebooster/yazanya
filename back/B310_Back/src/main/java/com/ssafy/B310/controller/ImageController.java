@@ -24,12 +24,12 @@ public class ImageController {
 	RoomRepository RoomRepository;
 	
 	@NoJwt
-	@GetMapping("/profile/{userId}")
-	@ApiOperation(value = "프로필이미지 반환", notes = "userId 에 해당하는 유저의 프로필 이미지를 반환\r\n아이디가 잘못됐거나 저장된 이미지가 없을 경우 기본 이미지를 넘겨줌")
-	public String showprofile(@PathVariable String userId) {
+	@GetMapping("/profile/{userNum}")
+	@ApiOperation(value = "프로필이미지 반환", notes = "userNum 에 해당하는 유저의 프로필 이미지를 반환\r\n아이디가 잘못됐거나 저장된 이미지가 없을 경우 기본 이미지를 넘겨줌")
+	public String showprofile(@PathVariable long userNum) {
 		String profileImg;
 		try {
-			profileImg = "redirect:/image/profile/" + userRepository.findByUserId(userId).get().getProfilePictureLink();
+			profileImg = "redirect:/image/profile/" + userRepository.findById(userNum).get().getProfilePictureLink();
 			if (profileImg.equalsIgnoreCase("null") || profileImg == null || profileImg.trim().equals("")) return "redirect:/image/thumbnail/study.jpg";
 		} catch (Exception e) {
 			return "redirect:/image/profile/profile.png";
@@ -40,7 +40,7 @@ public class ImageController {
 	@NoJwt
 	@GetMapping("/thumbnail/{roomNum}")
 	@ApiOperation(value = "썸네일이미지 반환", notes = "roomNum 에 해당하는 방의 썸네일 이미지를 반환\r\n방 정보가 잘못됐거나 저장된 이미지가 없을 경우 기본 이미지를 넘겨줌")
-	public String showprofile(@PathVariable int roomNum) {
+	public String showthumbnail(@PathVariable int roomNum) {
 		String thumbnailImg;
 		try {
 			thumbnailImg = "redirect:/image/thumbnail/" + RoomRepository.findById(roomNum).get().getRoomThumbnail();
