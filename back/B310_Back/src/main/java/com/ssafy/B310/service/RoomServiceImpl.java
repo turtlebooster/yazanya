@@ -148,9 +148,8 @@ public class RoomServiceImpl implements RoomService {
 
 		if (roomList.size() == 0) {
 			roomList = roomRepository.findAll();
-			result.put("roomList", roomList);
-			return result;
 		}
+		
 		for (Room r : roomList) {
 			int roomN = r.getRoomNum();
 			temp = new HashMap<>();
@@ -165,6 +164,7 @@ public class RoomServiceImpl implements RoomService {
 			temp.put("roomHash", tempRoomHsNameList);
 			lst.add(temp);
 		}
+		
 		result.put("roomList",lst);
 		return result;
 	}
