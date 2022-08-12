@@ -368,8 +368,9 @@ export default {
               autocorrect: 'off'
             }
           })
-
           isEntered = await rest_room.joinRoom(room_number, pw)
+        } else {
+          isEntered = await rest_room.joinRoom(room_number, '');
         }
         
         // gain room info
