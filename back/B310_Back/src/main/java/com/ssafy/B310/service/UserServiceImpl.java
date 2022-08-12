@@ -6,6 +6,8 @@ import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.ssafy.B310.entity.EmailConfirm;
+import com.ssafy.B310.repository.EmailConfrimRepository;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +30,9 @@ public class UserServiceImpl implements UserService{
 	
 	@Autowired
 	MailService mailService;
+
+	@Autowired
+	EmailConfrimRepository emailConfrimRepository;
 	
 	@Override
 	public String login(User user) throws SQLException {
@@ -75,6 +80,7 @@ public class UserServiceImpl implements UserService{
 	public String hashPw(String userPw) {
 		return BCrypt.hashpw(userPw, BCrypt.gensalt());
 	}
+
 
 	@Override
 	public int updateUser(User user) throws SQLException {
@@ -213,6 +219,18 @@ public class UserServiceImpl implements UserService{
         mailService.sendMail(mail);
         
 		return pwd;
+	}
+
+	@Override
+	public int confirmCode(String code, String email) {
+		Optional<EmailConfirm> optionalEmailConfirm = emailConfrimRepository.findByConfirmCode(code);
+		if (optionalEmailConfirm.isPresent()){
+			EmailConfirm emailConfirm = optionalEmailConfirm.get();
+			if (emailConfirm.getConfirmCode().equals(code) && emailConfirm.getEmail().equals(email)) {
+				return 1;
+			}
+		}
+		return 0;
 	}
 
 }

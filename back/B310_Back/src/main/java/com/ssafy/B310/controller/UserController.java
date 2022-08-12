@@ -6,13 +6,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 
+import com.ssafy.B310.entity.*;
+import com.ssafy.B310.repository.EmailConfrimRepository;
 import com.ssafy.B310.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,11 +38,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.ssafy.B310.annotation.NoJwt;
 import com.ssafy.B310.dto.TokenResponse;
-import com.ssafy.B310.entity.Auth;
-import com.ssafy.B310.entity.Follow;
-import com.ssafy.B310.entity.Hashtag;
-import com.ssafy.B310.entity.User;
-import com.ssafy.B310.entity.UserHashtag;
 import com.ssafy.B310.jwt.JwtTokenProvider;
 import com.ssafy.B310.repository.AuthRepository;
 import com.ssafy.B310.service.FollowService;
@@ -87,6 +84,13 @@ public class UserController {
     
     @Autowired
     JwtTokenProvider jwtTokenProvider;
+
+    @Autowired
+    private JavaMailSender mailSender;
+
+    @Autowired
+    EmailConfrimRepository emailConfrimRepository;
+
     
 //    @Value("${profileImg.path}")
     String profileImgPath;
@@ -445,6 +449,56 @@ public class UserController {
     public ResponseEntity<?> followerList (@PathVariable("userId") String userId) throws SQLException {
 
         return new ResponseEntity<List<User>>(followService.followerList(userId), HttpStatus.OK);
+    }
+
+    @GetMapping("/confirmEmail")
+    public void confirmEmail(@RequestParam String email) throws SQLException {
+
+        logger.info("이메일 데이터 전송 확인");
+        logger.info("인증변호: " + email);
+
+        Random ramdom = new Random();
+        int checkNum = ramdom.nextInt(888888) + 111111;
+        logger.info("인증번호" + checkNum);
+
+        String setFrom = "helpYaZaNya@gmail.com";
+        String toMail = email;
+        String title = "회원가입 인증 이메일 입니다.";
+        String content =
+                "홈페이지를 방문해주셔서 감사합니다.\n\n" +
+                        "<br><br>" +
+                "인증번호는 " + checkNum + " 입니다.\n" +
+                        "<br><br>" +
+                "해당 인증번호를 인증번호 확인란에 기입하여 주세요.";
+
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
+            helper.setFrom(setFrom);
+            helper.setTo(toMail);
+            helper.setSubject(title);
+            helper.setText(content, true);
+            mailSender.send(message);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        String num = Integer.toString(checkNum);
+        EmailConfirm confirm = new EmailConfirm();
+        confirm.setConfirmCode(num);
+        confirm.setEmail(email);
+
+        emailConfrimRepository.save(confirm);
+    }
+
+    @PostMapping
+    public ResponseEntity<?> confirmCode (@RequestBody Map<String, String> params) throws SQLException {
+        String code = params.get("code");
+        String email = params.get("email");
+        int cnt = userService.confirmCode(code, email);
+        if (cnt == 1){
+            return new ResponseEntity<String> (SUCCESS, HttpStatus.OK);
+        }
+        return new ResponseEntity<String>(FAIL, HttpStatus.OK);
     }
 }
 
