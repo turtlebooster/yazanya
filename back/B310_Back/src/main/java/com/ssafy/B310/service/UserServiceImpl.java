@@ -223,12 +223,16 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public void confirmEmail(String email) {
+	public int confirmEmail(String email) {
 //		logger.info("이메일 데이터 전송 확인");
 //		logger.info("인증변호: " + email);
 
 		Random random = new Random();
 		int checkNum = random.nextInt(888888) + 111111;
+		Optional<EmailConfirm> optionalEmail = emailConfirmRepository.findByEmail(email);
+		if (optionalEmail.isPresent()) {
+			return 2;
+		}
 //		logger.info("인증번호" + checkNum);
 
 		String setFrom = "helpYaZaNya@gmail.com";
@@ -260,6 +264,8 @@ public class UserServiceImpl implements UserService{
 		System.out.println(email);
 
 		emailConfirmRepository.save(confirm);
+
+		return 1;
 
 	}
 

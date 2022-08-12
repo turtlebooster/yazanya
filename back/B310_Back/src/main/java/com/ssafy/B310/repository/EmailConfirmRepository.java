@@ -10,4 +10,6 @@ import java.util.Optional;
 public interface EmailConfirmRepository extends JpaRepository<EmailConfirm, Integer> {
 
     Optional<EmailConfirm> findByConfirmCode(String confirmCode);
+
+    Optional<EmailConfirm> findByEmail(String email);
 }
