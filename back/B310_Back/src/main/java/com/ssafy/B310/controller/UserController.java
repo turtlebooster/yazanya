@@ -450,8 +450,15 @@ public class UserController {
     }
 
     @GetMapping("/confirmEmail")
-    public void confirmEmail(@RequestParam String email) throws SQLException {
-        userService.confirmEmail(email);
+    public ResponseEntity<?> confirmEmail(@RequestParam String email) throws SQLException {
+        int cnt = userService.confirmEmail(email);
+        if (cnt == 1) {
+            return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+        } else if (cnt == 2) {
+            return new ResponseEntity<String >("alreadyRegistEmail", HttpStatus.OK);
+
+        }
+        return new ResponseEntity<String>(FAIL,HttpStatus.OK);
     }
 
     @PostMapping("/confirmCode")
