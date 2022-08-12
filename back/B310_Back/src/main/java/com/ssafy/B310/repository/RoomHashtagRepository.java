@@ -19,6 +19,7 @@ public interface RoomHashtagRepository extends JpaRepository<RoomHashtag, Intege
 	
 	@Transactional
 	int deleteByRoomAndHashtag(Room room, Hashtag hashtag);
+	int countByRoomAndHashtag(Room room, Hashtag hashtag);
 
 	List<Room> findByHashtagHashtagNumIn(List<Integer> HashtagNum);
 	List<RoomHashtag> findByHashtagIn(List<Hashtag> HashtagList);

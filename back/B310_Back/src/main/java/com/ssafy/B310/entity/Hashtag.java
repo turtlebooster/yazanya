@@ -30,11 +30,15 @@ public class Hashtag {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int hashtagNum;
 	
-	@Column
+	@Column(unique = true)
 	private String hashtagName;
 	
 	public Hashtag(int hashtagNum, String hashtagName) {
 		this.hashtagNum = hashtagNum;
+		this.hashtagName = hashtagName;
+	}
+	
+	public Hashtag(String hashtagName) {
 		this.hashtagName = hashtagName;
 	}
 	

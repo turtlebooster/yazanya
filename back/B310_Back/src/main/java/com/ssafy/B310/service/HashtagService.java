@@ -16,4 +16,6 @@ public interface HashtagService {
 	List<Hashtag> getHashtagList();
 	
 	Hashtag getHashtag(int hashtagNum);
+	// 방 대한 해쉬태그 리스트로 추가
+	int addHashtagList(List<String> hashtagNameList, int roomNum);
 }

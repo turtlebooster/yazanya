@@ -1,7 +1,6 @@
 package com.ssafy.B310.controller;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -34,7 +33,6 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.ssafy.B310.annotation.NoJwt;
 import com.ssafy.B310.entity.Hashtag;
 import com.ssafy.B310.entity.Room;
 import com.ssafy.B310.entity.RoomForcedExit;
@@ -104,6 +102,7 @@ public class RoomController {
 	    		  		"  \"roomVideo\" : (전체 비디오 true/false),\r\n" + 
 	    		  		"  \"roomStudyTime\" : (공부시간 알람 간격),\r\n" + 
 	    		  		"  \"roomRestTime\" : (휴식시간 알람 간격),\r\n" + 
+	    		  		"  \"roomHasPw\" : (방 비밀번호 유무 true/false),\r\n" +
 	    		  		"  \"roomPw\" : (방 비밀번호),\r\n" + 
 	    		  		"  \"roomActive\" : (방 활성화 여부 true/false)\r\n" + 
 	    		  		" }")
@@ -112,6 +111,9 @@ public class RoomController {
         int cnt = 0;
         if (userNum != -1) {
         	cnt = roomservice.createRoom(room, userNum);        	
+//        	if (hashtagService.addHashtagList(roomInfo.getRoomHash(), cnt) == 0) {
+//        		return new ResponseEntity<String>("failToAddHashtag", HttpStatus.OK);
+//        	}
         }
 
         if(cnt!=0) return new ResponseEntity<Integer>(cnt, HttpStatus.OK);
@@ -258,18 +260,17 @@ public class RoomController {
 
 
     @PostMapping("/hashtag")
-    @ApiOperation(value = "방에 대한 해쉬태그 정보 추가")
+    @ApiOperation(value = "방에 대한 해쉬태그 정보 추가", 
+				    notes = "[\r\n" + 
+				    		"    \"해시태그1\",\r\n" + 
+				    		"    \"해시태그2\",\r\n" + 
+				    		"    \"해시태그3\"\r\n" + 
+				    		"]")
     @ApiImplicitParams({
     	@ApiImplicitParam(name = "roomNum", value = "방 번호", dataType = "int"),
-    	@ApiImplicitParam(name = "hashtagNum", value = "해쉬태그 번호", dataType = "int")
     })
-    public ResponseEntity<?> addHashtag(@RequestParam int roomNum, @RequestParam int hashtagNum) throws SQLException {
-    	Hashtag hashtag = hashtagService.getHashtag(hashtagNum);
-    	Room room = roomservice.getRoom(roomNum);
-   
-    	RoomHashtag roomHt = new RoomHashtag(room, hashtag);
-    	
-    	int cnt = roomHashtagService.addRoomHashtag(roomHt);
+    public ResponseEntity<?> addHashtag(@RequestParam int roomNum, @RequestBody List<String> hashtagNameList) throws SQLException {
+    	int cnt = hashtagService.addHashtagList(hashtagNameList, roomNum);
 		if(cnt == 1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 	    else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
     }
