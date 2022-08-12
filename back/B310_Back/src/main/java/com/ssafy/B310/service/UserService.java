@@ -20,5 +20,7 @@ public interface UserService {
 	String findPw(User user) throws SQLException;
 	String makeTmpPw(String userId) throws SQLException;
 	String hashPw(String userPw);
+
+	int confirmCode(String code, String email);
 	
 }
