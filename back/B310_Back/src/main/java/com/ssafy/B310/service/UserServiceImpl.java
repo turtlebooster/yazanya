@@ -3,24 +3,22 @@ package com.ssafy.B310.service;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
-
-import javax.servlet.http.HttpServletRequest;
+import java.util.Random;
 
 import com.ssafy.B310.entity.EmailConfirm;
-import com.ssafy.B310.repository.EmailConfrimRepository;
+import com.ssafy.B310.repository.EmailConfirmRepository;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import com.ssafy.B310.dto.TokenResponse;
 import com.ssafy.B310.entity.Mail;
 import com.ssafy.B310.entity.User;
-import com.ssafy.B310.jwt.JwtTokenProvider;
-import com.ssafy.B310.repository.AuthRepository;
 //import com.ssafy.B310.mapper.UserMapper;
 import com.ssafy.B310.repository.UserRepository;
 
-import io.jsonwebtoken.Claims;
+import javax.mail.internet.MimeMessage;
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -32,7 +30,10 @@ public class UserServiceImpl implements UserService{
 	MailService mailService;
 
 	@Autowired
-	EmailConfrimRepository emailConfrimRepository;
+	EmailConfirmRepository emailConfirmRepository;
+
+	@Autowired
+	private JavaMailSender mailSender;
 	
 	@Override
 	public String login(User user) throws SQLException {
@@ -222,8 +223,49 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
+	public void confirmEmail(String email) {
+//		logger.info("이메일 데이터 전송 확인");
+//		logger.info("인증변호: " + email);
+
+		Random random = new Random();
+		int checkNum = random.nextInt(888888) + 111111;
+//		logger.info("인증번호" + checkNum);
+
+		String setFrom = "helpYaZaNya@gmail.com";
+		String toMail = email;
+		String title = "회원가입 인증 이메일 입니다.";
+		String content =
+				"홈페이지를 방문해주셔서 감사합니다.\n\n" +
+						"<br><br>" +
+						"인증번호는 " + checkNum + " 입니다.\n" +
+						"<br><br>" +
+						"해당 인증번호를 인증번호 확인란에 기입하여 주세요.";
+
+		try {
+			MimeMessage message = mailSender.createMimeMessage();
+			MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
+			helper.setFrom(setFrom);
+			helper.setTo(toMail);
+			helper.setSubject(title);
+			helper.setText(content, true);
+			mailSender.send(message);
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		String num = Integer.toString(checkNum);
+		EmailConfirm confirm = new EmailConfirm();
+		confirm.setConfirmCode(num);
+		confirm.setEmail(email);
+		System.out.println(num);
+		System.out.println(email);
+
+		emailConfirmRepository.save(confirm);
+
+	}
+
+	@Override
 	public int confirmCode(String code, String email) {
-		Optional<EmailConfirm> optionalEmailConfirm = emailConfrimRepository.findByConfirmCode(code);
+		Optional<EmailConfirm> optionalEmailConfirm = emailConfirmRepository.findByConfirmCode(code);
 		if (optionalEmailConfirm.isPresent()){
 			EmailConfirm emailConfirm = optionalEmailConfirm.get();
 			if (emailConfirm.getConfirmCode().equals(code) && emailConfirm.getEmail().equals(email)) {
