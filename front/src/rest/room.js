@@ -119,7 +119,11 @@ export default {
       http
         .post(REST_PATH, payload)
         .then((response) => {
-          resolve(response.data);
+          if (response.data === 'fail') {
+            reject('방 생성 중 문제가 발생하였습니다');
+          } else {
+            resolve(response.data);
+          }
         })
         .catch((error) => {
           reject(error);
@@ -174,6 +178,23 @@ export default {
             resolve(true);
           } else {
             reject('강퇴 중 서버연결에 문제가 생겼습니다.');
+          }
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
+
+  addHashTags: function (room_num, tags) {
+    return new Promise((resolve, reject) => {
+      http
+        .post(REST_PATH + '/hashtag?roomNum=' + room_num, tags)
+        .then((response) => {
+          if (response.data === 'success') {
+            resolve(true);
+          } else {
+            reject('방의 해쉬태그 추가 중 문제가 발생하였습니다');
           }
         })
         .catch((error) => {
