@@ -449,6 +449,7 @@ public class UserController {
         return new ResponseEntity<List<User>>(followService.followerList(userId), HttpStatus.OK);
     }
 
+    @NoJwt
     @GetMapping("/confirmEmail")
     public ResponseEntity<?> confirmEmail(@RequestParam String email) throws SQLException {
         int cnt = userService.confirmEmail(email);
@@ -461,6 +462,7 @@ public class UserController {
         return new ResponseEntity<String>(FAIL,HttpStatus.OK);
     }
 
+    @NoJwt
     @PostMapping("/confirmCode")
     public ResponseEntity<?> confirmCode (@RequestBody Map<String, String> params) throws SQLException {
         String code = params.get("code");
