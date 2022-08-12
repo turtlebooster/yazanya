@@ -2,6 +2,7 @@ import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';
 import store from './store';
+import Popper from 'vue3-popper';
 
 // for bootstrap
 import { BootstrapVue3, BToastPlugin } from 'bootstrap-vue-3';
@@ -19,4 +20,5 @@ createApp(App)
   .use(BootstrapVue3)
   .use(BToastPlugin)
   .use(VCalendar)
+  .component('Popper', Popper)
   .mount('#app');
