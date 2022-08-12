@@ -11,4 +11,5 @@ import com.ssafy.B310.entity.Hashtag;
 @Repository
 public interface HashtagRepository extends JpaRepository<Hashtag, Integer>{
 	List<Hashtag> findByHashtagNumIn(List<Integer> hashtagNumList);
+	List<Hashtag> findByHashtagName(String hashtagName);
 }
