@@ -46,12 +46,7 @@
 export default {};
 </script>
 
-<style>
-.planner-view {
-  background-color: red;
-  height: 100vh;
-}
-
+<style scoped>
 .container {
   display: flex;
   justify-content: center;

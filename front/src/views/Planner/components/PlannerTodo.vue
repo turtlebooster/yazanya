@@ -1,7 +1,7 @@
 <template>
-  <div class="widget-template">
+  <div class="widget planner-todo">
     <div class="widget-component">
-      <h2 class="my-2">대충 투두 디자인</h2>
+      <div class="">대충 투두</div>
       <div v-for="todo in todoList" :key="todo.todoNum">
         <div class="d-flex">
           <div>{{ todo.todoProgress }}</div>
@@ -51,4 +51,4 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped></style>

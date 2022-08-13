@@ -1,8 +1,10 @@
 <template>
-  <div class="widget-template">
+  <div class="widget planner-timer">
     <div class="widget-component">
-      <div class="widget-component-detail">
-        <div>타이머</div>
+      <div class="timer-container">
+        <div id="timer" class="timer">
+          <div id="lines"></div>
+        </div>
       </div>
     </div>
 
@@ -19,49 +21,56 @@
 </template>
 
 <script>
-export default {};
+import { onMounted } from 'vue';
+export default {
+  setup() {
+    onMounted(() => {
+      const lines = document.getElementById('lines');
+
+      for (let i = 0; i < 30; i++) {
+        const line = document.createElement('div');
+        line.classList.add('line');
+        line.style.transform = `rotate(${i * 6}deg)`;
+
+        if (i % 5 == 0) {
+          line.classList.add('thick');
+        }
+        // console.log(lines);
+        lines.append(line);
+      }
+    });
+  },
+};
 </script>
 
 <style scoped>
-.widget-component {
+.timer-container {
+  color: rgb(50, 50, 50);
   width: 100%;
-  height: 100%;
-  padding: 16px;
+  height: 200px;
+  border: 15px solid rgb(55, 55, 55);
+  border-radius: 20%;
 }
 
-.widget-component * {
-  font-size: 20pt;
-  color: white;
+.timer {
+  position: relative;
+  font-size: 20px;
 }
 
-.widget-component::before,
-.widget-component::after {
-  content: '';
+.timer .line {
+  width: 100%;
+  height: 1px;
+  top: calc(50% - 1px / 2);
+
+  background: #000;
   position: absolute;
-  top: -5%;
-  right: -15%;
-  height: 150px;
-  width: 150px;
-  background-color: rgba(255, 255, 255, 0.2);
-  border-radius: 100%;
 }
 
-.widget-component::after {
-  top: auto;
-  bottom: -5%;
-  right: -5%;
-}
+.timer .line.thick {
+  width: calc(100% + 0.4em);
+  left: calc(-0.4em / 2);
 
-.widget-component-icon {
-  margin-bottom: 15px;
-  height: 60px;
-  width: 60px;
-  background-color: rgba(255, 255, 255, 0.4);
-  border-radius: 50%;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-shadow: 0 0 8px white;
+  height: 3px;
+  top: calc(50% - 3px / 2);
 }
 </style>

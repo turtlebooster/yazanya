@@ -8,10 +8,24 @@
 export default {
   setup() {
     // get theme flag from local
-    let theme = JSON.parse(localStorage.getItem('theme')) == undefined ? true : JSON.parse(localStorage.getItem('theme'));
-    let sidebar = JSON.parse(localStorage.getItem('sidebar') == undefined ? true : JSON.parse(localStorage.getItem('sidebar')));
-    sidebar ? document.documentElement.style.setProperty('--size-w-side-hover', '64px')
-      : document.documentElement.style.setProperty('--size-w-side-hover', '200px');
+    let theme =
+      JSON.parse(localStorage.getItem('theme')) == undefined
+        ? true
+        : JSON.parse(localStorage.getItem('theme'));
+    let sidebar = JSON.parse(
+      localStorage.getItem('sidebar') == undefined
+        ? true
+        : JSON.parse(localStorage.getItem('sidebar'))
+    );
+    sidebar
+      ? document.documentElement.style.setProperty(
+          '--size-w-side-hover',
+          '64px'
+        )
+      : document.documentElement.style.setProperty(
+          '--size-w-side-hover',
+          '200px'
+        );
     return { theme, sidebar };
   },
 };
@@ -60,10 +74,10 @@ export default {
 
   /* 라이트모드 */
   --light-main-color: #ffffff;
-  --light-sub-color: #d9d9d9;
+  --light-sub-color: #f4f4f4;
 
   --main-color: #ffffff;
-  --sub-color: #d9d9d9;
+  --sub-color: #f4f4f4;
 }
 
 * {
@@ -83,6 +97,27 @@ export default {
   color: white;
 }
 /* --------------------------------- */
+
+.outer {
+  box-shadow: 4px 4px 10px -1px rgba(0, 0, 0, 0.25),
+    -4px -4px 10px -1px rgba(255, 255, 255, 0.25);
+}
+
+.inner {
+  box-shadow: inset 4px 4px 10px -1px rgba(0, 0, 0, 0.25),
+    inset -4px -4px 10px -1px rgba(255, 255, 255, 0.25);
+}
+
+.liner {
+  height: 2px;
+  width: 80%;
+  border-radius: 1px;
+  background: var(--light-sub-color);
+}
+
+.spacer {
+  height: 24px;
+}
 
 #app {
   /* background: var(--sub-color-p); */

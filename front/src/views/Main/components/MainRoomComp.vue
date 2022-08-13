@@ -5,19 +5,6 @@
         :to="`/studyroom/${room.room.roomNum}`"
         class="room-component d-flex flex-column"
         >
-            <!-- room private icon -->
-            <b-button v-if="room.room.roomHasPw" style="position: absolute; top:1em; left:1em;" class="rounded-circle p-0 px-1" variant="light" disabled>
-                <i class="bi bi-lock-fill"></i>
-            </b-button>
-
-            <b-button pill variant="light" disabled
-            class="p-0 pe-1 ps-2"
-            style="position: absolute; right:1em; top:1em;">
-                <i class="bi bi-people-fill me-1"
-                style="font-style: normal;">
-                &nbsp;{{room.room.roomParticipationCount}} / {{room.room.roomCapacity}}</i>
-            </b-button>
-
             <!-- thumbnail -->
             <div class="room-thumbnail flex-grow-1 flex-shrink-1">
                 <!-- rooom setting -->
@@ -33,11 +20,22 @@
                             <i class="bi bi-camera-video-off-fill"></i>
                         </b-button>
                     </div>
-                </div>
-                <v-img
-                    :src="`${server_link}/image/thumbnail/${room.room.roomThumbnail}`">
-                </v-img>
+                    <!-- room private icon -->
+                    <b-button v-if="room.room.roomHasPw" style="position: absolute; top:0.5em; left:0.5em;" class="rounded-circle p-0 px-1" variant="light" disabled>
+                        <i class="bi bi-lock-fill"></i>
+                    </b-button>
 
+                    <b-button pill variant="light" disabled
+                    class="p-0 pe-1 ps-2"
+                    style="position: absolute; right:0.5em; top:0.5em;">
+                        <i class="bi bi-people-fill me-1"
+                        style="font-style: normal;">
+                        &nbsp;{{room.room.roomParticipationCount}} / {{room.room.roomCapacity}}</i>
+                    </b-button>
+
+                    <!--  -->
+                    <img :src="`${server_link}/showImg/thumbnail/${room.room.roomNum}`">
+                </div>
             </div>
 
             <div
@@ -45,8 +43,10 @@
                 style="margin-top: 8px"
             >
                 <!-- profile -->
+                <!-- `${server_link}/showImg/thumbnail/${room.room.userNum}` -->
                 <b-avatar
-                :src="require(`@/assets/avatar/0.jpg`)"
+
+                :src="`${server_link}/showImg/thumbnail/${room.room.userNum}`"
                 size="2em"
                 ></b-avatar>
 
@@ -72,7 +72,13 @@
 
 <script>
 import { ref } from 'vue';
+// import VueLoadImage from 'vue-load-image'
+
 export default {
+    // components: {
+    //     'vue-load-image': VueLoadImage
+    // },
+
     props: {
         room: {
             type : Object,

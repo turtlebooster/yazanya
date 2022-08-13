@@ -1,36 +1,28 @@
 <template>
-  <div class="d-flex flex-column vh-100 home-view">
-    <img class="vw-100 h-50" src="@/assets/book.jpg" />
-    <div class="d-flex justify-content-center">
-      <div class="d-flex fw-bold fs-6 home">
-        <img
-          class="mx-5"
-          style="width: 20vw"
-          src="@/assets/connection_img.png"
-        />
-        <div class="d-flex flex-column justify-content-end">
-          <span style="color: rgb(76, 205, 151)">야자냐가 처음이세요?</span>
-          <span>지금도 0명의 유저가</span>
-          <span>야자냐와 함께 공부중입니다.</span>
-          <span>
-            <button
-              style="background-color: var(--theme-color)"
-              @click="pageLogin"
-            >
-              로그인
-            </button>
-          </span>
-        </div>
+  <div class="home-view d-flex flex-column vh-100">
+    <div class="home-header">
+      <home-navbar />
+    </div>
+
+    <div class="home-container d-flex flex-grow-1 flex-shrink-1">
+      <!-- Contents -->
+      <div class="home-contents flex-grow-1">
+        <router-view />
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import HomeNavbar from './components/HomeNavbar.vue';
 import { useRouter } from 'vue-router';
+import { onBeforeMount } from 'vue';
 
 export default {
   name: 'HomeView',
+  components: {
+    HomeNavbar,
+  },
   setup() {
     let router = useRouter();
     function pageLogin() {
@@ -39,6 +31,12 @@ export default {
     function pageSignup() {
       router.push({ path: '/account/signup' });
     }
+
+    onBeforeMount(() => {
+      // setting
+      document.documentElement.style.setProperty('--size-h-header', '40px');
+      document.documentElement.style.setProperty('--size-w-side', '64px');
+    });
 
     return {
       pageLogin,
@@ -49,14 +47,34 @@ export default {
 </script>
 
 <style scoped>
-.home {
-  margin-top: -10%;
+* {
+  font-family: Koverwatch !important;
 }
-button {
-  border-radius: 5px;
-  color: white;
-  border: transparent;
-  width: 100px;
-  margin: 30px;
+
+.home-view {
+  height: 100vh;
+  width: 100vw;
+
+  /* background: var(--sub-color-b); */
+  overflow-y: auto;
+  overflow-x: auto;
+
+  -ms-overflow-style: none; /* IE, Edge 스크롤 지우는 코드 */
+  scrollbar-width: none; /* Firefox 스크롤 지우는 코드 */
+}
+
+.home-view::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera 스크롤 지우는 코드 */
+}
+
+.home-header {
+  /* background: var(--sub-color-r); */
+  /* visibility: hidden; */
+  min-height: var(--size-h-header);
+}
+
+.home-contents {
+  /* background: var(--sub-color-o); */
+  /* visibility: hidden; */
 }
 </style>
