@@ -88,7 +88,7 @@ public class UserController {
     @Autowired
     JwtTokenProvider jwtTokenProvider;
     
-//    @Value("${profileImg.path}")
+    @Value("${profileImg.path}")
     String profileImgPath;
     
     //Access Token 재발급
