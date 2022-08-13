@@ -312,10 +312,13 @@ export default {
 
         // upload thumbnail
         let input = document.getElementById('roomThumbnail');
-        const formData = new FormData()
-        formData.append('thumbnail', input.files[0]);
-        await rest_thumbnail.addThumbnail(room_num, formData);
+        if(input.files.length > 0) {
+          const formData = new FormData()
+          formData.append('thumbnail', input.files[0]);
+          await rest_thumbnail.addThumbnail(room_num, formData);
+        }
 
+        
         // add hashtag
         console.log("added tags", newRoom.roomHashTags)
         await rest_room.addHashTags(room_num, newRoom.roomHashTags);
