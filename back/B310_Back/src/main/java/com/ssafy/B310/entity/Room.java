@@ -18,7 +18,7 @@ import lombok.ToString;
 @Entity
 @Getter
 @Setter
-@ToString
+//@ToString
 @AllArgsConstructor
 public class Room {
 	@Id
