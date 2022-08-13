@@ -72,8 +72,6 @@
                   방 이름은 1-20글자여야 해요
                 </b-form-invalid-feedback>
               
-                
-
                 <b-form-checkbox v-model="newRoom.roomHasPw">
                   <small><i class="bi bi-lock-fill"></i>&nbsp;비밀방</small>
                 </b-form-checkbox>
@@ -127,7 +125,6 @@
                   </Popper>
                 </div>
                 
-
                 <div class="d-flex mt-3" style="space-between">
                   <b-form-checkbox v-model="newRoom.roomSound">
                     <small class="me-4"><i class="bi bi-mic-mute-fill"></i>&nbsp;마이크 끄기</small>

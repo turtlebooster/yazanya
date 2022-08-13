@@ -1,5 +1,4 @@
 import http from '@/util/common/http-commons';
-import store from '@/store';
 var REST_PATH = '/room';
 
 export default {
@@ -75,10 +74,9 @@ export default {
     });
   },
 
-  leaveRoom: function (room_num) {
+  leaveRoom: function (room_num, user_id) {
     let params = {
-      // TODO : remove store code part later
-      userId: store.getters['getUserID'],
+      userId: user_id,
     };
 
     return new Promise((resolve) => {
