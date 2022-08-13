@@ -46,7 +46,7 @@
                 <!-- `${server_link}/showImg/thumbnail/${room.room.userNum}` -->
                 <b-avatar
 
-                :src="`${server_link}/showImg/thumbnail/${room.room.userNum}`"
+                :src="`${server_link}/showImg/profile/number/${room.room.userNum}`"
                 size="2em"
                 ></b-avatar>
 
