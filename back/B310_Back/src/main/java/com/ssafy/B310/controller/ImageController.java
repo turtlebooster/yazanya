@@ -164,9 +164,6 @@ public class ImageController {
 		// find mime type(png or jpg)
 	    FileNameMap fileNameMap = URLConnection.getFileNameMap();
 	    String mimeType = fileNameMap.getContentTypeFor(img.getName());
-	    
-	    System.out.println("image" + img.getName());
-	    
 
 	    // byte data info
 	    HttpHeaders headers = new HttpHeaders();
