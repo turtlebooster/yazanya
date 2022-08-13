@@ -1,25 +1,26 @@
 <template>
-    <b-button @click="test()">
-        방 정보 출력
-    </b-button>
-    
+    <div class="d-flex flex-column">
+        <b-card class="m-3">
+            <room-pomodoro v-if="isUsingPomodoro"/>
+        </b-card>
+    </div>
 </template>
 
 <script>
+import { computed } from 'vue'
 import { useStore } from 'vuex';
 
-export default {
-    setup() {
-        const store = useStore();
-        
-        function test() {
-            const room_start_time = new Date(store.state.Room.room);
-            console.log(room_start_time);
-            console.log(new Date());
-        }
+import RoomPomodoro from './RoomPomodoro.vue';
 
+
+export default {
+    components: {
+        RoomPomodoro,
+    },
+
+    setup() {
         return {
-            test,
+            isUsingPomodoro : computed(()=> useStore().getters.isUsingPomodoro)
         }
     }
 }

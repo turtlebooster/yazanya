@@ -15,9 +15,8 @@
                 :class="[$root.theme ? 'light' : 'dark']"
                 style="width: 90%"
                 :style="(chat.senderId === myId)? 'margin-start: auto':''">
-                <!-- 내가 보낸 채팅은 ms-auto 추가 -->
                 <template v-if="!(chat.senderId === myId)" #header>
-                    <b-avatar variant="info" :src="chat.profile"></b-avatar>
+                    <b-avatar variant="info" :src="`${server_link}/showImg/profile/nickname/${chat.senderName}`"></b-avatar>
                     <span class="ms-3 fw-bolder align-middle">{{chat.senderName}}</span>
                 </template>
                 <b-card-text>{{chat.message}}</b-card-text>
@@ -86,6 +85,7 @@ export default {
                 store.dispatch('sendChat', {senderId: store.state.Room.user.userId, senderName: store.state.Room.user.userNickname, 
                     profile: store.state.Room.user.profilePictureLink, message: message.value});
                 message.value = '';
+                setScrollBottom();
             }
         }
         return {
