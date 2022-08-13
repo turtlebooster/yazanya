@@ -142,10 +142,18 @@
     </div>
   </div>
 </div>
+
+<!-- <b-modal
+  v-model="isRoomInfoShow"
+  centered
+  ok-disabled
+  hide-footer>
+  모달
+</b-modal> -->
 </template>
 
 <script>
-import { ref, computed, onBeforeMount, onUpdated } from 'vue';
+import { ref, computed, onBeforeMount, onUpdated, onMounted, onBeforeUnmount } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import { useToast } from 'bootstrap-vue-3';
@@ -327,7 +335,7 @@ export default {
       chat_width.value = chat_width.value === 0 ? SIDEBAR_WIDTH : 0;
     }
 
-    // --------------------- room information ----------------------- //
+    // --------------------- room enter and exit ----------------------- //
     let room_number;
     onBeforeMount(() => {
       // ----------- for room name ↓ ------------ //
@@ -389,7 +397,7 @@ export default {
         store.dispatch('joinRoom');
       } catch(error) {
         if(isEntered) {
-          await rest_room.leaveRoom(room_number);
+          await rest_room.leaveRoom(room_number, store.getters.getUserID);
         }
         Swal.fire({
             icon: 'warning',
@@ -405,7 +413,7 @@ export default {
      */
     async function leaveRoom(leaveCase) {
       // REST request
-      await rest_room.leaveRoom(room_number);
+      await rest_room.leaveRoom(room_number, store.getters.getUserID);
 
       // show alert
       switch(leaveCase) {
@@ -463,6 +471,24 @@ export default {
       // router.replace('/main');
       location.replace(window.location.origin + '/main');
     }
+
+    // -------------------- quit event with rest -------------------- //
+    function leaveRoomWithBeacon(event) {
+      if(navigator.sendBeacon(`${process.env.VUE_APP_SERVER}/room/exit/${room_number}/${store.getters.getUserID}`, new FormData())) {
+        return;
+      }
+      event.preventDefault();
+      event.returnValue = '';
+    }
+
+    onMounted(()=> {
+      window.addEventListener('beforeunload', leaveRoomWithBeacon);
+    });
+
+    onBeforeUnmount(()=> {
+      window.removeEventListener('beforeunload', leaveRoomWithBeacon);
+    });
+
 
     // ---------- dynamic video grid for participants ↓ ------------ //
     var nMember = computed(()=> store.getters.getParticipantsCount);
