@@ -1,5 +1,5 @@
 <template>
-  <div class="widget-template">
+  <div>
     <div class="widget-component">
       <div class="widget-component-icon">
         <span><i class="bi bi-trophy-fill"></i></span>
@@ -11,7 +11,7 @@
     </div>
 
     <!-- modal -->
-    <b-modal id="modal-3" centered title="프로필">
+    <b-modal id="modal-planner-rank" centered title="프로필">
       <p class="my-4">대충 배너</p>
     </b-modal>
   </div>
@@ -23,6 +23,7 @@ export default {};
 
 <style scoped>
 .widget-component {
+  position: relative;
   width: 100%;
   height: 100%;
   padding: 16px;

@@ -20,8 +20,16 @@ const routes = [
   {
     path: '/',
     name: 'home',
+    redirect: '/home',
     beforeEnter: beforeAuth(false),
     component: () => import('../views/Home/HomeView.vue'),
+    children: [
+      {
+        path: '/home',
+        name: 'home.content', // default page
+        component: () => import('../views/Home/components/HomeContent.vue'),
+      },
+    ],
   },
   {
     path: '/main',
@@ -64,20 +72,9 @@ const routes = [
     beforeEnter: beforeAuth(false),
     children: [
       {
-        path: 'sign',
-        name: 'account.sign',
-        component: () => import('../views/Account/components/AccountSign.vue'),
-      },
-      {
         path: 'login',
         name: 'account.login',
         component: () => import('../views/Account/components/AccountLogin.vue'),
-      },
-      {
-        path: 'signup',
-        name: 'account.signup',
-        component: () =>
-          import('../views/Account/components/AccountSignup.vue'),
       },
       {
         path: 'findid',

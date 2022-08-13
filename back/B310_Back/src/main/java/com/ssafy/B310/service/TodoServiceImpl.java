@@ -72,6 +72,7 @@ public class TodoServiceImpl implements TodoService {
 			if (todo.getTodoEndTime() != null) t.setTodoEndTime(todo.getTodoEndTime());
 			if (todo.getTodoName() != null) t.setTodoName(todo.getTodoName());
 			if (todo.getTodoStartTime() != null) t.setTodoStartTime(todo.getTodoStartTime());
+			t.setTodoProgress(todo.getTodoProgress());
 			todoRepository.save(t);
 			return 1;
 		}
