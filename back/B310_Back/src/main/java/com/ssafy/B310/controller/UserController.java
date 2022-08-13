@@ -6,20 +6,21 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 
+import com.ssafy.B310.entity.*;
+import com.ssafy.B310.repository.EmailConfirmRepository;
 import com.ssafy.B310.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,11 +37,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.ssafy.B310.annotation.NoJwt;
 import com.ssafy.B310.dto.TokenResponse;
-import com.ssafy.B310.entity.Auth;
-import com.ssafy.B310.entity.Follow;
-import com.ssafy.B310.entity.Hashtag;
-import com.ssafy.B310.entity.User;
-import com.ssafy.B310.entity.UserHashtag;
 import com.ssafy.B310.jwt.JwtTokenProvider;
 import com.ssafy.B310.repository.AuthRepository;
 import com.ssafy.B310.service.FollowService;
@@ -87,6 +83,12 @@ public class UserController {
     
     @Autowired
     JwtTokenProvider jwtTokenProvider;
+
+
+
+    @Autowired
+    EmailConfirmRepository emailConfirmRepository;
+
     
 //    @Value("${profileImg.path}")
     String profileImgPath;
@@ -445,6 +447,31 @@ public class UserController {
     public ResponseEntity<?> followerList (@PathVariable("userId") String userId) throws SQLException {
 
         return new ResponseEntity<List<User>>(followService.followerList(userId), HttpStatus.OK);
+    }
+
+    @NoJwt
+    @GetMapping("/confirmEmail")
+    public ResponseEntity<?> confirmEmail(@RequestParam String email) throws SQLException {
+        int cnt = userService.confirmEmail(email);
+        if (cnt == 1) {
+            return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+        } else if (cnt == 2) {
+            return new ResponseEntity<String >("alreadyRegistEmail", HttpStatus.OK);
+
+        }
+        return new ResponseEntity<String>(FAIL,HttpStatus.OK);
+    }
+
+    @NoJwt
+    @PostMapping("/confirmCode")
+    public ResponseEntity<?> confirmCode (@RequestBody Map<String, String> params) throws SQLException {
+        String code = params.get("code");
+        String email = params.get("email");
+        int cnt = userService.confirmCode(code, email);
+        if (cnt == 1){
+            return new ResponseEntity<String> (SUCCESS, HttpStatus.OK);
+        }
+        return new ResponseEntity<String>(FAIL, HttpStatus.OK);
     }
 }
 

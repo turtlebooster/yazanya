@@ -92,6 +92,10 @@ public class User {
 	@Column(columnDefinition = "varchar(20) default '0,1,2'")
 	private String profilePlannerSet;
 
+	@Column
+	@ColumnDefault("false")
+	private boolean emailConfirm;
+
 	public User(String userId, String userPw, String userName, String userEmail, String userNickname,
 				int userStatusNum) {
 		this.userId = userId;
