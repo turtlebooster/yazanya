@@ -1,31 +1,32 @@
 <template>
-  <nav class="home-navbar">
-    <!-- Main Nav -->
-
+  <nav class="home-navbar light d-flex align-items-center">
     <router-link to="/main">
+      <!-- Main Nav -->
       <img
-        src="@/assets/logo/title_logo_ffffff.png"
+        src="@/assets/logo/title_logo_009e73.png"
         class="align-bottom"
         style="margin-left: 16px; height: var(--size-h-header)"
         alt="logo"
       />
     </router-link>
-
-    <ul>
-      <li><router-link to="/account/sign"> 로그인 </router-link></li>
-      <li><router-link to="/account/sign"> 회원가입 </router-link></li>
-      <li><router-link to="/account/sign"> 로그인 </router-link></li>
-      <li><router-link to="/account/sign"> Contact </router-link></li>
-    </ul>
-
-    <!-- <div class="flex-grow-1"></div>
-
-      <router-link to="/account/login">
-        <b-button pill variant="success" class="button">로그인</b-button>
-      </router-link>
-      <router-link to="/account/signup">
-        <b-button pill variant="outline-danger" class="button">Button</b-button>
-      </router-link> -->
+    <div class="flex-grow-1"></div>
+    <router-link to="/account/login" style="text-decoration: none">
+      <div
+        style="
+          margin-right: 16px;
+          background: var(--theme-color);
+          height: calc(var(--size-h-header) - 12px);
+          width: 100px;
+          border-radius: var(--size-h-header);
+          color: white;
+          text-align: center;
+          line-height: calc(var(--size-h-header) - 12px);
+          font-size: 14pt;
+        "
+      >
+        시작하기
+      </div>
+    </router-link>
   </nav>
 </template>
 
@@ -33,40 +34,12 @@
 export default {};
 </script>
 
-<style scoped>
-* {
-  margin: 0;
-}
-
+<style>
 .home-navbar {
-  height: var(--size-h-header);
-  width: 100vw;
+  z-index: 20;
   position: fixed;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.home-navbar ul {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.home-navbar ul li {
-  list-style: none;
-  margin-right: 16px;
-}
-
-.home-navbar ul li a {
-  padding: 6px 15px;
-  text-decoration: none;
-  color: white;
-  border-radius: 20px;
-}
-
-.home-navbar ul li a:hover {
-  background: #ffffff;
-  color: #2b1055;
+  width: 100vw;
+  border-bottom: 4px solid var(--theme-color);
+  height: var(--size-h-header);
 }
 </style>

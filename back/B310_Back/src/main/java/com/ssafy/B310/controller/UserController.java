@@ -90,7 +90,7 @@ public class UserController {
     EmailConfirmRepository emailConfirmRepository;
 
     
-//    @Value("${profileImg.path}")
+    @Value("${profileImg.path}")
     String profileImgPath;
     
     //Access Token 재발급
