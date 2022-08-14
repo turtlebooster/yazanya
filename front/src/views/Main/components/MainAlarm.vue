@@ -1,6 +1,6 @@
 <template>
   <div class="main-alarm" :class="[$root.theme ? 'light' : 'dark']">
-    <div style="width: 300px; height: 1200px; background: red">
+    <div style="width: 300px; height: 1200px">
       <planner-view />
     </div>
     <div class="container d-flex flex-column align-items-center">

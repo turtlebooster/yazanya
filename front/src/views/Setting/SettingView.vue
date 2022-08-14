@@ -1,5 +1,5 @@
 <template>
-  <div class="setting-view" :class="[$root.theme ? 'light' : 'dark']">
+  <div class="setting-view main">
     <div class="app-header">
       <!-- <header-nav style="display: none" /> -->
       <header-nav />
@@ -29,20 +29,19 @@ export default {
   components: {
     HeaderNav,
     SideBar,
-  },  
-    setup() {
-      
+  },
+  setup() {
     onBeforeMount(() => {
       // setting
       document.documentElement.style.setProperty('--size-h-header', '40px');
       document.documentElement.style.setProperty('--size-w-side', '64px');
     });
-    }
+  },
 };
 </script>
 
 <style>
-  .setting-view {
-    height: 100vh;
-  }
+.setting-view {
+  height: 100vh;
+}
 </style>
