@@ -4,7 +4,7 @@
   >
     <div class="account-sign-background"></div>
 
-    <div class="panel outer">
+    <div class="panel outer main">
       <div class="form sign-in">
         <h2>로그인</h2>
         <label>
@@ -29,7 +29,7 @@
       </div> -->
       </div>
 
-      <div class="sub-panel">
+      <div class="sub-panel main">
         <div class="img">
           <div class="img-text m-up">
             <h2>처음 오셨나요?</h2>
@@ -95,11 +95,15 @@ export default {
 
     async function login() {
       try {
-        let tokens = await rest_user.login({ id: id.value, pw: pw.value })
-        await store.dispatch('login', {'access-token': tokens.access_TOKEN, 'refresh-token': tokens.refresh_TOKEN, id: id.value });
+        let tokens = await rest_user.login({ id: id.value, pw: pw.value });
+        await store.dispatch('login', {
+          'access-token': tokens.access_TOKEN,
+          'refresh-token': tokens.refresh_TOKEN,
+          'id': id.value,
+        });
 
         console.log(store.state.Account.nextRoom);
-        if(store.state.Account.nextRoom != '') {
+        if (store.state.Account.nextRoom != '') {
           // move to room
           router.replace(store.state.Account.nextRoom);
         } else {
@@ -196,7 +200,6 @@ button {
   position: relative;
   width: 900px;
   height: 550px;
-  background: #fff;
   border-radius: 40px;
 }
 
@@ -304,7 +307,6 @@ button {
   width: 900px;
   height: 100%;
   padding-left: 260px;
-  background: #fff;
   -webkit-transition: -webkit-transform 1.2s ease-in-out;
   transition: -webkit-transform 1.2s ease-in-out;
   transition: transform 1.2s ease-in-out;

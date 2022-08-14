@@ -1,5 +1,5 @@
 <template>
-  <div class="home-view d-flex flex-column vh-100">
+  <div class="home-view main d-flex flex-column vh-100">
     <div class="home-header">
       <home-navbar />
     </div>

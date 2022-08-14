@@ -1,5 +1,5 @@
 <template>
-  <div class="main-sidebar" :class="[$root.theme ? 'light' : 'dark']">
+  <div class="main-sidebar main">
     <router-link to="/main/setting/profile">
       <img
         :src="require(`@/assets/avatar/0.jpg`)"
@@ -83,6 +83,11 @@ export default {
 </script>
 
 <style scoped>
+* {
+  font-family: Koverwatch !important;
+  color: var(--light-sub-color);
+}
+
 .main-sidebar {
   z-index: 20;
   position: fixed;
@@ -107,9 +112,14 @@ export default {
   white-space: nowrap;
 }
 
-.main-sidebar:hover {
+.dark .main-sidebar:hover {
   width: calc(var(--size-w-side-hover) - 16px);
-  box-shadow: 8px 0px 8px white;
+  box-shadow: 8px 0px 8px var(--dark-main-color);
+}
+
+.light .main-sidebar:hover {
+  width: calc(var(--size-w-side-hover) - 16px);
+  box-shadow: 8px 0px 8px var(--light-main-color);
 }
 
 .main-sidebar a {
@@ -118,7 +128,6 @@ export default {
   width: 100%;
 
   text-decoration: none;
-  color: var(--light-main-color);
   font-size: 12pt;
 
   margin-bottom: 8px;
@@ -127,12 +136,15 @@ export default {
   border-top-left-radius: calc(var(--size-w-side) / 2);
 }
 
-.main-sidebar a.router-link-exact-active {
+.light .main-sidebar a.router-link-exact-active {
   background: var(--light-main-color);
-  color: var(--theme-color);
 }
 
-.main-sidebar a.router-link-exact-active::before {
+.dark .main-sidebar a.router-link-exact-active {
+  background: var(--dark-main-color);
+}
+
+.light .main-sidebar a.router-link-exact-active::before {
   content: '';
   position: absolute;
   top: -30px;
@@ -145,7 +157,7 @@ export default {
   z-index: -1;
 }
 
-.main-sidebar a.router-link-exact-active::after {
+.light .main-sidebar a.router-link-exact-active::after {
   content: '';
   position: absolute;
   bottom: -30px;
@@ -156,6 +168,36 @@ export default {
   border-radius: 50%;
   box-shadow: 15px -15px 0 var(--light-main-color);
   z-index: -1;
+}
+
+.dark .main-sidebar a.router-link-exact-active::before {
+  content: '';
+  position: absolute;
+  top: -30px;
+  right: 0;
+  width: 30px;
+  height: 30px;
+  background: var(--theme-color);
+  border-radius: 50%;
+  box-shadow: 15px 15px 0 var(--dark-main-color);
+  z-index: -1;
+}
+
+.dark .main-sidebar a.router-link-exact-active::after {
+  content: '';
+  position: absolute;
+  bottom: -30px;
+  right: 0;
+  width: 30px;
+  height: 30px;
+  background: var(--theme-color);
+  border-radius: 50%;
+  box-shadow: 15px -15px 0 var(--dark-main-color);
+  z-index: -1;
+}
+
+.main-sidebar a.router-link-exact-active * {
+  color: var(--theme-color) !important;
 }
 
 .main-sidebar a .icon {
