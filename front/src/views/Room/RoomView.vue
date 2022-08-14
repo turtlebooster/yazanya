@@ -457,12 +457,11 @@ export default {
      * 0: usual, 1: room closed, 2: kicked
      */
     async function leaveRoom(leaveCase) {
-      // REST request
-      await rest_room.leaveRoom(room_number, store.getters.getUserID);
-
       // show alert
       switch(leaveCase) {
         case 0:
+          // REST request
+          await rest_room.leaveRoom(room_number, store.getters.getUserID);
           if(store.getters.isRoomHost) {
             const result = await Swal.fire({
               icon: 'warning',
@@ -475,6 +474,7 @@ export default {
             // delete room
             if(!result.isConfirmed) {
               store.commit('sendClosed');
+              // wait data channel
               try {
                 await rest_room.removeRoom(room_number);
               } catch (error) {
@@ -483,7 +483,7 @@ export default {
                   title: 'error',
                 })
               }
-              // wait data channel
+
               await Swal.fire({
                 icon: 'success',
                 title: '방을 닫는 중입니다',
@@ -502,6 +502,8 @@ export default {
           })
           break;
         case 2:
+          // REST request
+          await rest_room.leaveRoom(room_number, store.getters.getUserID);
           await Swal.fire({
             icon: 'error',
             title:'방에서 강제 퇴장당했습니다',
@@ -511,7 +513,7 @@ export default {
           break;
       }
 
-      // APP Server Socket disconnect
+      // APP Server Socket disconnect (not used cause error)
       // await store.dispatch("leaveRoom");
       // router.replace('/main');
       location.replace(window.location.origin + '/main');
@@ -519,6 +521,10 @@ export default {
 
     // -------------------- quit event with rest -------------------- //
     function leaveRoomWithBeacon(event) {
+      if(store.getters.getLeaveTriggerFlag != 0) {
+        return;
+      }
+      // send exit room request for participation sync
       if(navigator.sendBeacon(`${process.env.VUE_APP_SERVER}/room/exit/${room_number}/${store.getters.getUserID}`, new FormData())) {
         return;
       }
