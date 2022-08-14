@@ -7,9 +7,9 @@
         <CircleProgress
             :percent="percent"
             :viewport="true"
-            size=160
-            border-width=80
-            border-bg-width=80
+            :size="size"
+            :border-width="border"
+            :border-bg-width="border_bg"
             linecap=""
             :fill-color="isStudying?'#52bbbd':'#64b355'"/>
         <b-badge class="px-2" pill variant="light"
@@ -36,6 +36,11 @@ export default {
 
     setup() {
         const store = useStore();
+
+        //UI size
+        let size = ref(160);
+        let border = ref(80);
+        let border_bg = ref(80);
 
         let roomTime = computed(()=> store.getters.getRoomStartTime);
         let nowTime = ref(new Date().getTime());
@@ -113,7 +118,10 @@ export default {
             isStudying,
             hours,
             minutes,
-            seceonds
+            seceonds,
+            size,
+            border,
+            border_bg
         }
     }
 }
