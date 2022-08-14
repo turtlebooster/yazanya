@@ -311,8 +311,8 @@ public class RoomController {
     			  notes = "해쉬태그 번호들을 받아 관련된 방 목록 전달\r\n"
     				+ "hashtagNum=1,2,3,4,5")
     @ApiImplicitParam(name = "hashtagNum", value = "해쉬태그 번호")
-    public ResponseEntity<?> recommendRoom(@RequestParam(value="hashtagNum", required=false, defaultValue="") List<Integer> hashtagNumList) {
-    	return new ResponseEntity<Map<String, Object>>(roomservice.getRecommendHashtagList(hashtagNumList), HttpStatus.OK);
+    public ResponseEntity<?> recommendRoom(@RequestParam(value="hashtagName", required=false, defaultValue="") List<String> hashtagNameList) {
+    	return new ResponseEntity<Map<String, Object>>(roomservice.getRecommendHashtagList(hashtagNameList), HttpStatus.OK);
     }
     
     @PatchMapping("/exit/{roomNum}")

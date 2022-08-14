@@ -21,14 +21,14 @@ import lombok.RequiredArgsConstructor;
 public class RoomQueryRepository {
 	public final JPAQueryFactory queryFactory;
 	
-	public List<Room> findRecommendRoom(List<Integer> hashtagNumList) {
+	public List<Room> findRecommendRoom(List<String> hashtagNameList) {
 		return 	queryFactory
 				.selectFrom(room)
 				.where(room.roomNum.in(
 						JPAExpressions
 							.select(roomHashtag.room.roomNum)
 							.from(roomHashtag)
-							.where(roomHashtag.hashtag.hashtagNum.in(hashtagNumList))))
+							.where(roomHashtag.hashtag.hashtagName.in(hashtagNameList))))
 				.fetch();
 	}
 	

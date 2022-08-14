@@ -137,8 +137,8 @@ public class RoomServiceImpl implements RoomService {
 	}
 
 	// 해쉬태그 추천 목록
-	public Map<String, Object> getRecommendHashtagList(List<Integer> hashtagNumList) {
-		List<Room> roomList = roomQueryRepository.findRecommendRoom(hashtagNumList);
+	public Map<String, Object> getRecommendHashtagList(List<String > hashtagNameList) {
+		List<Room> roomList = roomQueryRepository.findRecommendRoom(hashtagNameList);
 		Map<String, Object> result = new HashMap<>();
 		List<String> tempRoomHsNameList;
 		Map<String, Object> temp;
