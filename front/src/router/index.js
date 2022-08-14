@@ -6,14 +6,20 @@ import store from '../store';
 const beforeAuth = (needAuth) => (from, to, next) => {
   const isLogined = store.getters['isAuthenticated']; // is logined
   if (needAuth && !isLogined) {
+    if (from.path.includes('studyroom')) {
+      // save last room info for using after login
+      store.commit('SET_NEXT_ROOM', from.path);
+    }
+
     // 로그인 필요
     alert('로그인이 필요한 서비스 입니다');
-    next('/account');
+    next('/account/login');
     // 로그인 필요 없음
   } else if (!needAuth && isLogined) {
     next('/main');
+  } else {
+    next();
   }
-  next();
 };
 
 const routes = [

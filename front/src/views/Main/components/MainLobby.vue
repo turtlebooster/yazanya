@@ -72,8 +72,6 @@
                   방 이름은 1-20글자여야 해요
                 </b-form-invalid-feedback>
               
-                
-
                 <b-form-checkbox v-model="newRoom.roomHasPw">
                   <small><i class="bi bi-lock-fill"></i>&nbsp;비밀방</small>
                 </b-form-checkbox>
@@ -127,7 +125,6 @@
                   </Popper>
                 </div>
                 
-
                 <div class="d-flex mt-3" style="space-between">
                   <b-form-checkbox v-model="newRoom.roomSound">
                     <small class="me-4"><i class="bi bi-mic-mute-fill"></i>&nbsp;마이크 끄기</small>
@@ -312,10 +309,13 @@ export default {
 
         // upload thumbnail
         let input = document.getElementById('roomThumbnail');
-        const formData = new FormData()
-        formData.append('thumbnail', input.files[0]);
-        await rest_thumbnail.addThumbnail(room_num, formData);
+        if(input.files.length > 0) {
+          const formData = new FormData()
+          formData.append('thumbnail', input.files[0]);
+          await rest_thumbnail.addThumbnail(room_num, formData);
+        }
 
+        
         // add hashtag
         console.log("added tags", newRoom.roomHashTags)
         await rest_room.addHashTags(room_num, newRoom.roomHashTags);

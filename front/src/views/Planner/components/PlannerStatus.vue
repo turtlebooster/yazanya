@@ -11,8 +11,8 @@
     </div>
 
     <!-- modal -->
-    <b-modal id="modal-planner-status" centered title="프로필">
-      <p class="my-4">대충 배너</p>
+    <b-modal id="modal-planner-status" centered title="목표까지">
+      <p class="my-4">전체 투두 리스트 achivement에서 긁어오면됨</p>
     </b-modal>
   </div>
 </template>

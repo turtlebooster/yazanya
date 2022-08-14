@@ -1,5 +1,5 @@
 <template>
-<div class="d-flex flex-column" style="max-height: 100%; height:100%">
+<div class="d-flex flex-column" style="max-height: 100%; height:100%; font-family: 'Nanum Gothic', sans-serif;">
   <div
     class="room-navbar"
     :class="[$root.theme ? 'light-back-only' : 'dark-back-only']"
@@ -23,7 +23,6 @@
       }"
     >
       <planner-sidebar/>
-
     </div>
 
     <!-- Video Content -->
@@ -39,7 +38,7 @@
         <i
           class="ms-2 mt-1 me-auto"
           :class="[isPrivateRoom ? 'bi bi-lock-fill' : '']"
-          style="font-size: 1.5em; font-style: normal;"
+          style="font-size: 1.5em; font-style: normal; font-weight: bold;"
           >&nbsp;&nbsp;{{ roomName }}
         </i>
 
@@ -55,9 +54,16 @@
           >
             <i class="bi bi-list text-center" style="font-size: 2em"></i>
           </a>
-          <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-            <li><a class="dropdown-item" href="#">방 정보</a></li>
-            <li><a class="dropdown-item" href="#">튜토리얼</a></li>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuLink">
+            <li><a class="dropdown-item" href="#" @click="showRoomInfo"  style="font-size:1.1em">
+              <i class="bi bi-info-circle me-3" style="font-size:1.2em"></i>방 정보</a>
+            </li>
+            <li><a class="dropdown-item" href="#" @click="copyRoomURL" style="font-size:1.2em">
+              <i class="bi bi-share-fill me-3" ></i>방 참여 링크</a>
+            </li>
+            <li><a class="dropdown-item" href="#" @click="showMemberInfo" style="font-size:1.2em">
+              <i class="bi bi-people-fill me-3" ></i>참가자 정보</a>
+            </li>
           </ul>
         </div>
       </div>
@@ -142,10 +148,30 @@
     </div>
   </div>
 </div>
+
+<b-modal
+  v-model="isRoomInfoShow"
+  centered
+  ok-disabled
+  hide-header
+  hide-footer>
+  <room-info-modal/>
+</b-modal>
+
+<b-modal
+  v-model="isMemberInfoShow"
+  centered
+  ok-disabled
+  hide-header
+  hide-footer>
+  <div>
+    모달2
+  </div>
+</b-modal>
 </template>
 
 <script>
-import { ref, computed, onBeforeMount, onUpdated } from 'vue';
+import { ref, computed, onBeforeMount, onUpdated, onMounted, onBeforeUnmount } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import { useToast } from 'bootstrap-vue-3';
@@ -155,6 +181,8 @@ import RoomNav from './components/RoomNavbar.vue';
 import ChatSidebar from './components/RoomChatSidebar.vue';
 import PlannerSidebar from './components/RoomPlannerSidebar.vue';
 
+import RoomInfoModal from './components/RoomInfoModal.vue';
+
 import rest_room from '@/rest/room';
 import rest_user from '@/rest/user';
 
@@ -163,24 +191,49 @@ export default {
     RoomNav,
     ChatSidebar,
     PlannerSidebar,
+    RoomInfoModal,
   },
 
   setup() {
     const router = useRouter();
     const store = useStore();
+
+    // --------------------- Modal control -------------------- //
+    let isRoomInfoShow = ref(false);
+    let isMemberInfoShow = ref(false);
+
+    function showRoomInfo() {
+      isMemberInfoShow.value = false;
+      isRoomInfoShow.value = true;
+    }
+
+    function showMemberInfo() {
+      isRoomInfoShow.value = false;
+      isMemberInfoShow.value = true;
+    }
+
+    // ---------------------- Room Share Link ----------------- //
+    async function copyRoomURL() {
+      try {
+        await navigator.clipboard.writeText(document.URL);
+        showInfoToast('Info','링크를 클립보드에 복사하였습니다');
+      } catch(error) {
+        showWarnToast('Warn', '클립보드 복사 중 문제가 발생하였습니다');
+      }
+    }
     
     // ---------------------- Toast ------------------------- //
     const toast = useToast();
     function showWarnToast(title, message) {
       toast.show(
         { title: title, body: message},
-        { pos: 'bottom-right', variant:'danger'}
+        { pos: 'top-center', variant:'danger'}
       )
     }
     function showInfoToast(title, message) {
       toast.show(
         { title: title, body: message},
-        { pos: 'bottom-right'}
+        { pos: 'top-center', variant: 'info'}
       )
     }
 
@@ -327,7 +380,7 @@ export default {
       chat_width.value = chat_width.value === 0 ? SIDEBAR_WIDTH : 0;
     }
 
-    // --------------------- room information ----------------------- //
+    // --------------------- room enter and exit ----------------------- //
     let room_number;
     onBeforeMount(() => {
       // ----------- for room name ↓ ------------ //
@@ -389,7 +442,7 @@ export default {
         store.dispatch('joinRoom');
       } catch(error) {
         if(isEntered) {
-          await rest_room.leaveRoom(room_number);
+          await rest_room.leaveRoom(room_number, store.getters.getUserID);
         }
         Swal.fire({
             icon: 'warning',
@@ -405,7 +458,7 @@ export default {
      */
     async function leaveRoom(leaveCase) {
       // REST request
-      await rest_room.leaveRoom(room_number);
+      await rest_room.leaveRoom(room_number, store.getters.getUserID);
 
       // show alert
       switch(leaveCase) {
@@ -463,6 +516,24 @@ export default {
       // router.replace('/main');
       location.replace(window.location.origin + '/main');
     }
+
+    // -------------------- quit event with rest -------------------- //
+    function leaveRoomWithBeacon(event) {
+      if(navigator.sendBeacon(`${process.env.VUE_APP_SERVER}/room/exit/${room_number}/${store.getters.getUserID}`, new FormData())) {
+        return;
+      }
+      event.preventDefault();
+      event.returnValue = '';
+    }
+
+    onMounted(()=> {
+      window.addEventListener('beforeunload', leaveRoomWithBeacon);
+    });
+
+    onBeforeUnmount(()=> {
+      window.removeEventListener('beforeunload', leaveRoomWithBeacon);
+    });
+
 
     // ---------- dynamic video grid for participants ↓ ------------ //
     var nMember = computed(()=> store.getters.getParticipantsCount);
@@ -594,12 +665,21 @@ export default {
       userNickname : computed(()=> store.getters.getNickname),
 
       ya_zanya,
+
+      showRoomInfo,
+      showMemberInfo,
+      isRoomInfoShow,
+      isMemberInfoShow,
+
+      copyRoomURL,
     };
   },
 };
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap');
+
 /* for theme */
 .light {
   background-color: #f3f3f3;

@@ -8,6 +8,7 @@ export const Account = {
     },
     isLogined: !!jwt.getAccessToken(),
     userID: jwt.getID(),
+    nextRoom: '',
   },
 
   getters: {
@@ -59,6 +60,10 @@ export const Account = {
     REMOVE_USER_ID: function (state) {
       state.saveID = '';
       jwt.destroyID();
+    },
+
+    SET_NEXT_ROOM: function (state, data) {
+      state.nextRoom = data;
     },
   },
 

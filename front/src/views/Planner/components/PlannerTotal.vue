@@ -1,6 +1,6 @@
 <template>
   <div class="widget planner-total">
-    <div class="widget-component">
+    <div class="widget-component" id="1">
       <div class="widget-component-icon">
         <span><i class="bi bi-trophy-fill"></i></span>
       </div>
@@ -11,8 +11,8 @@
     </div>
 
     <!-- modal -->
-    <b-modal id="modal-planner-status" centered title="프로필">
-      <p class="my-4">대충 배너</p>
+    <b-modal id="modal-planner-total" centered title="총 공부 시간">
+      <p class="my-4">user 에서 가져오면 됨 ㅇㅇ</p>
     </b-modal>
   </div>
 </template>

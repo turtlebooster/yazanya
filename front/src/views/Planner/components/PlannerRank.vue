@@ -11,8 +11,8 @@
     </div>
 
     <!-- modal -->
-    <b-modal id="modal-planner-rank" centered title="프로필">
-      <p class="my-4">대충 배너</p>
+    <b-modal id="modal-planner-rank" centered title="공부 티어">
+      <p class="my-4">대충 v-if 훈장 띄워주면 됨</p>
     </b-modal>
   </div>
 </template>

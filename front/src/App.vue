@@ -1,7 +1,18 @@
 <template>
-  <div id="app" class="d-flex flex-column flex-nowrap">
+  <div
+    id="app"
+    class="d-flex flex-column flex-nowrap"
+    :class="[$root.theme ? 'light' : 'dark']"
+  >
     <router-view />
   </div>
+  <b-container
+    :toast="{ root: true }"
+    fluid="sm"
+    position="position-fixed"
+    style="top: 50px; left: -200px"
+  >
+  </b-container>
 </template>
 
 <script>
@@ -71,13 +82,12 @@ export default {
   /* 다크모드 */
   --dark-main-color: #404040;
   --dark-sub-color: #000000;
+  --dark-reverser-color: #f4f4f4;
 
   /* 라이트모드 */
   --light-main-color: #ffffff;
   --light-sub-color: #f4f4f4;
-
-  --main-color: #ffffff;
-  --sub-color: #f4f4f4;
+  --light-reverse-color: #404040;
 }
 
 * {
@@ -87,15 +97,62 @@ export default {
 }
 
 /* ---- for light and dark mode ---- */
-.light {
-  background: #ffffff;
+.light * {
   color: black;
 }
 
-.dark {
-  background: #404040;
+.dark * {
   color: white;
 }
+
+.light .main {
+  background: #ffffff;
+}
+
+.light .sub {
+  background: #f4f4f4;
+}
+
+.light .reverse {
+  background: #404040;
+}
+
+.dark .main {
+  background: #404040;
+}
+
+.dark .sub {
+  background: #000000;
+}
+
+.dark .reverse {
+  background: #f4f4f4;
+}
+
+.light .main-color {
+  background: #ffffff;
+}
+
+.light .sub-color {
+  background: #f4f4f4;
+}
+
+.light .reverse-color {
+  background: #404040;
+}
+
+.dark .main-color {
+  background: #404040;
+}
+
+.dark .sub-color {
+  background: #000000;
+}
+
+.dark .reverse-color {
+  background: #f4f4f4;
+}
+
 /* --------------------------------- */
 
 .outer {
@@ -120,12 +177,10 @@ export default {
 }
 
 #app {
-  /* background: var(--sub-color-p); */
   height: 100vh;
   width: 100vw;
   max-height: 100vh;
 
-  /* font-family: Jalnan, Avenir, Helvetica, Arial, sans-serif; */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;

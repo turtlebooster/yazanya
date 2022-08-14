@@ -15,7 +15,6 @@ export default {
       http
         .post(REST_PATH, params)
         .then((response) => {
-          console.log(`[createTodo : ${response}]`);
           if (response.data.message === 'success') {
             resolve(response.data);
           } else {
@@ -33,7 +32,6 @@ export default {
       http
         .get(REST_PATH)
         .then((response) => {
-          console.log(response);
           if (response.status === 200) {
             resolve(response.data);
           } else {

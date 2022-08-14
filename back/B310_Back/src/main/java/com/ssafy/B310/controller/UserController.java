@@ -90,7 +90,6 @@ public class UserController {
     @Autowired
     EmailConfirmRepository emailConfirmRepository;
 
-    
     @Value("${profileImg.path}")
     String profileImgPath;
     
