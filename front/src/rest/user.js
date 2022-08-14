@@ -101,4 +101,21 @@ export default {
         });
     });
   },
+
+  getUserList: function () {
+    return new Promise((resolve, reject) => {
+      http
+        .get(REST_PATH)
+        .then((response) => {
+          if (response.data == {}) {
+            reject('유저 리스트 정보를 불러오는데 실패하였습니다');
+          } else {
+            resolve(response.data);
+          }
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
 };

@@ -36,6 +36,39 @@ export const Room = {
     },
 
     // ------------------ Room Info ------------------------ //
+    getRoom(state) {
+      if (state.room == null) return '';
+      return state.room;
+    },
+
+    isUsingPomodoro(state) {
+      if (state.room != null && state.room.roomRestTime > 0) {
+        return true;
+      }
+      return false;
+    },
+
+    getRoomStartTime(state) {
+      if (state.room == null) {
+        return '';
+      }
+      return new Date(state.room.roomStartTime);
+    },
+
+    getRoomStudyTime(state) {
+      if (state.room == null) {
+        return 1;
+      }
+      return state.room.roomStudyTime * 60;
+    },
+
+    getRoomRestTime(state) {
+      if (state.room == null) {
+        return 0;
+      }
+      return state.room.roomRestTime * 60;
+    },
+
     isEntered(state) {
       return state.room == null ? false : true;
     },

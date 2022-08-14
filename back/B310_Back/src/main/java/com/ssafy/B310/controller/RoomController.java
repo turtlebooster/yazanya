@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.ssafy.B310.annotation.NoJwt;
 import com.ssafy.B310.entity.Hashtag;
 import com.ssafy.B310.entity.Room;
 import com.ssafy.B310.entity.RoomForcedExit;
@@ -320,12 +321,25 @@ public class RoomController {
     			  notes = "해당 방의 유저 목록에서 유저 제거\r\n" + 
     			  		"{\r\n" + 
     			  		"  userId : (유저 아이디)\r\n" + 
-    			  		"}")	
+    			  		"}")
     public ResponseEntity<?> exitRoom(@RequestBody Map<String, String> params , @PathVariable int roomNum ) throws SQLException {
         String userId = params.get("userId");
         int cnt = participationservice.exitRoom(userId, roomNum);
 
-        System.out.println(userId);
+        Room room = roomservice.getRoom(roomNum);
+        if(cnt==1)  {
+        	roomservice.decreaseParticipation(room);
+        	return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+        }
+        else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
+    }
+    
+    @NoJwt
+    @PostMapping("/exit/{roomNum}/{userId}")
+    @ApiOperation(value = "유저 퇴장")
+    public ResponseEntity<?> abnormalExitRoom(@PathVariable int roomNum, @PathVariable String userId) throws SQLException {
+        int cnt = participationservice.exitRoom(userId, roomNum);
+
         Room room = roomservice.getRoom(roomNum);
         if(cnt==1)  {
         	roomservice.decreaseParticipation(room);
@@ -341,7 +355,6 @@ public class RoomController {
         List<User> joinedUserList = participationservice.joinedUser(roomNum);
 
         return new ResponseEntity<List<User>>(joinedUserList, HttpStatus.OK);
-
     }
 
 //	@Transactional

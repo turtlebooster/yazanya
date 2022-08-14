@@ -45,19 +45,18 @@ public class ImageController {
     @NoJwt
 	@GetMapping("/profile/number/{userNum}")
 	@ApiOperation(value = "프로필이미지 반환", notes = "userNum 에 해당하는 유저의 프로필 이미지를 반환\r\n아이디가 잘못됐거나 저장된 이미지가 없을 경우 기본 이미지를 넘겨줌")
-	public ResponseEntity<byte[]> showProfile(@PathVariable long userNum) {
+	public ResponseEntity<byte[]> showProfile(@PathVariable int userNum) {
 		String path = profileImgPath;
 		String filepath;
 		String profileImgName;
 		try {
-			profileImgName = userRepository.findById(userNum).get().getProfilePictureLink();
+			profileImgName = userRepository.findByUserNum(userNum).get().getProfilePictureLink();
 			if (profileImgName.equalsIgnoreCase("null") || profileImgName == null || profileImgName.trim().equals(""))
 				throw new Exception("profile is invalid");
 			else
 				filepath = path + "/" + profileImgName; 
 		} catch (Exception e) {
-			e.printStackTrace();
-			filepath = path + "/profile.jpg";
+			filepath = path + "/profile.png";
 		}
 		
 		// get byte data in file
@@ -71,7 +70,6 @@ public class ImageController {
 			fl.read(data);
 			fl.close();
 		} catch (IOException e) {
-			e.printStackTrace();
 			return new ResponseEntity<byte[]>(new byte[0], HttpStatus.NO_CONTENT);
 		}
 		// find mime type(png or jpg)
@@ -99,8 +97,7 @@ public class ImageController {
 			else
 				filepath = path + "/" + profileImgName; 
 		} catch (Exception e) {
-			e.printStackTrace();
-			filepath = path + "/profile.jpg";
+			filepath = path + "/profile.png";
 		}
 		
 		// get byte data in file
@@ -143,7 +140,6 @@ public class ImageController {
 			else 
 				filepath = path + "/" + thumbnailName;
 		} catch (Exception e) {
-			e.printStackTrace();
 			filepath = path + "/study.jpg";
 		}
 		
@@ -158,7 +154,6 @@ public class ImageController {
 			fl.read(data);
 			fl.close();
 		} catch (IOException e) {
-			e.printStackTrace();
 			return new ResponseEntity<byte[]>(new byte[0], HttpStatus.NO_CONTENT);
 		}
 		// find mime type(png or jpg)

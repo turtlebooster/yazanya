@@ -33,7 +33,6 @@
                         &nbsp;{{room.room.roomParticipationCount}} / {{room.room.roomCapacity}}</i>
                     </b-button>
 
-                    <!--  -->
                     <img :src="`${server_link}/showImg/thumbnail/${room.room.roomNum}`">
                 </div>
             </div>
@@ -46,7 +45,7 @@
                 <!-- `${server_link}/showImg/thumbnail/${room.room.userNum}` -->
                 <b-avatar
 
-                :src="`${server_link}/showImg/thumbnail/${room.room.userNum}`"
+                :src="`${server_link}/showImg/profile/number/${room.room.userNum}`"
                 size="2em"
                 ></b-avatar>
 
@@ -72,13 +71,8 @@
 
 <script>
 import { ref } from 'vue';
-// import VueLoadImage from 'vue-load-image'
 
 export default {
-    // components: {
-    //     'vue-load-image': VueLoadImage
-    // },
-
     props: {
         room: {
             type : Object,

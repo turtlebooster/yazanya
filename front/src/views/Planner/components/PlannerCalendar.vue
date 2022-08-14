@@ -1,19 +1,21 @@
 <template>
-  <div class="calendar d-flex flex-column">
-    <!-- <button
+  <div class="widget calendar d-flex flex-column">
+    <div class="widget-component">
+      <!-- <button
       type="button"
       class="btn-close align-self-end"
       aria-label="Close"
     ></button> -->
 
-    <div>
-      <!-- <v-calendar is-expanded/> -->
-      <v-date-picker is-expanded mode="date" v-model="date" /> 
+      <div>
+        <!-- <v-calendar is-expanded/> -->
+        <v-date-picker is-expanded mode="date" v-model="date" />
+      </div>
     </div>
 
     <!-- modal -->
     <b-modal id="modal-0" centered title="달력">
-      <p class="my-4">{{date}}</p>
+      <p class="my-4">{{ date }}</p>
       <!-- <v-calendar is-expanded /> -->
       <!-- <v-date-picker v-model="date" />  -->
     </b-modal>
@@ -25,10 +27,10 @@ import { ref } from 'vue';
 export default {
   setup() {
     let date = ref();
-    
-    return { date }
-  }
-}
+
+    return { date };
+  },
+};
 </script>
 
 <style></style>
