@@ -23,7 +23,7 @@ public interface RoomService {
 
 	
 	//해쉬태그 추천으로 목록 불러오기
-	Map<String, Object> getRecommendHashtagList(List<Integer> hashtagNumList);
+	Map<String, Object> getRecommendHashtagList(List<String> hashtagNameList);
 	
 	//유저 입장할 때 participation 1 증가
 	public void addParticipation(Room room) throws SQLException;
