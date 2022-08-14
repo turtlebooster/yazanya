@@ -31,6 +31,17 @@ public class RoomQueryRepository {
 							.where(roomHashtag.hashtag.hashtagNum.in(hashtagNumList))))
 				.fetch();
 	}
+
+	public List<Room> searchRoom(List<String> hashtagNameList) {
+		return 	queryFactory
+				.selectFrom(room)
+				.where(room.roomNum.in(
+						JPAExpressions
+								.select(roomHashtag.room.roomNum)
+								.from(roomHashtag)
+								.where(roomHashtag.hashtag.hashtagName.in(hashtagNameList))))
+				.fetch();
+	}
 	
 	//participation count + 1
 	@Transactional

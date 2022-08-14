@@ -144,6 +144,7 @@ public class RoomServiceImpl implements RoomService {
 	}
 
 	// 해쉬태그 추천 목록
+
 	public Map<String, Object> getRecommendHashtagList(List<Integer> hashtagNumList) {
 		List<Room> roomList = roomQueryRepository.findRecommendRoom(hashtagNumList);
 		Map<String, Object> result = new HashMap<>();
@@ -172,6 +173,38 @@ public class RoomServiceImpl implements RoomService {
 			lst.add(temp);
 		}
 		
+		result.put("roomList",lst);
+		return result;
+	}
+
+	//해쉬태그이름으로 검색
+	@Override
+	public Map<String, Object> searchRecommendHashtagList(List<String > hashtagNameList) {
+		List<Room> roomList = roomQueryRepository.searchRoom(hashtagNameList);
+		Map<String, Object> result = new HashMap<>();
+		List<String> tempRoomHsNameList;
+		Map<String, Object> temp;
+		List<Map<String, Object>> lst = new ArrayList<>();
+
+		if (roomList.size() == 0) {
+			roomList = roomRepository.findAll();
+		}
+
+		for (Room r : roomList) {
+			int roomN = r.getRoomNum();
+			temp = new HashMap<>();
+			temp.put("room", r);
+			List<RoomHashtag> roomHs = roomHashtagRepository.findByRoom(r);
+
+			tempRoomHsNameList = new ArrayList<>();
+			for (RoomHashtag roomH : roomHs) {
+				String roomHsName = roomH.getHashtag().getHashtagName();
+				tempRoomHsNameList.add(roomHsName);
+			}
+			temp.put("roomHash", tempRoomHsNameList);
+			lst.add(temp);
+		}
+
 		result.put("roomList",lst);
 		return result;
 	}
