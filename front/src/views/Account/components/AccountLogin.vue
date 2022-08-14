@@ -97,8 +97,7 @@ export default {
       try {
         let tokens = await rest_user.login({ id: id.value, pw: pw.value })
         await store.dispatch('login', {'access-token': tokens.access_TOKEN, 'refresh-token': tokens.refresh_TOKEN, id: id.value });
-
-        console.log(store.state.Account.nextRoom);
+        
         if(store.state.Account.nextRoom != '') {
           // move to room
           router.replace(store.state.Account.nextRoom);
