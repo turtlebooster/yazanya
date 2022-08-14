@@ -58,8 +58,8 @@
             <li><a class="dropdown-item" href="#" @click="showRoomInfo"  style="font-size:1.1em">
               <i class="bi bi-info-circle me-3" style="font-size:1.2em"></i>방 정보</a>
             </li>
-            <li><a class="dropdown-item" href="#" @click="showMemberInfo" style="font-size:1.2em">
-              <i class="bi bi-share-fill me-3" ></i>참여 링크</a>
+            <li><a class="dropdown-item" href="#" @click="copyRoomURL" style="font-size:1.2em">
+              <i class="bi bi-share-fill me-3" ></i>방 참여 링크</a>
             </li>
             <li><a class="dropdown-item" href="#" @click="showMemberInfo" style="font-size:1.2em">
               <i class="bi bi-people-fill me-3" ></i>참가자 정보</a>
@@ -211,19 +211,29 @@ export default {
       isRoomInfoShow.value = false;
       isMemberInfoShow.value = true;
     }
+
+    // ---------------------- Room Share Link ----------------- //
+    async function copyRoomURL() {
+      try {
+        await navigator.clipboard.writeText(document.URL);
+        showInfoToast('Info','링크를 클립보드에 복사하였습니다');
+      } catch(error) {
+        showWarnToast('Warn', '클립보드 복사 중 문제가 발생하였습니다');
+      }
+    }
     
     // ---------------------- Toast ------------------------- //
     const toast = useToast();
     function showWarnToast(title, message) {
       toast.show(
         { title: title, body: message},
-        { pos: 'bottom-right', variant:'danger'}
+        { pos: 'top-center', variant:'danger'}
       )
     }
     function showInfoToast(title, message) {
       toast.show(
         { title: title, body: message},
-        { pos: 'bottom-right'}
+        { pos: 'top-center', variant: 'info'}
       )
     }
 
@@ -660,6 +670,8 @@ export default {
       showMemberInfo,
       isRoomInfoShow,
       isMemberInfoShow,
+
+      copyRoomURL,
     };
   },
 };
