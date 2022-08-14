@@ -326,7 +326,6 @@ public class RoomController {
         String userId = params.get("userId");
         int cnt = participationservice.exitRoom(userId, roomNum);
 
-        System.out.println(userId);
         Room room = roomservice.getRoom(roomNum);
         if(cnt==1)  {
         	roomservice.decreaseParticipation(room);
@@ -338,10 +337,9 @@ public class RoomController {
     @NoJwt
     @PostMapping("/exit/{roomNum}/{userId}")
     @ApiOperation(value = "유저 퇴장")
-    public ResponseEntity<?> exitRoom(@PathVariable int roomNum, @PathVariable String userId) throws SQLException {
+    public ResponseEntity<?> abnormalExitRoom(@PathVariable int roomNum, @PathVariable String userId) throws SQLException {
         int cnt = participationservice.exitRoom(userId, roomNum);
 
-        System.out.println(userId);
         Room room = roomservice.getRoom(roomNum);
         if(cnt==1)  {
         	roomservice.decreaseParticipation(room);
@@ -357,7 +355,6 @@ public class RoomController {
         List<User> joinedUserList = participationservice.joinedUser(roomNum);
 
         return new ResponseEntity<List<User>>(joinedUserList, HttpStatus.OK);
-
     }
 
 //	@Transactional
