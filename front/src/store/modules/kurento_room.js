@@ -36,6 +36,11 @@ export const Room = {
     },
 
     // ------------------ Room Info ------------------------ //
+    getRoom(state) {
+      if (state.room == null) return '';
+      return state.room;
+    },
+
     isUsingPomodoro(state) {
       if (state.room != null && state.room.roomRestTime > 0) {
         return true;

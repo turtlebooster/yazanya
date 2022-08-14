@@ -1,5 +1,5 @@
 <template>
-<div class="d-flex flex-column" style="max-height: 100%; height:100%">
+<div class="d-flex flex-column" style="max-height: 100%; height:100%; font-family: 'Nanum Gothic', sans-serif;">
   <div
     class="room-navbar"
     :class="[$root.theme ? 'light-back-only' : 'dark-back-only']"
@@ -23,7 +23,6 @@
       }"
     >
       <planner-sidebar/>
-
     </div>
 
     <!-- Video Content -->
@@ -39,7 +38,7 @@
         <i
           class="ms-2 mt-1 me-auto"
           :class="[isPrivateRoom ? 'bi bi-lock-fill' : '']"
-          style="font-size: 1.5em; font-style: normal;"
+          style="font-size: 1.5em; font-style: normal; font-weight: bold;"
           >&nbsp;&nbsp;{{ roomName }}
         </i>
 
@@ -55,9 +54,16 @@
           >
             <i class="bi bi-list text-center" style="font-size: 2em"></i>
           </a>
-          <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-            <li><a class="dropdown-item" href="#">방 정보</a></li>
-            <li><a class="dropdown-item" href="#">튜토리얼</a></li>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuLink">
+            <li><a class="dropdown-item" href="#" @click="showRoomInfo"  style="font-size:1.1em">
+              <i class="bi bi-info-circle me-3" style="font-size:1.2em"></i>방 정보</a>
+            </li>
+            <li><a class="dropdown-item" href="#" @click="showMemberInfo" style="font-size:1.2em">
+              <i class="bi bi-share-fill me-3" ></i>참여 링크</a>
+            </li>
+            <li><a class="dropdown-item" href="#" @click="showMemberInfo" style="font-size:1.2em">
+              <i class="bi bi-people-fill me-3" ></i>참가자 정보</a>
+            </li>
           </ul>
         </div>
       </div>
@@ -143,13 +149,25 @@
   </div>
 </div>
 
-<!-- <b-modal
+<b-modal
   v-model="isRoomInfoShow"
   centered
   ok-disabled
+  hide-header
   hide-footer>
-  모달
-</b-modal> -->
+  <room-info-modal/>
+</b-modal>
+
+<b-modal
+  v-model="isMemberInfoShow"
+  centered
+  ok-disabled
+  hide-header
+  hide-footer>
+  <div>
+    모달2
+  </div>
+</b-modal>
 </template>
 
 <script>
@@ -163,6 +181,8 @@ import RoomNav from './components/RoomNavbar.vue';
 import ChatSidebar from './components/RoomChatSidebar.vue';
 import PlannerSidebar from './components/RoomPlannerSidebar.vue';
 
+import RoomInfoModal from './components/RoomInfoModal.vue';
+
 import rest_room from '@/rest/room';
 import rest_user from '@/rest/user';
 
@@ -171,11 +191,26 @@ export default {
     RoomNav,
     ChatSidebar,
     PlannerSidebar,
+    RoomInfoModal,
   },
 
   setup() {
     const router = useRouter();
     const store = useStore();
+
+    // --------------------- Modal control -------------------- //
+    let isRoomInfoShow = ref(false);
+    let isMemberInfoShow = ref(false);
+
+    function showRoomInfo() {
+      isMemberInfoShow.value = false;
+      isRoomInfoShow.value = true;
+    }
+
+    function showMemberInfo() {
+      isRoomInfoShow.value = false;
+      isMemberInfoShow.value = true;
+    }
     
     // ---------------------- Toast ------------------------- //
     const toast = useToast();
@@ -620,12 +655,19 @@ export default {
       userNickname : computed(()=> store.getters.getNickname),
 
       ya_zanya,
+
+      showRoomInfo,
+      showMemberInfo,
+      isRoomInfoShow,
+      isMemberInfoShow,
     };
   },
 };
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap');
+
 /* for theme */
 .light {
   background-color: #f3f3f3;
