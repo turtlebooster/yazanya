@@ -114,10 +114,17 @@ public class RoomServiceImpl implements RoomService {
 				if (r.getUserNum() != (userNum)) {
 					return 0;
 				}
-
+				
 				manager.setUserRoomCount(manager.getUserRoomCount() - 1);
 				userRepository.save(manager);
-				roomRepository.deleteById(roomNum);
+				
+				// 방 삭제 전 유저 내보내기
+				for (Participation participation : r.getParticipationList()) {
+					String userId = participation.getUser().getUserId();
+					participationService.exitRoom(userId, roomNum);				
+				}
+				
+				roomRepository.deleteById(roomNum);				
 				roomForceExitRepository.deleteByRoom_roomNum(roomNum);
 				return 1;
 			}
