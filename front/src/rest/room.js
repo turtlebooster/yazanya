@@ -200,4 +200,21 @@ export default {
         });
     });
   },
+
+  getParticipants: function (room_num) {
+    return new Promise((resolve, reject) => {
+      http
+        .get(REST_PATH + '/join/' + room_num)
+        .then((response) => {
+          if (response.data.length == 0) {
+            reject('참여자 정보 불러오기 실패');
+          } else {
+            resolve(response.data);
+          }
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
 };

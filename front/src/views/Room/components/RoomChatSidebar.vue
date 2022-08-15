@@ -88,6 +88,10 @@ export default {
                 setScrollBottom();
             }
         }
+
+        // for profile link
+        const server_link = ref(process.env.VUE_APP_SERVER);
+
         return {
             chatting_plane,
             isScrolled,
@@ -99,6 +103,8 @@ export default {
             myId : computed(()=> store.getters.getUserID),
             isActive : computed(()=> props.isSidebarOn === 0 ? false: true),
             nMember : computed(()=> store.getters.getParticipantsCount),
+            
+            server_link,
         }
     }
 };
