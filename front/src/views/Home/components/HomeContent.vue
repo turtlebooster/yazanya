@@ -45,7 +45,7 @@
                 style="height: 100px; object-fit: cover"
                 alt="logo"
               />
-              <div>디자인 수정 중 입니다.</div>
+              <div>야자냐에 오신 것을 환영합니다.</div>
               <router-link to="/account/login" style="text-decoration: none">
                 <div
                   style="
@@ -76,7 +76,7 @@
                 style="height: 100px; object-fit: cover"
                 alt="logo"
               />
-              <div>디자인 수정 중 입니다.</div>
+              <div>야자냐에 오신 것을 환영합니다.</div>
               <router-link to="/account/login" style="text-decoration: none">
                 <div
                   style="
@@ -94,21 +94,6 @@
                   시작하기
                 </div>
               </router-link>
-            </div>
-          </div>
-
-          <div class="carousel-item">
-            <img
-              src="@/assets/thumbnail/2.jpg"
-              class="d-block w-100"
-              style="height: 90vh; object-fit: cover"
-              alt="..."
-            />
-            <div class="carousel-caption d-none d-md-block">
-              <h5>Third slide label</h5>
-              <p>
-                Some representative placeholder content for the third slide.
-              </p>
             </div>
           </div>
         </div>
@@ -163,7 +148,7 @@ export default {};
 
 <style>
 .carousel-item-2 {
-  background-image: url('@/assets/thumbnail/0.jpg');
+  background-image: url('@/assets/thumbnail/1.jpg');
   background-size: cover;
 }
 </style>
