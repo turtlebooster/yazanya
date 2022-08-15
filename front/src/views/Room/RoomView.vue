@@ -164,9 +164,7 @@
   ok-disabled
   hide-header
   hide-footer>
-  <div>
-    모달2
-  </div>
+  <room-participants-modal :participants="participantsInfo"/>
 </b-modal>
 </template>
 
@@ -182,6 +180,7 @@ import ChatSidebar from './components/RoomChatSidebar.vue';
 import PlannerSidebar from './components/RoomPlannerSidebar.vue';
 
 import RoomInfoModal from './components/RoomInfoModal.vue';
+import RoomParticipantsModal from './components/RoomParticipantsModal.vue';
 
 import rest_room from '@/rest/room';
 import rest_user from '@/rest/user';
@@ -192,6 +191,7 @@ export default {
     ChatSidebar,
     PlannerSidebar,
     RoomInfoModal,
+    RoomParticipantsModal,
   },
 
   setup() {
@@ -207,7 +207,11 @@ export default {
       isRoomInfoShow.value = true;
     }
 
-    function showMemberInfo() {
+    let participantsInfo = ref([]);
+    async function showMemberInfo() {
+      // get info from server
+      participantsInfo.value = await rest_room.getParticipants(room_number);
+
       isRoomInfoShow.value = false;
       isMemberInfoShow.value = true;
     }
@@ -678,6 +682,7 @@ export default {
       isMemberInfoShow,
 
       copyRoomURL,
+      participantsInfo,
     };
   },
 };
@@ -685,6 +690,18 @@ export default {
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap');
+
+/* popper style */
+:root {
+  --popper-theme-background-color: #ffffff;
+  --popper-theme-background-color-hover: #ffffff;
+  --popper-theme-text-color: #333333;
+  --popper-theme-border-width: 0px;
+  --popper-theme-border-style: solid;
+  --popper-theme-border-radius: 6px;
+  --popper-theme-padding: 12px 20px 12px 20px;
+  --popper-theme-box-shadow: 0 6px 30px -6px rgba(0, 0, 0, 0.4);       
+}
 
 /* for theme */
 .light {

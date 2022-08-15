@@ -54,11 +54,12 @@
                 style="margin-left: 8px"
                 >
                 <!-- title -->
-                <div style="font-size: 16pt; font-weight: bold">
+                <div style="font-size: 24pt; font-weight: bold">
                     {{ room.room.roomName }}
                 </div>
                 </div>
             </div>
+            <!-- HashTags -->
             <div class="d-flex mt-1"
                 style="min-height:20px;">
                 <b-badge v-for="(hash, index) in room.roomHash" :key="index" pill
