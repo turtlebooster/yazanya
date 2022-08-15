@@ -120,6 +120,10 @@
       </div>
     </div>
 
+    <div class="spacer"></div>
+    <div class="liner"></div>
+    <div class="spacer"></div>
+
     <div class="column-2 main-color d-flex">
       <div class="flex-grow-1" style="height: 400px">
         { 대충 모두와 함께 공부하는 야자냐 너무 좋다는 내용 + 캐치프레이즈 }

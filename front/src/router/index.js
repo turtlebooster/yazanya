@@ -40,7 +40,7 @@ const routes = [
   {
     path: '/main',
     component: () => import('../views/Main/MainView.vue'),
-    // beforeEnter: beforeAuth(true),
+    beforeEnter: beforeAuth(true),
     children: [
       {
         path: '',
@@ -54,8 +54,8 @@ const routes = [
           import('../views/Setting/components/SettingProfile.vue'),
       },
       {
-        path: 'Planner',
-        name: 'main.Planner',
+        path: 'planner',
+        name: 'main.planner',
         component: () => import('../views/Planner/PlannerView.vue'),
       },
       {
@@ -83,16 +83,9 @@ const routes = [
         component: () => import('../views/Account/components/AccountLogin.vue'),
       },
       {
-        path: 'findid',
-        name: 'account.findid',
-        component: () =>
-          import('../views/Account/components/AccountFindid.vue'),
-      },
-      {
-        path: 'findpw',
-        name: 'account.findpw',
-        component: () =>
-          import('../views/Account/components/AccountFindpw.vue'),
+        path: 'find',
+        name: 'account.find',
+        component: () => import('../views/Account/components/AccountFind.vue'),
       },
     ],
   },

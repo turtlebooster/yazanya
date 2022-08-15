@@ -2,7 +2,7 @@
   <div class="account-view">
     <!-- Navbar -->
     <div class="main-header">
-      <main-navbar />
+      <account-navbar />
     </div>
 
     <router-view />
@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import MainNavbar from '@/views/Main/components/MainNavbar.vue';
+import AccountNavbar from '@/views/Account/components/AccountNavbar.vue';
 import { onBeforeMount } from 'vue';
 
 export default {
@@ -24,12 +24,15 @@ export default {
   },
 
   components: {
-    MainNavbar,
+    AccountNavbar,
   },
 };
 </script>
 
 <style scoped>
+* {
+  font-family: NanumSquareRoundB;
+}
 .main-header {
   /* background: var(--sub-color-r); */
   min-height: var(--size-h-header);

@@ -1,12 +1,12 @@
 <template>
   <div class="main-sidebar main">
     <img
-        :src="require(`@/assets/avatar/0.jpg`)"
-        alt="profile"
-        class="image icon"
-        style="padding: 8px; object-fit: cover; border-radius: 50%"
-        @click="router.to('/main/setting/profile')"
-      />
+      :src="require(`@/assets/avatar/0.jpg`)"
+      alt="profile"
+      class="image icon"
+      style="padding: 8px; object-fit: cover; border-radius: 50%"
+      @click="router.to('/main/setting/profile')"
+    />
 
     <router-link to="/main">
       <span class="icon"><i class="bi bi-house"></i></span>
@@ -87,8 +87,9 @@ export default {
 
 <style scoped>
 * {
-  font-family: Koverwatch !important;
-  color: var(--light-sub-color);
+  /* font-family: Koverwatch !important; */
+  font-family: NanumSquareRoundEB;
+  color: var(--light-main-color);
 }
 
 .main-sidebar {
