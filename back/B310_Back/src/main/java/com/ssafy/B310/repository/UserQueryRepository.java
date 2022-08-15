@@ -28,20 +28,18 @@ public class UserQueryRepository {
 		
 		double grade = (list.indexOf(userR) / (double)totalUser) * 100;
 		
-		if(grade <= 5) {
+		if(grade <= 10) {
 			userR.setProfileRank("마스터");
-		} else if(grade <= 15) {
+		} else if(grade <= 20) {
 			userR.setProfileRank("다이아몬드");
-		} else if(grade <= 25) {
+		} else if(grade <= 30) {
 			userR.setProfileRank("플래티넘");
-		} else if(grade <= 35) {
+		} else if(grade <= 40) {
 			userR.setProfileRank("골드");
-		} else if(grade <= 45) {
+		} else if(grade <= 50) {
 			userR.setProfileRank("실버");
-		} else if(grade <= 60) {
-			userR.setProfileRank("브론즈");
 		} else {
-			userR.setProfileRank("아이언");
+			userR.setProfileRank("브론즈");
 		}
 		
 		userRepo.save(userR);
