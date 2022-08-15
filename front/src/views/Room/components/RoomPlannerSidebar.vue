@@ -1,30 +1,35 @@
 <template>
-    <div class="d-flex flex-column">
-        <b-card class="m-3">
-            <room-pomodoro v-if="isUsingPomodoro"/>
-        </b-card>
-    </div>
-    <study-planner/>
+  <div class="d-flex flex-column">
+    <b-card class="m-3">
+      <room-pomodoro v-if="isUsingPomodoro" />
+    </b-card>
+  </div>
+  <study-planner ref="studyPlanner" />
 </template>
 
 <script>
-import { computed } from 'vue'
+import { ref, computed } from 'vue';
 import { useStore } from 'vuex';
 
 import RoomPomodoro from './RoomPomodoro.vue';
 import StudyPlanner from '../../Planner/PlannerView.vue';
 
-
 export default {
-    components: {
-        RoomPomodoro,
-        StudyPlanner,
-    },
+  components: {
+    RoomPomodoro,
+    StudyPlanner,
+  },
 
-    setup() {
-        return {
-            isUsingPomodoro : computed(()=> useStore().getters.isUsingPomodoro)
-        }
+  setup() {
+    const studyPlanner = ref(null);
+    async function plannerResize() {
+      await studyPlanner.value.masonryLayout();
     }
-}
+    return {
+      studyPlanner,
+      plannerResize,
+      isUsingPomodoro: computed(() => useStore().getters.isUsingPomodoro),
+    };
+  },
+};
 </script>

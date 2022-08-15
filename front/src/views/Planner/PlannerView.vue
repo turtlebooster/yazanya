@@ -103,8 +103,12 @@ export default {
     }
 
     function masonryLayout() {
+      console.log('작동은함');
       const masonryContainer = document.querySelector('.masonry-container');
-      if (!masonryContainer) return;
+      if (!masonryContainer) {
+        console.log('업는데?');
+        return;
+      }
 
       const masonryContainerStyle = getComputedStyle(masonryContainer);
 
@@ -185,7 +189,13 @@ export default {
       init();
     });
 
-    return { componentList, componentNameList, widgetList, profile };
+    return {
+      componentList,
+      componentNameList,
+      widgetList,
+      profile,
+      masonryLayout,
+    };
   },
 };
 </script>

@@ -43,9 +43,9 @@ export default {
 
 <style scoped>
 * {
-  font-family: Koverwatch !important;
+  /* font-family: Koverwatch !important; */
+  font-family: NanumSquareRoundEB;
 }
-
 .main-view {
   height: 100vh;
   width: 100vw;
