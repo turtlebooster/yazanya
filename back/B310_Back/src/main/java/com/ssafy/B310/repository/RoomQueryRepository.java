@@ -74,4 +74,12 @@ public class RoomQueryRepository {
 			.set(room.roomThumbnail, filename)
 			.execute();
 	}
+	
+	public List<Room> searchRoomByName(String search) {
+		return 	queryFactory
+				.selectFrom(room)
+				.where(room.roomName.contains(search))
+				.fetch();
+	}
+
 }
