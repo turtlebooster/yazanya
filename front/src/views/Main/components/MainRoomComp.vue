@@ -54,7 +54,16 @@
             >
           </b-button>
 
-          <img :src="`${server_link}/showImg/thumbnail/${room.room.roomNum}`" />
+          <div v-if="room.room.userNum == userNum">
+            <h4 class="m-0">
+            <b-badge pill variant="light"
+            :style="'position: absolute; opacity: 0.7; top: 0.2em;' + (room.room.roomHasPw?'left: 2.5em;':'left: 0.5em;')">
+              Host
+            </b-badge>
+            </h4>
+          </div>
+
+          <img :src="`${server_link}/showImg/thumbnail/${room.room.roomNum}`" style="max-width: 100%; height: auto;"/>
         </div>
       </div>
 
@@ -92,6 +101,7 @@
 </template>
 
 <script>
+import { useStore } from 'vuex';
 import { ref } from 'vue';
 
 export default {
@@ -106,6 +116,7 @@ export default {
     const server_link = ref(process.env.VUE_APP_SERVER);
     return {
       server_link,
+      userNum : useStore().getters.getUserNum,
     };
   },
 };
