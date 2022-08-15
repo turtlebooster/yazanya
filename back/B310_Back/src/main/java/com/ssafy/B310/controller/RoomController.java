@@ -317,7 +317,7 @@ public class RoomController {
     	return new ResponseEntity<Map<String, Object>>(roomservice.getRecommendHashtagList(hashtagNumList), HttpStatus.OK);
     }
 
-	@GetMapping("/search")
+	@GetMapping("/searchByTags")
 	@ApiOperation(value = "추천 방 리스트",
 			notes = "해쉬태그 번호들을 받아 관련된 방 목록 전달\r\n"
 					+ "hashtagNum=1,2,3,4,5")

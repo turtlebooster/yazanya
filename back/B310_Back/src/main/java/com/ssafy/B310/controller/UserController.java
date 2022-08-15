@@ -327,19 +327,22 @@ public class UserController {
     @ApiImplicitParam(name = "userId", value = "유저 아이디")
     public ResponseEntity<?> getUserHashtagList(@RequestParam String userId) throws SQLException {
         User user = userService.myPage(userId);
-
+        
+        System.out.println(user.getUserId());
         List<UserHashtag> list = userHashtagService.getUserHashtag(user);
 
         if (list.isEmpty()) {
-            System.out.println("해당 user는 해쉬태그가 없음");
+        	// list result in none
             return new ResponseEntity<String>(FAIL, HttpStatus.OK);
         }
 
+        // convert to string list
+        List<String> ret_list = new ArrayList<>();
         for (UserHashtag uht : list) {
-            System.out.println(uht.getHashtag().getHashtagName());
+            ret_list.add(uht.getHashtag().getHashtagName());
         }
-
-        return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+        
+        return new ResponseEntity<List<String>>(ret_list, HttpStatus.OK);
     }
 
     // 유저 프로필 페이지

@@ -137,13 +137,25 @@ export default {
       email: payload.email,
       code: payload.code,
     };
-    console.log(params);
     return new Promise((resolve, reject) => {
       http
         .post(REST_PATH + '/confirmCode', params)
         .then((response) => {
-          console.log(response.data);
           resolve(response.data);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
+
+  getHashTags: function (user_id) {
+    return new Promise((resolve, reject) => {
+      http
+        .get(REST_PATH + '/hashtag?userId=' + user_id.trim())
+        .then((response) => {
+          if (response.data === 'fail') resolve([]);
+          else resolve(response.data);
         })
         .catch((error) => {
           reject(error);
