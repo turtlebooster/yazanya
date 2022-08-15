@@ -86,10 +86,9 @@ public class ParticipationServiceImpl implements ParticipationService {
 
         List<User> participationListRes = new ArrayList<>();
 
-        for (Participation user : participationList) {
-            User u = user.getUser();
-            participationListRes.add(new User(u.getUserId(), u.getUserNickname()));
-        }
+        for (Participation user : participationList) 
+            participationListRes.add(user.getUser());
+        
         return participationListRes;
     }
 }
