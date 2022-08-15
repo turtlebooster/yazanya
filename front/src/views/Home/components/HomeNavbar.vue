@@ -1,5 +1,5 @@
 <template>
-  <nav class="home-navbar main d-flex align-items-center">
+  <nav class="home-navbar main-color d-flex align-items-center">
     <router-link to="/main">
       <!-- Main Nav -->
       <img
