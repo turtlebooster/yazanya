@@ -1,36 +1,39 @@
 <template>
   <div class="main-sidebar main">
-    <router-link to="/main/setting/profile">
-      <img
+    <img
         :src="require(`@/assets/avatar/0.jpg`)"
         alt="profile"
         class="image icon"
         style="padding: 8px; object-fit: cover; border-radius: 50%"
+        @click="router.to('/main/setting/profile')"
       />
-      <span class="title">{{ userName }}</span>
-    </router-link>
 
     <router-link to="/main">
       <span class="icon"><i class="bi bi-house"></i></span>
-      <span class="title">로비</span>
+      <span class="title">메인</span>
+    </router-link>
+
+    <router-link to="/main/setting/profile">
+      <span class="icon"><i class="bi bi-people"></i></span>
+      <span class="title">내 프로필</span>
     </router-link>
 
     <router-link to="/main/planner">
       <span class="icon"
         ><i class="bi bi-layout-text-sidebar-reverse"></i
       ></span>
-      <span class="title">플래너</span>
+      <span class="title">내 플래너</span>
     </router-link>
 
-    <router-link to="/main/friends">
+    <!-- <router-link to="/main/friends">
       <span class="icon"><i class="bi bi-people"></i></span>
       <span class="title">친구 목록</span>
-    </router-link>
+    </router-link> -->
 
-    <router-link to="/main/alarm">
+    <!-- <router-link to="/main/alarm">
       <span class="icon"><i class="bi bi-bell"></i></span>
       <span class="title">알림</span>
-    </router-link>
+    </router-link> -->
 
     <div style="flex-grow: 1"></div>
 
