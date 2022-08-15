@@ -278,9 +278,9 @@ public class RoomServiceImpl implements RoomService {
 		List<String> tempRoomHsNameList;
 		Map<String, Object> temp;
 		List<Map<String, Object>> lst = new ArrayList<>();
-		if (roomList.size() == 0) {
-			roomList = roomRepository.findAll();
-		}
+//		if (roomList.size() == 0) {
+////			roomList = roomRepository.findAll();
+//		}
 
 		for (Room r : roomList) {
 			int roomN = r.getRoomNum();
