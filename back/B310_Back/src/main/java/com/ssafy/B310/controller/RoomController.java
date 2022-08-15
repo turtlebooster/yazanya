@@ -443,4 +443,19 @@ public class RoomController {
 		else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
 	}
     
+	@GetMapping("/searchByName/{search}")
+    @ApiOperation(value = "방 검색", notes = "특정 단어를 포함하는 방 리스트 전달")
+    public ResponseEntity<?> searchRoom(@PathVariable String search) throws Exception {
+		System.out.println("여기?");
+    	List<Room> roomList = roomservice.searchRoomByName(search);
+    	
+    	if(!roomList.isEmpty()) {
+    		
+    		return new ResponseEntity<List<Room>>(roomList, HttpStatus.OK);
+    	}
+    	else
+    		System.out.println("비었나?");
+    		return new ResponseEntity<String>(FAIL, HttpStatus.OK); 
+    }
+
 }
