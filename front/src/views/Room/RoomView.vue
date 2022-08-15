@@ -164,9 +164,7 @@
   ok-disabled
   hide-header
   hide-footer>
-  <div>
-    모달2
-  </div>
+  <room-participants-modal :participants="participantsInfo"/>
 </b-modal>
 </template>
 
@@ -182,6 +180,7 @@ import ChatSidebar from './components/RoomChatSidebar.vue';
 import PlannerSidebar from './components/RoomPlannerSidebar.vue';
 
 import RoomInfoModal from './components/RoomInfoModal.vue';
+import RoomParticipantsModal from './components/RoomParticipantsModal.vue';
 
 import rest_room from '@/rest/room';
 import rest_user from '@/rest/user';
@@ -192,6 +191,7 @@ export default {
     ChatSidebar,
     PlannerSidebar,
     RoomInfoModal,
+    RoomParticipantsModal,
   },
 
   setup() {
@@ -207,7 +207,11 @@ export default {
       isRoomInfoShow.value = true;
     }
 
-    function showMemberInfo() {
+    let participantsInfo = ref([]);
+    async function showMemberInfo() {
+      // get info from server
+      participantsInfo.value = await rest_room.getParticipants(room_number);
+
       isRoomInfoShow.value = false;
       isMemberInfoShow.value = true;
     }
@@ -457,12 +461,11 @@ export default {
      * 0: usual, 1: room closed, 2: kicked
      */
     async function leaveRoom(leaveCase) {
-      // REST request
-      await rest_room.leaveRoom(room_number, store.getters.getUserID);
-
       // show alert
       switch(leaveCase) {
         case 0:
+          // REST request
+          await rest_room.leaveRoom(room_number, store.getters.getUserID);
           if(store.getters.isRoomHost) {
             const result = await Swal.fire({
               icon: 'warning',
@@ -475,6 +478,7 @@ export default {
             // delete room
             if(!result.isConfirmed) {
               store.commit('sendClosed');
+              // wait data channel
               try {
                 await rest_room.removeRoom(room_number);
               } catch (error) {
@@ -483,7 +487,7 @@ export default {
                   title: 'error',
                 })
               }
-              // wait data channel
+
               await Swal.fire({
                 icon: 'success',
                 title: '방을 닫는 중입니다',
@@ -502,6 +506,8 @@ export default {
           })
           break;
         case 2:
+          // REST request
+          await rest_room.leaveRoom(room_number, store.getters.getUserID);
           await Swal.fire({
             icon: 'error',
             title:'방에서 강제 퇴장당했습니다',
@@ -511,7 +517,7 @@ export default {
           break;
       }
 
-      // APP Server Socket disconnect
+      // APP Server Socket disconnect (not used cause error)
       // await store.dispatch("leaveRoom");
       // router.replace('/main');
       location.replace(window.location.origin + '/main');
@@ -519,6 +525,10 @@ export default {
 
     // -------------------- quit event with rest -------------------- //
     function leaveRoomWithBeacon(event) {
+      if(store.getters.getLeaveTriggerFlag != 0) {
+        return;
+      }
+      // send exit room request for participation sync
       if(navigator.sendBeacon(`${process.env.VUE_APP_SERVER}/room/exit/${room_number}/${store.getters.getUserID}`, new FormData())) {
         return;
       }
@@ -672,6 +682,7 @@ export default {
       isMemberInfoShow,
 
       copyRoomURL,
+      participantsInfo,
     };
   },
 };
@@ -679,6 +690,18 @@ export default {
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap');
+
+/* popper style */
+:root {
+  --popper-theme-background-color: #ffffff;
+  --popper-theme-background-color-hover: #ffffff;
+  --popper-theme-text-color: #333333;
+  --popper-theme-border-width: 0px;
+  --popper-theme-border-style: solid;
+  --popper-theme-border-radius: 6px;
+  --popper-theme-padding: 12px 20px 12px 20px;
+  --popper-theme-box-shadow: 0 6px 30px -6px rgba(0, 0, 0, 0.4);       
+}
 
 /* for theme */
 .light {

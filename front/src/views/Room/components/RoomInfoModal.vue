@@ -20,6 +20,12 @@
       <div class="d-flex mt-1">
         <h6 style="width:190px">캠화면 사용 여부</h6> <h6>&nbsp;:&nbsp;&nbsp;</h6> <h6>{{room.roomVideo?'예':'아니오'}}</h6>
       </div>
+      <div v-if="room.roomRestTime > 0" class="d-flex mt-1">
+        <h6 style="width:190px">공부 시간</h6> <h6>&nbsp;:&nbsp;&nbsp;</h6> <h6>{{room.roomStudyTime + '분'}}</h6>
+      </div>
+      <div v-if="room.roomRestTime > 0" class="d-flex mt-1">
+        <h6 style="width:190px">쉬는 시간</h6> <h6>&nbsp;:&nbsp;&nbsp;</h6> <h6>{{room.roomRestTime + '분'}}</h6>
+      </div>
     </div>
   </b-card>
 </template>
