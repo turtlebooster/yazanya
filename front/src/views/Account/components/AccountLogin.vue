@@ -235,7 +235,10 @@ export default {
           'id': id.value,
         });
 
-        console.log(store.state.Account.nextRoom);
+        // get user number
+        let userData = await rest_user.getProfile(id.value);
+        store.commit('SET_USER_NUM', userData.userNum);
+
         if (store.state.Account.nextRoom != '') {
           // move to room
           router.replace(store.state.Account.nextRoom);
