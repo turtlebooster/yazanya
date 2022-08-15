@@ -46,7 +46,7 @@ http.interceptors.response.use(
         },
       });
       if (response.data === 'fail') {
-        return Promise.reject('로그인이 해제되었습니다');
+        return Promise.reject('로그인이 해제되었습니다\n 다시 로그인해주세요');
       }
       const accessToken = response.data;
       store.commit('SET_ACCESS_TOKEN', accessToken);

@@ -1,6 +1,7 @@
 const ACCESS_TOKEN_KEY = 'id_access_token_b310';
 const REFRESH_TOKEN_KEY = 'id_refresh_token_b310';
 const ID_KEY = 'id_b310';
+const NO_KEY = 'id_no_b310';
 
 export const getAccessToken = () => {
   return window.sessionStorage.getItem(ACCESS_TOKEN_KEY);
@@ -39,6 +40,18 @@ export const destroyID = () => {
   return window.sessionStorage.removeItem(ID_KEY);
 };
 
+export const getNum = () => {
+  return window.sessionStorage.getItem(NO_KEY);
+};
+
+export const saveNum = (num) => {
+  return window.sessionStorage.setItem(NO_KEY, num);
+};
+
+export const destroyNum = () => {
+  return window.sessionStorage.removeItem(NO_KEY);
+};
+
 export default {
   getAccessToken,
   saveAccessToken,
@@ -49,4 +62,7 @@ export default {
   getID,
   saveID,
   destroyID,
+  getNum,
+  saveNum,
+  destroyNum,
 };
