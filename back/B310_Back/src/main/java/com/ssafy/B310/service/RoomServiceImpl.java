@@ -270,5 +270,11 @@ public class RoomServiceImpl implements RoomService {
 			} else return 0;
 		} else return 0;
 	}
+	
+	@Override
+	public List<Room> searchRoomByName(String search) throws SQLException {
+		return roomQueryRepository.searchRoomByName(search);
+	}
+
 }
 
