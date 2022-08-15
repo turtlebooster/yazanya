@@ -272,9 +272,33 @@ public class RoomServiceImpl implements RoomService {
 	}
 	
 	@Override
-	public List<Room> searchRoomByName(String search) throws SQLException {
-		return roomQueryRepository.searchRoomByName(search);
-	}
+	public Map<String, Object> searchRoomByName(String search) throws SQLException {
+		List<Room> roomList = roomQueryRepository.searchRoomByName(search);
+		Map<String, Object> result = new HashMap<>();
+		List<String> tempRoomHsNameList;
+		Map<String, Object> temp;
+		List<Map<String, Object>> lst = new ArrayList<>();
+		if (roomList.size() == 0) {
+			roomList = roomRepository.findAll();
+		}
 
+		for (Room r : roomList) {
+			int roomN = r.getRoomNum();
+			temp = new HashMap<>();
+			temp.put("room", r);
+			List<RoomHashtag> roomHs = roomHashtagRepository.findByRoom(r);
+
+			tempRoomHsNameList = new ArrayList<>();
+			for (RoomHashtag roomH : roomHs) {
+				String roomHsName = roomH.getHashtag().getHashtagName();
+				tempRoomHsNameList.add(roomHsName);
+			}
+			temp.put("roomHash", tempRoomHsNameList);
+			lst.add(temp);
+		}
+
+		result.put("roomList",lst);
+		return result;
+	}
 }
 

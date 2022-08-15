@@ -45,6 +45,6 @@ public interface RoomService {
 	public int forcedExitUser(String reqUserId,String userNickname, int roomNum) throws SQLException;
 	
 	//방 검색
-	public List<Room> searchRoomByName(String search) throws SQLException;
+	public Map<String,Object> searchRoomByName(String search) throws SQLException;
 
 }
