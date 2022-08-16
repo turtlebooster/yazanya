@@ -162,12 +162,16 @@
       </h2>
     </div>
 
+    <div class="spacer"></div>
+    <div class="liner"></div>
+    <div class="spacer"></div>
+
     <div class="column-4 d-flex" style="width: 90%">
       <h2
         class="flex-grow-1 flex-shrink-1 text-align-center"
         style="color: var(--theme-color); text-align: center"
       >
-        어떤 기기로든 접속하세요
+        온라인 스터디에 플래너가 함께합니다.
       </h2>
       <img
         src="@/assets/homeImg/2.png"
