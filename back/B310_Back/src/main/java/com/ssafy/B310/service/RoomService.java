@@ -23,7 +23,7 @@ public interface RoomService {
 
 	
 	//해쉬태그 추천으로 목록 불러오기
-	Map<String, Object> getRecommendHashtagList(List<Integer> hashtagNumList);
+	Map<String, Object> getRecommendHashtagList(List<String > hashtagNameList);
 
 	//해쉬태그 이름으로 방 검색
 	public Map<String, Object> searchHashtagList(List<String> hashtagNameList);
