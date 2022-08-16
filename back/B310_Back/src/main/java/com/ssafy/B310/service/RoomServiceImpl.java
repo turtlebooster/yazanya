@@ -73,7 +73,6 @@ public class RoomServiceImpl implements RoomService {
 			r.setRoomSound(room.isRoomSound());
 			r.setRoomHasPw(room.isRoomHasPw());
 			r.setRoomPw(hashPw(room.getRoomPw()));
-//			r.setRoomThumbnail(room.getRoomThumbnail());
 			r.setRoomActive(room.isRoomActive());
 
 			roomRepository.save(r);
@@ -145,14 +144,12 @@ public class RoomServiceImpl implements RoomService {
 
 	// 해쉬태그 추천 목록
 
-	public Map<String, Object> getRecommendHashtagList(List<Integer> hashtagNumList) {
-		List<Room> roomList = roomQueryRepository.findRecommendRoom(hashtagNumList);
+	public Map<String, Object> getRecommendHashtagList(List<String> hashtagNameList) {
+		List<Room> roomList = roomQueryRepository.searchRoomByHashtag(hashtagNameList);
 		Map<String, Object> result = new HashMap<>();
 		List<String> tempRoomHsNameList;
 		Map<String, Object> temp;
 		List<Map<String, Object>> lst = new ArrayList<>();
-
-//		result.put("roomList", roomList);
 
 		if (roomList.size() == 0) {
 			roomList = roomRepository.findAll();
@@ -182,16 +179,11 @@ public class RoomServiceImpl implements RoomService {
 	public Map<String, Object> searchHashtagList(List<String> hashtagNameList) {
 		
 		List<Room> roomList = roomQueryRepository.searchRoomByHashtag(hashtagNameList);
-//		return roomQueryRepository.searchRoomByHashtag(hashtagNameList);
 		
 		Map<String, Object> result = new HashMap<>();
 		List<String> tempRoomHsNameList;
 		Map<String, Object> temp;
 		List<Map<String, Object>> lst = new ArrayList<>();
-
-		if (roomList.size() == 0) {
-			roomList = roomRepository.findAll();
-		}
 
 		for (Room r : roomList) {
 			int roomN = r.getRoomNum();
@@ -229,7 +221,6 @@ public class RoomServiceImpl implements RoomService {
 	public boolean enableJoinRoom(int roomNum) throws SQLException {
 		Room room = roomRepository.findById(roomNum).get();
 
-//		if (room.isRoomActive() && (room.getRoomCapacity() > room.getRoomParticipationCount()))
 		if (room.getRoomCapacity() > room.getRoomParticipationCount())
 
 			return true;
@@ -267,7 +258,6 @@ public class RoomServiceImpl implements RoomService {
 				RoomForcedExit forcedExitUser = new RoomForcedExit(userNickname, room);
 				roomForceExitRepository.save(forcedExitUser);
 				String userId = oUser.get().getUserId();
-//				participationService.exitRoom(userId, room.getRoomNum());
 
 				return 1;
 			} else return 0;
@@ -281,9 +271,6 @@ public class RoomServiceImpl implements RoomService {
 		List<String> tempRoomHsNameList;
 		Map<String, Object> temp;
 		List<Map<String, Object>> lst = new ArrayList<>();
-//		if (roomList.size() == 0) {
-////			roomList = roomRepository.findAll();
-//		}
 
 		for (Room r : roomList) {
 			int roomN = r.getRoomNum();
