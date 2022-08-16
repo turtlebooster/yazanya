@@ -35,7 +35,7 @@
             <b-form-textarea
                 v-model="message"
                 :class="[$root.theme ? 'light' : 'dark']"
-                placeholder="채팅을 입력해주세요"
+                placeholder="채팅을 입력해"
                 rows="3"
                 max-rows="3"
                 maxlength="100"
@@ -46,6 +46,7 @@
             </b-form-textarea>
             <b-button
                 class="ms-2 fw-bold"
+                style="font-size:0.8em"
                 @click="sendMessage()"
                 >Submit</b-button>
         </div>
