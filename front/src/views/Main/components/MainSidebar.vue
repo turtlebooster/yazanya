@@ -87,7 +87,6 @@ export default {
 
 <style scoped>
 * {
-  /* font-family: Koverwatch !important; */
   font-family: NanumSquareRoundEB;
   color: var(--light-main-color);
 }
