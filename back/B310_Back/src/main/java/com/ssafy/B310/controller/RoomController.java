@@ -272,7 +272,7 @@ public class RoomController {
     	@ApiImplicitParam(name = "roomNum", value = "방 번호", dataType = "int"),
     })
     public ResponseEntity<?> addHashtag(@RequestParam int roomNum, @RequestBody List<String> hashtagNameList) throws SQLException {
-    	int cnt = hashtagService.addHashtagList(hashtagNameList, roomNum);
+    	int cnt = hashtagService.addRoomHashtagList(hashtagNameList, roomNum);
 		if(cnt == 1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 	    else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
     }
