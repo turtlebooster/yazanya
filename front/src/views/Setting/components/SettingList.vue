@@ -76,9 +76,8 @@ export default {
 
 <style scoped>
   * {
-    font-family: Koverwatch !important;
-    font-size: 1.5rem;
-  }
+  font-family: NanumSquareRoundEB;
+}
   .row {
     margin-bottom: 8px;
   }

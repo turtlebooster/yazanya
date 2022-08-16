@@ -41,7 +41,7 @@
           @hidden="resetModal"
           @ok="handleOk"
         >
-          <form ref="form" @submit.stop.prevent="handleSubmit">
+          <form ref="form" @submit="handleSubmit">
             <b-form-group
               :label="dateFormat(date)"
               label-for="name-input"
@@ -82,7 +82,7 @@ export default {
         day = day >= 10 ? day : '0' + day;
 
         return date.getFullYear() + '-' + month + '-' + day;
-}
+    }
     
     let name = ''
     let nameState = ref(null)
@@ -94,25 +94,25 @@ export default {
         return valid
     }
 
-    function resetModal() {
-      this.name.value = ''
-      this.nameState.value = null
+    const resetModal = () => {
+      name = ''
+      nameState.value = null
     }
 
-    function handleOk(bvModalEvent) {
+    const handleOk = (bvModalEvent) => {
       // Prevent modal from closing
       bvModalEvent.preventDefault()
       // Trigger submit handler
       this.handleSubmit()
     }
     
-    function handleSubmit() {
+    const handleSubmit = () => {
       // Exit when the form isn't valid
       if (!this.checkFormValidity()) {
         return
       }
       // Push the name to submitted names
-      this.scheduleList.push(this.name.value)
+      this.scheduleList.push(this.name)
       // Hide the modal manually
       this.$nextTick(() => {
         this.$bvModal.hide('modal-prevent-closing')
