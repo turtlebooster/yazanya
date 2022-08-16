@@ -19,6 +19,7 @@ import com.ssafy.B310.entity.User;
 import com.ssafy.B310.repository.UserRepository;
 
 import javax.mail.internet.MimeMessage;
+import javax.transaction.Transactional;
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -69,7 +70,6 @@ public class UserServiceImpl implements UserService{
 		// 없을 경우
 		//비밀번호 암호화
 		String hashPw = hashPw(user.getUserPw());
-		System.out.println(hashPw);
 		user.setUserPw(hashPw);
 		user.setProfilePictureLink("profile.png");
 		userRepository.save(user);
@@ -102,10 +102,13 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
+	@Transactional
 	public int deleteUser(User user) throws SQLException {
 		Optional<User> oUser = userRepository.findByUserId(user.getUserId());
-		
+
 		if (oUser.isPresent()) {
+			String email = oUser.get().getUserEmail();
+			emailConfirmRepository.deleteByEmail(email);
 			userRepository.delete(oUser.get());
 			return 1;
 		}

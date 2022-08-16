@@ -12,4 +12,7 @@ public interface EmailConfirmRepository extends JpaRepository<EmailConfirm, Inte
     Optional<EmailConfirm> findByConfirmCode(String confirmCode);
 
     Optional<EmailConfirm> findByEmail(String email);
+
+    void deleteByEmail(String email);
+
 }
