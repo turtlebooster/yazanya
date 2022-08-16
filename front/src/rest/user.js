@@ -162,4 +162,60 @@ export default {
         });
     });
   },
+
+  quitAccount: function (user_id) {
+    return new Promise((resolve, reject) => {
+      http
+        .patch(REST_PATH + '/quit/' + user_id)
+        .then((response) => {
+          if (response.data === 'fail') resolve('회원 탈퇴에 실패했습니다');
+          else resolve(true);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
+
+  checkNicknameDuplicated(user_nickname) {
+    return new Promise((resolve, reject) => {
+      http
+        .get(REST_PATH + '/checkNick?userNickname=' + user_nickname)
+        .then((response) => {
+          if (response.data === 'fail') reject('중복된 닉네임입니다');
+          else resolve(true);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
+
+  modifyProfile(userData) {
+    return new Promise((resolve, reject) => {
+      http
+        .put(REST_PATH + '/update', userData)
+        .then((response) => {
+          if (response.data === 'fail') reject('회원정보 수정 실패');
+          else resolve(true);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
+
+  addUserHashTags(user_id, tags) {
+    return new Promise((resolve, reject) => {
+      http
+        .post(REST_PATH + '/hashtag?userId=' + user_id, tags)
+        .then((response) => {
+          if (response.data === 'fail') reject('해쉬 태그 추가 실패');
+          else resolve(true);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
 };

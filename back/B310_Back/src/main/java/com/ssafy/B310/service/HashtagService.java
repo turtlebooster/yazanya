@@ -3,7 +3,7 @@ package com.ssafy.B310.service;
 import java.util.List;
 
 import com.ssafy.B310.entity.Hashtag;
-import com.ssafy.B310.entity.Room;
+import com.ssafy.B310.entity.User;
 
 public interface HashtagService {
 	// 해쉬태그 생성
@@ -17,5 +17,7 @@ public interface HashtagService {
 	
 	Hashtag getHashtag(int hashtagNum);
 	// 방 대한 해쉬태그 리스트로 추가
-	int addHashtagList(List<String> hashtagNameList, int roomNum);
+	int addRoomHashtagList(List<String> hashtagNameList, int roomNum);
+	// 유저에 대한 해쉬태그 리스트로 추가
+	int addUserHashtagList(List<String> hashtagNameList, String userId);
 }

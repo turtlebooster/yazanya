@@ -1,11 +1,10 @@
 <template>
   <div class="main-sidebar main">
     <img
-      :src="require(`@/assets/avatar/0.jpg`)"
+      :src="`${server_link}/showImg/profile/number/${userNum}`"
       alt="profile"
       class="image icon"
       style="padding: 8px; object-fit: cover; border-radius: 50%"
-      @click="router.to('/main/setting/profile')"
     />
 
     <router-link to="/main">
@@ -80,7 +79,9 @@ export default {
       init();
     });
 
-    return { userNum, userName, logout };
+    // for profile image
+    const server_link = ref(process.env.VUE_APP_SERVER);
+    return { userNum, userName, logout, server_link };
   },
 };
 </script>

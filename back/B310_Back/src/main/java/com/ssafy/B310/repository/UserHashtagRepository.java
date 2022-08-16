@@ -17,4 +17,5 @@ public interface UserHashtagRepository extends JpaRepository<UserHashtag, String
 	
 	@Transactional
 	int deleteByUserAndHashtag(User user, Hashtag hashtag);
+	int countByUserAndHashtag(User user, Hashtag hashtag);
 }

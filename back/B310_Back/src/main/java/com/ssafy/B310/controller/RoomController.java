@@ -272,7 +272,7 @@ public class RoomController {
     	@ApiImplicitParam(name = "roomNum", value = "방 번호", dataType = "int"),
     })
     public ResponseEntity<?> addHashtag(@RequestParam int roomNum, @RequestBody List<String> hashtagNameList) throws SQLException {
-    	int cnt = hashtagService.addHashtagList(hashtagNameList, roomNum);
+    	int cnt = hashtagService.addRoomHashtagList(hashtagNameList, roomNum);
 		if(cnt == 1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 	    else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
     }
@@ -313,16 +313,17 @@ public class RoomController {
     			  notes = "해쉬태그 번호들을 받아 관련된 방 목록 전달\r\n"
     				+ "hashtagNum=1,2,3,4,5")
     @ApiImplicitParam(name = "hashtagNum", value = "해쉬태그 번호")
-    public ResponseEntity<?> recommendRoom(@RequestParam(value="hashtagNum", required=false, defaultValue="") List<Integer> hashtagNumList) {
-    	return new ResponseEntity<Map<String, Object>>(roomservice.getRecommendHashtagList(hashtagNumList), HttpStatus.OK);
-    }
+	public ResponseEntity<?> recommendRoom(@RequestParam(value="hashtagName", required=false, defaultValue="") List<String> hashtagNameList) {
+		return new ResponseEntity<Map<String, Object>>(roomservice.getRecommendHashtagList(hashtagNameList), HttpStatus.OK);
+	}
+
 
 	@GetMapping("/searchByTags")
 	@ApiOperation(value = "해쉬태그로 방 검색",
 			notes = "해쉬태그 이름을 받아서 검색\r\n")
 	@ApiImplicitParam(name = "hashtagName", value = "해쉬태그 이름")
 	public ResponseEntity<?> searchRoom(@RequestParam(value="hashtagName", required=false, defaultValue="") List<String> hashtagNameList) {
-		return new ResponseEntity<List<Room>>(roomservice.searchHashtagList(hashtagNameList), HttpStatus.OK);
+		return new ResponseEntity<Map<String, Object>>(roomservice.searchHashtagList(hashtagNameList), HttpStatus.OK);
 	}
     
     @PatchMapping("/exit/{roomNum}")
