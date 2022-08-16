@@ -166,7 +166,7 @@
     <div class="liner"></div>
     <div class="spacer"></div>
 
-    <div class="column-4 d-flex" style="width: 90%">
+    <div class="column-4 d-flex outter" style="width: 90%">
       <h2
         class="flex-grow-1 flex-shrink-1 text-align-center"
         style="color: var(--theme-color); text-align: center"

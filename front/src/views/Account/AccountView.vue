@@ -1,11 +1,13 @@
 <template>
-  <div class="account-view">
+  <div class="account-view d-flex flex-column">
     <!-- Navbar -->
-    <div class="main-header">
+    <div class="account-header">
       <account-navbar />
     </div>
 
-    <router-view />
+    <div class="flex-grow-1">
+      <router-view />
+    </div>
   </div>
 </template>
 
@@ -33,7 +35,7 @@ export default {
 * {
   font-family: NanumSquareRoundB;
 }
-.main-header {
+.account-header {
   /* background: var(--sub-color-r); */
   min-height: var(--size-h-header);
 }
