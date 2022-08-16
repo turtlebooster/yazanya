@@ -28,4 +28,31 @@ export default {
         });
     });
   },
+
+  // add profile image
+  addProfileImage: function (user_id, formdata) {
+    return new Promise((resolve, reject) => {
+      axios
+        .post(
+          process.env.VUE_APP_SERVER + '/user/profile/' + user_id,
+          formdata,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+              'access-token': jwt.getAccessToken(),
+            },
+          }
+        )
+        .then((response) => {
+          if (response.data === 'success') {
+            resolve(true);
+          } else {
+            reject('프로필 사진 설정 중 문제가 발생하였습니다');
+          }
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
 };

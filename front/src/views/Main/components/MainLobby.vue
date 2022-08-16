@@ -321,7 +321,7 @@ import {
 } from 'vue';
 import Swal from 'sweetalert2';
 import rest_room from '@/rest/room';
-import rest_thumbnail from '@/rest/thumbnail';
+import rest_img from '@/rest/image';
 import rest_user from '@/rest/user';
 import MainRoomComp from './MainRoomComp.vue';
 import { useRouter } from 'vue-router';
@@ -533,7 +533,7 @@ export default {
         if (input.files.length > 0) {
           const formData = new FormData();
           formData.append('thumbnail', input.files[0]);
-          await rest_thumbnail.addThumbnail(room_num, formData);
+          await rest_img.addThumbnail(room_num, formData);
         }
 
         // add hashtag
