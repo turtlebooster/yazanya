@@ -25,7 +25,7 @@ export default {
         : JSON.parse(localStorage.getItem('theme'));
     let sidebar = JSON.parse(
       localStorage.getItem('sidebar') == undefined
-        ? true
+        ? false
         : JSON.parse(localStorage.getItem('sidebar'))
     );
     sidebar
