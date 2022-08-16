@@ -8,7 +8,7 @@
         <span class="mx-2 fw-bolder align-middle"><h4>{{member.userNickname}}</h4></span>
 
         <Popper arrow>
-          <img :src="`@/assets/img/rank/${member.profileRank}.png`" style="height:24px; width:20px;"/>
+          <img :src="require(`@/assets/img/rank/${member.profileRank}.png`)" style="height:24px; width:20px;"/>
           <template #content>
             지금까지 한 공부 시간에 따른 랭크에요
           </template>

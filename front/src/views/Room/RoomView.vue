@@ -1,12 +1,5 @@
 <template>
-  <div
-    class="d-flex flex-column"
-    style="
-      max-height: 100%;
-      height: 100%;
-      font-family: 'Nanum Gothic', sans-serif;
-    "
-  >
+  <div class="d-flex flex-column" style="height: 100vh; width: 100vw">
     <div
       class="room-navbar"
       :class="[$root.theme ? 'light-back-only' : 'dark-back-only']"
@@ -16,8 +9,9 @@
     </div>
 
     <div
-      class="room-main d-flex justify-content-center flex-grow-1 w-100"
+      class="room-main d-flex justify-content-center"
       :class="[$root.theme ? 'light' : 'dark']"
+      style="height: 92%"
     >
       <!-- Planner Side bar -->
       <div
@@ -25,8 +19,9 @@
         :style="{
           width: planner_width + '%',
           minWidth: planner_width != 0 ? 200 + 'px' : 0,
-          overflow: 'hidden',
-          height: '98%',
+          overflow: 'auto',
+          height: '95%',
+          maxHeight: '95%',
         }"
       >
         <planner-sidebar ref="plannerSidebar" />
@@ -36,7 +31,7 @@
       <div
         class="video-plane d-flex flex-column w-100 m-2 rounded-3 shadow"
         :class="[$root.theme ? 'light' : 'dark']"
-        style="overflow: hidden; height = 95%"
+        style="overflow: hidden; height: 95%"
       >
         <div
           class="video-room-info-topbar d-flex justify-content-center mb-auto p-1 pt-2"

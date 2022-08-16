@@ -184,8 +184,8 @@ public class UserController {
         int cnt = userService.checkId(userId);
 
         // 상태 코드만으로 구분
-        if (cnt != 0) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK); //중복된 것이므로 사용 불가능
-        else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
+        if (cnt != 0) return new ResponseEntity<String>(FAIL, HttpStatus.OK); //중복된 것이므로 사용 불가능
+        else return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
     }
 
     // 닉네임 중복체크
@@ -197,8 +197,8 @@ public class UserController {
         int cnt = userService.checkNickname(userNickname);
 
         // 상태 코드만으로 구분
-        if (cnt != 0) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK); //중복된 것이므로 사용 불가능
-        else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
+        if (cnt != 0) return new ResponseEntity<String>(FAIL, HttpStatus.OK); //중복된 것이므로 사용 불가능
+        else return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
     }
 
     // 회원가입
@@ -290,16 +290,11 @@ public class UserController {
     @ApiOperation(value = "해쉬태그 추가")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", value = "유저아이디"),
-            @ApiImplicitParam(name = "hashtagNum", value = "해쉬태그 NUM", dataType = "int")
     })
-    public ResponseEntity<?> addUserHashtag(@RequestParam String userId, @RequestParam int hashtagNum) throws SQLException {
-        User user = userService.myPage(userId);
-        Hashtag hashtag = hashtagService.getHashtag(hashtagNum);
-
-        UserHashtag userHashtag = new UserHashtag(user, hashtag);
-
-        int cnt = userHashtagService.addUserHashtag(userHashtag);
-
+    public ResponseEntity<?> addUserHashtag(@RequestParam String userId, @RequestBody List<String> hashtagNameList) throws SQLException {
+        
+    	int cnt = hashtagService.addUserHashtagList(hashtagNameList, userId);
+    	
         if (cnt == 1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
         else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
     }

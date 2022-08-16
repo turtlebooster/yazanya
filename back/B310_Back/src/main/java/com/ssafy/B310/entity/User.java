@@ -55,10 +55,18 @@ public class User {
 	@OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
 	@JsonIgnore
 	private Set<Participation> participationList;
+	
+	@OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+	@JsonIgnore
+	private Set<ParticipationHistory> participationHistoryList;
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
 	@JsonIgnore
 	private Set<Todo> todo;
+	
+	@OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+	@JsonIgnore
+	private Set<UserHashtag> userHashtag;
 	
 	@OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
 	@JsonIgnore
@@ -89,7 +97,7 @@ public class User {
 	private String profileBelongTo;
 	
 	// 플래너 배치 설정
-	@Column(columnDefinition = "varchar(20) default '0,1,2'")
+	@Column(columnDefinition = "varchar(20) default '0,1,2,3,4,5'")
 	private String profilePlannerSet;
 
 	@Column
