@@ -71,7 +71,7 @@ export default {
         });
         let minutes = computed(()=> { 
             return Math.floor(isStudying.value?
-                (roomStudyTime.value - currentTime.value) / 60 : (roomRestTime.value - (currentTime.value - roomStudyTime.value)) / 60)
+                ((roomStudyTime.value - currentTime.value) % 3600) / 60 : ((roomRestTime.value - (currentTime.value - roomStudyTime.value)) % 3600) / 60)
                     .toString().padStart(2, '0');
         });
         let hours = computed(()=>  {

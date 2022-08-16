@@ -317,13 +317,13 @@ public class RoomController {
     	return new ResponseEntity<Map<String, Object>>(roomservice.getRecommendHashtagList(hashtagNumList), HttpStatus.OK);
     }
 
-	@GetMapping("/search")
-	@ApiOperation(value = "추천 방 리스트",
-			notes = "해쉬태그 이름들을 받아 관련된 방 목록 전달\r\n"
-					+ "hashtagName=공시, 임용고시, 공부")
+
+	@GetMapping("/searchByTags")
+	@ApiOperation(value = "해쉬태그로 방 검색",
+			notes = "해쉬태그 이름을 받아서 검색\r\n")
 	@ApiImplicitParam(name = "hashtagName", value = "해쉬태그 이름")
 	public ResponseEntity<?> searchRoom(@RequestParam(value="hashtagName", required=false, defaultValue="") List<String> hashtagNameList) {
-		return new ResponseEntity<Map<String, Object>>(roomservice.searchRecommendHashtagList(hashtagNameList), HttpStatus.OK);
+		return new ResponseEntity<List<Room>>(roomservice.searchHashtagList(hashtagNameList), HttpStatus.OK);
 	}
     
     @PatchMapping("/exit/{roomNum}")
@@ -446,7 +446,6 @@ public class RoomController {
 	@GetMapping("/searchByName/{search}")
     @ApiOperation(value = "방 검색", notes = "특정 단어를 포함하는 방 리스트 전달")
     public ResponseEntity<?> searchRoom(@PathVariable String search) throws Exception {
-		System.out.println("여기?");
     	Map<String ,Object> roomList = roomservice.searchRoomByName(search);
     	
     	if(!roomList.isEmpty()) {

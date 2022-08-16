@@ -12,11 +12,11 @@
       <a href="#" class="search_icon sub"><i class="bi bi-search"></i></a>
     </div>
 
-    <div>받아오는 값</div>
+    <!-- <div>받아오는 값</div>
     <div>{{ profile }}</div>
 
     <div>현재 리스트 순서</div>
-    <div>{{ widgetList.toString() }}</div>
+    <div>{{ widgetList.toString() }}</div> -->
 
     <div class="spacer"></div>
     <div class="spacer"></div>
@@ -104,7 +104,9 @@ export default {
 
     function masonryLayout() {
       const masonryContainer = document.querySelector('.masonry-container');
-      if (!masonryContainer) return;
+      if (!masonryContainer) {
+        return;
+      }
 
       const masonryContainerStyle = getComputedStyle(masonryContainer);
 
@@ -185,7 +187,13 @@ export default {
       init();
     });
 
-    return { componentList, componentNameList, widgetList, profile };
+    return {
+      componentList,
+      componentNameList,
+      widgetList,
+      profile,
+      masonryLayout,
+    };
   },
 };
 </script>

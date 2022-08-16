@@ -217,4 +217,30 @@ export default {
         });
     });
   },
+
+  searchRoomWithName: function (search_keyword) {
+    return new Promise((resolve, reject) => {
+      http
+        .get(REST_PATH + '/searchByName/' + search_keyword.trim())
+        .then((response) => {
+          resolve(response.data.roomList);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
+
+  searchRoomWithTags: function (search_tags) {
+    return new Promise((resolve, reject) => {
+      http
+        .get(REST_PATH + '/searchByTags?hashtagNum=' + search_tags)
+        .then((response) => {
+          resolve(response.data.roomList);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
 };

@@ -11,7 +11,7 @@
         <div class="spacer"></div>
         <div class="spacer"></div>
 
-        <h2>로그인</h2>
+        <h2>비밀번호 찾기</h2>
 
         <div class="spacer"></div>
 
@@ -25,85 +25,59 @@
             type="text"
             name="id"
             v-model="id"
-            placeholder="아이디"
+            placeholder="아이디를 입력해주세요"
           />
         </div>
 
         <div class="spacer"></div>
 
-        <!-- Password -->
+        <!-- E-mail -->
         <div class="search outer main-color d-flex align-items-center">
           <div class="search_icon">
-            <i class="bi bi-lock-fill"></i>
+            <i class="bi bi-envelope-fill"></i>
           </div>
           <input
             class="search_input"
-            type="password"
-            name="pw"
-            v-model="pw"
-            placeholder="비밀번호"
+            type="text"
+            name="email"
+            v-model="email"
+            placeholder="이메일을 입력해주세요"
           />
         </div>
 
         <div class="spacer"></div>
 
-        <button class="submit" type="button" @click="login">로그인</button>
+        <button class="submit" type="button" @click="login">
+          임시 비밀번호 발급
+        </button>
 
-        <router-link to="find">
-          <p class="forgot-pass">비밀번호를 잊으셨나요?</p>
+        <router-link to="login">
+          <p class="forgot-pass">로그인하러 가기</p>
         </router-link>
       </div>
 
       <div class="sub-panel main-color">
         <div class="img" @click="change">
           <div class="img-text m-up" style="color: red">
-            <h2>처음 오셨나요?</h2>
-            <p>회원이 되시면 야자냐의 기능들을 사용하실 수 있습니다.</p>
+            <h2>아이디를 잊으셨나요?</h2>
+            <p>이 곳을 클릭하면 아이디를 조회할 수 있습니다.</p>
           </div>
           <div class="img-text m-in">
-            <h2>이미 회원이신가요?</h2>
-            <p>이 곳을 클릭해서 로그인해주세요</p>
+            <h2>비밀번호를 잊으셨나요?</h2>
+            <p>가입하신 이메일로 임시 비밀번호를 발급해 드립니다.</p>
           </div>
           <div class="img-btn">
-            <span class="m-up">회원가입</span>
-            <span class="m-in">로그인</span>
+            <span class="m-up">아이디 찾기</span>
+            <span class="m-in">비밀번호 찾기</span>
           </div>
         </div>
 
         <div class="form sign-up d-flex flex-column align-items-center">
-          <h2>회원가입</h2>
-
           <div class="spacer"></div>
-
-          <!-- ID -->
-          <div class="search outer main-color d-flex align-items-center">
-            <div class="search_icon">
-              <i class="bi bi-person-fill"></i>
-            </div>
-            <input
-              class="search_input"
-              type="text"
-              name="id"
-              v-model="id"
-              placeholder="아이디"
-            />
-          </div>
-
           <div class="spacer"></div>
-
-          <!-- Password -->
-          <div class="search outer main-color d-flex align-items-center">
-            <div class="search_icon">
-              <i class="bi bi-lock-fill"></i>
-            </div>
-            <input
-              class="search_input"
-              type="password"
-              name="pw"
-              v-model="pw"
-              placeholder="비밀번호"
-            />
-          </div>
+          <div class="spacer"></div>
+          <div class="spacer"></div>
+          <h2>아이디 찾기</h2>
 
           <div class="spacer"></div>
 
@@ -114,89 +88,18 @@
             </div>
             <input
               class="search_input"
-              type="email"
+              type="text"
               name="email"
               v-model="email"
-              placeholder="이메일"
-            />
-            <div
-              style="
-                width: 100px;
-                background: -webkit-linear-gradient(left, #7579ff, #b224ef);
-                text-align: center;
-                border-radius: 50px;
-                color: white;
-              "
-              @click="emailCheck"
-            >
-              인증
-            </div>
-          </div>
-
-          <div class="spacer"></div>
-
-          <!-- E-mail Code -->
-          <div
-            v-if="hasCode"
-            class="search outer main-color d-flex align-items-center"
-          >
-            <div class="search_icon">
-              <i class="bi bi-key-fill"></i>
-            </div>
-            <input
-              class="search_input"
-              type="code"
-              name="code"
-              v-model="code"
-              placeholder="인증 코드"
-            />
-            <div
-              style="
-                width: 100px;
-                background: -webkit-linear-gradient(left, #7579ff, #b224ef);
-                text-align: center;
-                border-radius: 50px;
-                color: white;
-              "
-              @click="codeCheck"
-            >
-              확인
-            </div>
-          </div>
-
-          <div v-if="hasCode" class="spacer"></div>
-
-          <!-- Name -->
-          <div class="search outer main-color d-flex align-items-center">
-            <div class="search_icon">
-              <i class="bi bi-emoji-smile-fill"></i>
-            </div>
-            <input
-              class="search_input"
-              type="name"
-              name="name"
-              v-model="name"
-              placeholder="이름"
+              placeholder="이메일을 입력해주세요"
             />
           </div>
 
           <div class="spacer"></div>
 
-          <!-- NickName -->
-          <div class="search outer main-color d-flex align-items-center">
-            <div class="search_icon">
-              <i class="bi bi-chat-dots-fill"></i>
-            </div>
-            <input
-              class="search_input"
-              type="nickname"
-              name="nickname"
-              v-model="nickname"
-              placeholder="닉네임"
-            />
-          </div>
-
-          <button type="button" class="submit" @click="signup">회원가입</button>
+          <button type="button" class="submit" @click="signup">
+            아이디 조회
+          </button>
         </div>
       </div>
     </div>
@@ -362,7 +265,15 @@ export default {
   z-index: 1;
   height: 100%;
   width: 100%;
-  background: linear-gradient(-45deg, #8d42ff, #01e973);
+
+  background-image: linear-gradient(
+    -45deg,
+    #35c3f3 0%,
+    #8b9fe8 20%,
+    #e681d8 39%,
+    #ffa9a4 76%,
+    #fed2ce 100%
+  );
   background-size: cover;
 }
 
@@ -374,7 +285,7 @@ export default {
   right: 0;
   height: 100%;
   width: 100%;
-  background: linear-gradient(135deg, #26bbac, #bcfb69);
+  background-image: linear-gradient(135deg, #f984f7, #03fae5);
   opacity: 1;
   -webkit-transition: opacity 1.2s ease-in-out;
   -ms-transition: opacity 1.2s ease-in-out;

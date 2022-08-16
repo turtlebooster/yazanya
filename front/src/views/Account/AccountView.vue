@@ -1,16 +1,18 @@
 <template>
-  <div class="account-view">
+  <div class="account-view d-flex flex-column">
     <!-- Navbar -->
-    <div class="main-header">
-      <main-navbar />
+    <div class="account-header">
+      <account-navbar />
     </div>
 
-    <router-view />
+    <div class="flex-grow-1">
+      <router-view />
+    </div>
   </div>
 </template>
 
 <script>
-import MainNavbar from '@/views/Main/components/MainNavbar.vue';
+import AccountNavbar from '@/views/Account/components/AccountNavbar.vue';
 import { onBeforeMount } from 'vue';
 
 export default {
@@ -24,13 +26,16 @@ export default {
   },
 
   components: {
-    MainNavbar,
+    AccountNavbar,
   },
 };
 </script>
 
 <style scoped>
-.main-header {
+* {
+  font-family: NanumSquareRoundB;
+}
+.account-header {
   /* background: var(--sub-color-r); */
   min-height: var(--size-h-header);
 }

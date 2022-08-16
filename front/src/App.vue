@@ -25,7 +25,7 @@ export default {
         : JSON.parse(localStorage.getItem('theme'));
     let sidebar = JSON.parse(
       localStorage.getItem('sidebar') == undefined
-        ? true
+        ? false
         : JSON.parse(localStorage.getItem('sidebar'))
     );
     sidebar
@@ -43,6 +43,7 @@ export default {
 </script>
 
 <style>
+@import url('https://hangeul.pstatic.net/hangeul_static/css/nanum-square-round.css');
 @font-face {
   /* 여기어때 잘난체 */
   font-family: 'Jalnan';
@@ -94,15 +95,17 @@ export default {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+
+  font-family: NanumSquareRoundEB;
 }
 
 /* ---- for light and dark mode ---- */
 .light * {
-  color: black;
+  color: #404040;
 }
 
 .dark * {
-  color: white;
+  color: #f4f4f4;
 }
 
 .light .main {
