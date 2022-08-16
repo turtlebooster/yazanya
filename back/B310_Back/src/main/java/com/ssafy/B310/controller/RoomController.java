@@ -323,7 +323,7 @@ public class RoomController {
 			notes = "해쉬태그 이름을 받아서 검색\r\n")
 	@ApiImplicitParam(name = "hashtagName", value = "해쉬태그 이름")
 	public ResponseEntity<?> searchRoom(@RequestParam(value="hashtagName", required=false, defaultValue="") List<String> hashtagNameList) {
-		return new ResponseEntity<List<Room>>(roomservice.searchHashtagList(hashtagNameList), HttpStatus.OK);
+		return new ResponseEntity<Map<String ,Object>>(roomservice.searchHashtagList(hashtagNameList), HttpStatus.OK);
 	}
     
     @PatchMapping("/exit/{roomNum}")

@@ -179,37 +179,37 @@ public class RoomServiceImpl implements RoomService {
 
 	//해쉬태그이름으로 검색
 	@Override
-	public List<Room> searchHashtagList(List<String> hashtagNameList) {
+	public Map<String, Object> searchHashtagList(List<String> hashtagNameList) {
 		
-//		List<Room> roomList = roomQueryRepository.searchRoom(hashtagNameList);
-		return roomQueryRepository.searchRoomByHashtag(hashtagNameList);
+		List<Room> roomList = roomQueryRepository.searchRoomByHashtag(hashtagNameList);
+//		return roomQueryRepository.searchRoomByHashtag(hashtagNameList);
 		
-//		Map<String, Object> result = new HashMap<>();
-//		List<String> tempRoomHsNameList;
-//		Map<String, Object> temp;
-//		List<Map<String, Object>> lst = new ArrayList<>();
+		Map<String, Object> result = new HashMap<>();
+		List<String> tempRoomHsNameList;
+		Map<String, Object> temp;
+		List<Map<String, Object>> lst = new ArrayList<>();
 
-//		if (roomList.size() == 0) {
-//			roomList = roomRepository.findAll();
-//		}
+		if (roomList.size() == 0) {
+			roomList = roomRepository.findAll();
+		}
 
-//		for (Room r : roomList) {
-//			int roomN = r.getRoomNum();
-//			temp = new HashMap<>();
-//			temp.put("room", r);
-//			List<RoomHashtag> roomHs = roomHashtagRepository.findByRoom(r);
-//
-//			tempRoomHsNameList = new ArrayList<>();
-//			for (RoomHashtag roomH : roomHs) {
-//				String roomHsName = roomH.getHashtag().getHashtagName();
-//				tempRoomHsNameList.add(roomHsName);
-//			}
-//			temp.put("roomHash", tempRoomHsNameList);
-//			lst.add(temp);
-//		}
-//
-//		result.put("roomList",lst);
-//		return result;
+		for (Room r : roomList) {
+			int roomN = r.getRoomNum();
+			temp = new HashMap<>();
+			temp.put("room", r);
+			List<RoomHashtag> roomHs = roomHashtagRepository.findByRoom(r);
+
+			tempRoomHsNameList = new ArrayList<>();
+			for (RoomHashtag roomH : roomHs) {
+				String roomHsName = roomH.getHashtag().getHashtagName();
+				tempRoomHsNameList.add(roomHsName);
+			}
+			temp.put("roomHash", tempRoomHsNameList);
+			lst.add(temp);
+		}
+
+		result.put("roomList",lst);
+		return result;
 	}
 
 	//유저 입장할 때 participation 1 증가
