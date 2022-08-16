@@ -32,7 +32,9 @@ public class RoomQueryRepository {
 				.fetch();
 	}
 
-	public List<Room> searchRoom(List<String> hashtagNameList) {
+	
+	//해쉬태그 이름으로 검색한 방 목록 전달
+	public List<Room> searchRoomByHashtag(List<String> hashtagNameList) {
 		return 	queryFactory
 				.selectFrom(room)
 				.where(room.roomNum.in(
