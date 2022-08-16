@@ -115,7 +115,9 @@ public class HashtagServiceImpl implements HashtagService {
 		if (oUser.isPresent()) {
 			User user = oUser.get();
 			// 이전에 등록된 해쉬태그 삭제
-			userHashRepo.deleteByUser(user);
+			for (UserHashtag uht : userHashRepo.findByUser(user)) {
+				userHashRepo.delete(uht);				
+			}
 			
 			// 해쉬태그 리스트 등록
 			List<Hashtag> findList;
