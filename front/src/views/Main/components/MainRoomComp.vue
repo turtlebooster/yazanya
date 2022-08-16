@@ -1,8 +1,8 @@
 <template>
   <!-- room -->
   <div class="room-template outer main-color">
-    <router-link
-      :to="`/studyroom/${room.room.roomNum}`"
+    <a
+      :href="`/studyroom/${room.room.roomNum}`"
       class="room-component d-flex flex-column"
     >
       <!-- thumbnail -->
@@ -54,7 +54,16 @@
             >
           </b-button>
 
-          <img :src="`${server_link}/showImg/thumbnail/${room.room.roomNum}`" />
+          <div v-if="room.room.userNum == userNum">
+            <h5 class="m-0">
+            <b-badge pill variant="light"
+            :style="'position: absolute; opacity: 0.7; top: 0.2em;' + (room.room.roomHasPw?'left: 2.5em;':'left: 0.5em;')">
+              Host
+            </b-badge>
+            </h5>
+          </div>
+
+          <img :src="`${server_link}/showImg/thumbnail/${room.room.roomNum}`" style="max-width: 100%; height: auto;"/>
         </div>
       </div>
 
@@ -71,7 +80,7 @@
 
         <div class="d-flex flex-column flex-grow-1" style="margin-left: 8px">
           <!-- title -->
-          <div style="font-size: 24pt; font-weight: bold">
+          <div style="font-size: 1.5em; font-weight: bold">
             {{ room.room.roomName }}
           </div>
         </div>
@@ -87,11 +96,12 @@
           >#{{ hash }}</b-badge
         >
       </div>
-    </router-link>
+    </a>
   </div>
 </template>
 
 <script>
+import { useStore } from 'vuex';
 import { ref } from 'vue';
 
 export default {
@@ -106,6 +116,7 @@ export default {
     const server_link = ref(process.env.VUE_APP_SERVER);
     return {
       server_link,
+      userNum : useStore().getters.getUserNum,
     };
   },
 };

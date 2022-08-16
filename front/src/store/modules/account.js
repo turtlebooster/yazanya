@@ -8,6 +8,8 @@ export const Account = {
     },
     isLogined: !!jwt.getAccessToken(),
     userID: jwt.getID(),
+    userNum: jwt.getNum(),
+
     nextRoom: '',
   },
 
@@ -23,6 +25,9 @@ export const Account = {
     },
     getUserID: function (state) {
       return state.userID;
+    },
+    getUserNum: function (state) {
+      return state.userNum;
     },
   },
 
@@ -58,8 +63,18 @@ export const Account = {
     },
 
     REMOVE_USER_ID: function (state) {
-      state.saveID = '';
+      state.userID = '';
       jwt.destroyID();
+    },
+
+    SET_USER_NUM: function (state, num) {
+      state.userNum = num;
+      jwt.saveNum(num);
+    },
+
+    REMOVE_USER_NUM: function (state) {
+      state.userNum = '';
+      jwt.destroyNum();
     },
 
     SET_NEXT_ROOM: function (state, data) {
@@ -76,6 +91,7 @@ export const Account = {
           context.commit('REMOVE_ACCESS_TOKEN');
           context.commit('REMOVE_REFRESH_TOKEN');
           context.commit('REMOVE_USER_ID');
+          context.commit('REMOVE_USER_NUM');
           resolve({});
         }, 500);
       });

@@ -59,28 +59,7 @@ public class ImageController {
 			filepath = path + "/profile.png";
 		}
 		
-		// get byte data in file
-		File img;
-		byte[] data;
-		try {
-			img = new File(filepath);
-			data = new byte[(int)img.length()];
-			// convert byte array
-			FileInputStream fl = new FileInputStream(img);
-			fl.read(data);
-			fl.close();
-		} catch (IOException e) {
-			return new ResponseEntity<byte[]>(new byte[0], HttpStatus.NO_CONTENT);
-		}
-		// find mime type(png or jpg)
-	    FileNameMap fileNameMap = URLConnection.getFileNameMap();
-	    String mimeType = fileNameMap.getContentTypeFor(img.getName());
-
-	    // byte data info
-	    HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type", mimeType);
-        headers.add("Content-Length", String.valueOf(img.length()));
-		return new ResponseEntity<byte[]>(data, headers, HttpStatus.OK);
+		return imgToBytes(filepath);
 	}
 	
 	@NoJwt
@@ -100,29 +79,7 @@ public class ImageController {
 			filepath = path + "/profile.png";
 		}
 		
-		// get byte data in file
-		File img;
-		byte[] data;
-		try {
-			img = new File(filepath);
-			data = new byte[(int)img.length()];
-			// convert byte array
-			FileInputStream fl = new FileInputStream(img);
-			fl.read(data);
-			fl.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-			return new ResponseEntity<byte[]>(new byte[0], HttpStatus.NO_CONTENT);
-		}
-		// find mime type(png or jpg)
-	    FileNameMap fileNameMap = URLConnection.getFileNameMap();
-	    String mimeType = fileNameMap.getContentTypeFor(img.getName());
-
-	    // byte data info
-	    HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type", mimeType);
-        headers.add("Content-Length", String.valueOf(img.length()));
-		return new ResponseEntity<byte[]>(data, headers, HttpStatus.OK);
+		return imgToBytes(filepath);
 	}
 	
 	@NoJwt
@@ -143,6 +100,10 @@ public class ImageController {
 			filepath = path + "/study.jpg";
 		}
 		
+		return imgToBytes(filepath);
+	}
+	
+	private ResponseEntity<byte[]> imgToBytes(String filepath) {
 		// get byte data in file
 		File img;
 		byte[] data;

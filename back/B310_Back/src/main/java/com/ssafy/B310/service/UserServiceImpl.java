@@ -89,10 +89,9 @@ public class UserServiceImpl implements UserService{
 		
 		if (oUser.isPresent()) {
 			User u = oUser.get();
-			
-			String hashPw = hashPw(user.getUserPw());
-			u.setUserPw(hashPw);
-			u.setUserNickname(user.getUserNickname());
+			if (user.getUserPw() != null) u.setUserPw(hashPw(user.getUserPw()));
+			if (user.getUserNickname() != null) u.setUserNickname(user.getUserNickname());
+			if (user.getProfileSelfIntroduce() != null) u.setProfileSelfIntroduce(user.getProfileSelfIntroduce());
 			
 			userRepository.save(u);
 			
