@@ -1,10 +1,12 @@
 <template>
-  <div class="d-flex flex-column">
+  <div class="room-plannersidebar d-flex flex-column">
     <b-card class="m-3">
       <room-pomodoro v-if="isUsingPomodoro" />
     </b-card>
   </div>
-  <study-planner ref="studyPlanner" />
+  <div class="room-plannersidebar">
+    <study-planner ref="studyPlanner" />
+  </div>
 </template>
 
 <script>
@@ -33,3 +35,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.room-plannersidebar {
+  overflow: hidden;
+}
+</style>
