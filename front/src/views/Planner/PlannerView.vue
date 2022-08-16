@@ -12,11 +12,11 @@
       <a href="#" class="search_icon sub"><i class="bi bi-search"></i></a>
     </div>
 
-    <div>받아오는 값</div>
+    <!-- <div>받아오는 값</div>
     <div>{{ profile }}</div>
 
     <div>현재 리스트 순서</div>
-    <div>{{ widgetList.toString() }}</div>
+    <div>{{ widgetList.toString() }}</div> -->
 
     <div class="spacer"></div>
     <div class="spacer"></div>
@@ -103,10 +103,8 @@ export default {
     }
 
     function masonryLayout() {
-      console.log('작동은함');
       const masonryContainer = document.querySelector('.masonry-container');
       if (!masonryContainer) {
-        console.log('업는데?');
         return;
       }
 
