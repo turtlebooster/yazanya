@@ -66,6 +66,10 @@ public class UserServiceImpl implements UserService{
 			System.out.println("올바른 이메일 형식이 아님");
 			return 0;
 		}
+
+		if( user.getUserPw().length() < 4) {
+			return 0;
+		}
 		
 		// 없을 경우
 		//비밀번호 암호화

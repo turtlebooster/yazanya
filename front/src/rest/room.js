@@ -89,7 +89,7 @@ export default {
   getRoomRecommendList: function (tagArr) {
     return new Promise((resolve, reject) => {
       http
-        .get(REST_PATH + '/recommend?hashtagNum=' + tagArr)
+        .get(REST_PATH + '/recommend?hashtagName=' + tagArr)
         .then((response) => {
           resolve(response.data.roomList);
         })
@@ -234,7 +234,7 @@ export default {
   searchRoomWithTags: function (search_tags) {
     return new Promise((resolve, reject) => {
       http
-        .get(REST_PATH + '/searchByTags?hashtagNum=' + search_tags)
+        .get(REST_PATH + '/searchByTags?hashtagName=' + search_tags)
         .then((response) => {
           resolve(response.data.roomList);
         })
