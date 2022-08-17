@@ -350,7 +350,6 @@ public class UserController {
             int cnt = profileService.updateProfile(userId, user);
 
             if (cnt == 1) {
-                System.out.println(user);
                 return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
             } else {
                 return new ResponseEntity<String>(FAIL, HttpStatus.OK);
@@ -381,8 +380,6 @@ public class UserController {
 
         if (!makeFolder.exists()) {
             makeFolder.mkdir();
-            System.out.println(path + "에 폴더 생성");
-            System.out.println(("폴더가 존재하는지 체크 true/false : " + makeFolder.exists()));
         } else {
             System.out.println("폴더 이미 존재함");
         }

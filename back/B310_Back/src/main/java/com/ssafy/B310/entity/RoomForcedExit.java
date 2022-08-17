@@ -18,8 +18,6 @@ public class RoomForcedExit {
     @Column
     private String userId;
 
-//    @Column
-//    private int roomNum;
 
     @JsonIgnore
     @ManyToOne
