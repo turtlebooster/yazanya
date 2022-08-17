@@ -1,6 +1,6 @@
 <template>
-  <div class="d-flex justify-content-center" :class="[$root.theme ? 'light' : 'dark']">
-    <b-card class="mt-4 w-50">
+  <div class="d-flex justify-content-center">
+    <b-card class="mt-4 w-50" :class="[$root.theme ? ' ' : 'custom-dark']">
       <div class="d-flex flex-column">
         <h4 class="m-2">내 프로필 관리</h4>
         <hr class="my-3 me-4">
@@ -314,5 +314,8 @@ input:disabled {
 .b-form-tags-button {
   visibility: hidden !important;
 }
-
+.custom-dark {
+  background-color: #404040;
+  border-color: white;
+}
 </style>
