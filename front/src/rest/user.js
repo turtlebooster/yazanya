@@ -50,16 +50,12 @@ export default {
     });
   },
 
-  findId: function (payload) {
-    let params = {
-      userEmail: payload.email,
-    };
-
+  findId: function (email) {
     return new Promise((resolve, reject) => {
       http
-        .post(REST_PATH + '/findid', params)
+        .get(REST_PATH + '/findid?userEmail=' + email)
         .then((response) => {
-          resolve(response);
+          resolve(response.data);
         })
         .catch((error) => {
           reject(error);
@@ -68,14 +64,15 @@ export default {
   },
 
   findPw: function (payload) {
-    let params = {
-      userEmail: payload.email,
-      userPw: payload.password,
-    };
-
     return new Promise((resolve, reject) => {
       http
-        .post(REST_PATH + '/findpw', params)
+        .get(
+          REST_PATH +
+            '/findpw?userEmail=' +
+            payload.email +
+            '&userId=' +
+            payload.id
+        )
         .then((response) => {
           resolve(response);
         })
