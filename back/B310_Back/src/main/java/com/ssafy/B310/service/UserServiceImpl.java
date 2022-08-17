@@ -93,8 +93,8 @@ public class UserServiceImpl implements UserService{
 		
 		if (oUser.isPresent()) {
 			User u = oUser.get();
-			if (user.getUserPw() != null || user.getUserPw().trim().equals("")) u.setUserPw(hashPw(user.getUserPw()));
-			if (user.getUserNickname() != null || user.getUserNickname().trim().equals("")) u.setUserNickname(user.getUserNickname());
+			if (user.getUserPw() != null && !user.getUserPw().trim().equals("") && !user.getUserPw().equals(u.getUserPw())) u.setUserPw(hashPw(user.getUserPw()));
+			if (user.getUserNickname() != null && !user.getUserNickname().trim().equals("")) u.setUserNickname(user.getUserNickname());
 			if (user.getProfileSelfIntroduce() != null) u.setProfileSelfIntroduce(user.getProfileSelfIntroduce());
 			
 			userRepository.save(u);
@@ -286,5 +286,7 @@ public class UserServiceImpl implements UserService{
 		}
 		return 0;
 	}
+	
+
 
 }
