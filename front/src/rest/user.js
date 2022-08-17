@@ -38,10 +38,16 @@ export default {
       http
         .post(REST_PATH + '/login', params)
         .then((response) => {
-          if (response.data.message === 'success') {
+          let message = response.data.message;
+
+          if (message === 'success') {
             resolve(response.data.token);
+          } else if (message === 'pwErr') {
+            reject('비밀번호가 틀렸습니다');
+          } else if (message === 'noId') {
+            reject('가입되지 않은 아이디입니다');
           } else {
-            reject('로그인 중 문제가 발생하였습니다');
+            reject(message);
           }
         })
         .catch((error) => {
