@@ -18,13 +18,13 @@
     </div>
 
     <!-- modal -->
-    <b-modal id="modal-planner-calendar" centered title="달력" ok-title="추가" hide-footer>
-      <p class="my-4">{{ dateFormat(date) }}</p>
+    <!-- <b-modal id="modal-planner-calendar" centered title="달력" ok-title="추가" hide-footer>
+      <p class="my-4">{{ dateFormat(date) }}</p> -->
       <!-- <v-calendar is-expanded /> -->
       <!-- <v-date-picker v-model="date" />  -->
       <!-- <b-button class="mt-3">추가</b-button> -->
       <!-- <template #modal-footer="{ ok, cancel }"> -->
-        <b-button size="sm" variant="secondary">
+        <!-- <b-button size="sm" variant="secondary">
           취소
         </b-button>
         <b-button v-b-modal.modal-prevent-closing size="sm" variant="primary">
@@ -56,7 +56,7 @@
               ></b-form-input>
             </b-form-group>
           </form>
-        </b-modal>
+        </b-modal> -->
       <!-- </template> -->
     <!-- </b-modal> -->
   </div>
