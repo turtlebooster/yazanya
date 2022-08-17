@@ -215,4 +215,17 @@ export default {
         });
     });
   },
+
+  getRestStudyTime(user_id) {
+    return new Promise((resolve, reject) => {
+      http
+        .get(REST_PATH + '/restStudyTime/' + user_id)
+        .then((response) => {
+          resolve(response.data);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
 };

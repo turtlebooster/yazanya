@@ -19,7 +19,6 @@ export default {
   setup() {
     onBeforeMount(() => {
       // setting
-      console.log('작동함');
       document.documentElement.style.setProperty('--size-h-header', '40px');
       document.documentElement.style.setProperty('--size-w-side', '64px');
     });

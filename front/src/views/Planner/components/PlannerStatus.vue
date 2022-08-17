@@ -5,20 +5,46 @@
         <span><i class="bi bi-trophy-fill"></i></span>
       </div>
       <div class="widget-component-detail">
-        <div>목표까지</div>
-        <div style="font-size: 16pt">21%</div>
+        <div>다음 티어까지</div>
+        <div style="font-size: 0.8em">{{nextTear_restTime}}</div>
       </div>
     </div>
 
     <!-- modal -->
-    <b-modal id="modal-planner-status" centered title="목표까지">
+    <!-- <b-modal id="modal-planner-status" centered title="목표까지">
       <p class="my-4">전체 투두 리스트 achivement에서 긁어오면됨</p>
-    </b-modal>
+    </b-modal> -->
   </div>
 </template>
 
 <script>
-export default {};
+import { onBeforeMount, ref } from '@vue/runtime-core';
+import { useStore } from 'vuex';
+import rest_user from '@/rest/user';
+export default {
+  setup() {
+    onBeforeMount(async ()=> {
+      let restTime = await rest_user.getRestStudyTime(useStore().getters.getUserID);
+
+      if(restTime || restTime == 0)  {
+        nextTear_restTime.value = '';
+        if(restTime >= 60) {
+          nextTear_restTime.value += Math.floor(restTime / 60) + '시간 '
+          nextTear_restTime.value += restTime % 60 == 0? '' : restTime % 60 + '분'
+        } else {
+          nextTear_restTime.value += restTime + '분';
+        }
+      } else {
+        nextTear_restTime.value = '시간 정보 불러오기 실패';
+      }
+    })
+
+    let nextTear_restTime = ref("?");
+    return {
+      nextTear_restTime,
+    }
+  }
+};
 </script>
 
 <style scoped>

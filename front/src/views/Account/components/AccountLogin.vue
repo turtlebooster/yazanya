@@ -323,7 +323,7 @@ export default {
       // TODO : 빈칸 체크, 입력값 검증, ID, EMAIL, PW, 중복 검사
       hasCode.value = true;
       rest_user
-        .confirmCode({ email: email.value, code: code.value })
+        .confirmCode({ email: email.value, code: code.value.trim() })
         .then((response) => {
           if (response === 'success') {
             alert('이메일이 인증되었습니다.');
