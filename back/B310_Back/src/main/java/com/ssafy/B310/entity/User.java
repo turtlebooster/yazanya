@@ -27,7 +27,6 @@ import lombok.ToString;
 @Setter
 @DynamicInsert
 @Builder
-//@ToString
 @AllArgsConstructor
 public class User {
 	@Id

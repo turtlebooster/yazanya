@@ -124,7 +124,6 @@ public class TodoController {
     	
     	int compare = startDate.compareTo(endDate);
     	if (compare > 0) {
-    		System.out.println("날짜 범위 오류입니다.");
     		return new ResponseEntity<String>(FAIL, HttpStatus.OK);
     	} else if (compare == 0) {
     		Calendar cal = Calendar.getInstance();
