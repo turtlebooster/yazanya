@@ -38,10 +38,16 @@ export default {
       http
         .post(REST_PATH + '/login', params)
         .then((response) => {
-          if (response.data.message === 'success') {
+          let message = response.data.message;
+
+          if (message === 'success') {
             resolve(response.data.token);
+          } else if (message === 'pwErr') {
+            reject('비밀번호가 틀렸습니다');
+          } else if (message === 'noId') {
+            reject('가입되지 않은 아이디입니다');
           } else {
-            reject('로그인 중 문제가 발생하였습니다');
+            reject(message);
           }
         })
         .catch((error) => {
@@ -209,6 +215,19 @@ export default {
         .then((response) => {
           if (response.data === 'fail') reject('해쉬 태그 추가 실패');
           else resolve(true);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
+
+  getRestStudyTime(user_id) {
+    return new Promise((resolve, reject) => {
+      http
+        .get(REST_PATH + '/restStudyTime/' + user_id)
+        .then((response) => {
+          resolve(response.data);
         })
         .catch((error) => {
           reject(error);

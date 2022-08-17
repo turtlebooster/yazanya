@@ -112,10 +112,7 @@ public class RoomController {
     	int userNum = jwtService.getUserNum(request.getHeader("access-token"));
         int cnt = 0;
         if (userNum != -1) {
-        	cnt = roomservice.createRoom(room, userNum);        	
-//        	if (hashtagService.addHashtagList(roomInfo.getRoomHash(), cnt) == 0) {
-//        		return new ResponseEntity<String>("failToAddHashtag", HttpStatus.OK);
-//        	}
+        	cnt = roomservice.createRoom(room, userNum);
         }
 
         if(cnt!=0) return new ResponseEntity<Integer>(cnt, HttpStatus.OK);
@@ -388,9 +385,7 @@ public class RoomController {
     	File makeFolder = new File(path);
     	
     	if(!makeFolder.exists()) {
-    		makeFolder.mkdir(); 
-    		System.out.println(path + "에 폴더 생성");
-    		System.out.println(("폴더가 존재하는지 체크 true/false : "+ makeFolder.exists()));
+    		makeFolder.mkdir();
     	} else {
     		System.out.println("폴더 이미 존재함");
     	}
@@ -449,11 +444,9 @@ public class RoomController {
     	Map<String ,Object> roomList = roomservice.searchRoomByName(search);
     	
     	if(!roomList.isEmpty()) {
-    		
     		return new ResponseEntity<Map<String ,Object>>(roomList, HttpStatus.OK);
     	}
     	else
-    		System.out.println("비었나?");
     		return new ResponseEntity<String>(FAIL, HttpStatus.OK); 
     }
 

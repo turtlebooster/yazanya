@@ -3,14 +3,14 @@
     <div class="spacer"></div>
 
     <!-- search -->
-    <div class="search outer d-flex align-items-center">
+    <!-- <div class="search outer d-flex align-items-center">
       <input
         class="search_input"
         type="text"
         placeholder="플래너 템플릿 검색"
       />
       <a href="#" class="search_icon sub"><i class="bi bi-search"></i></a>
-    </div>
+    </div> -->
 
     <!-- <div>받아오는 값</div>
     <div>{{ profile }}</div>
@@ -18,7 +18,7 @@
     <div>현재 리스트 순서</div>
     <div>{{ widgetList.toString() }}</div> -->
 
-    <div class="spacer"></div>
+    <!-- <div class="spacer"></div> -->
     <div class="spacer"></div>
 
     <!-- planner masonry & draggable layout -->
@@ -93,7 +93,7 @@ export default {
     async function init() {
       profile.value = await rest_user.getProfile(store.getters.getUserID);
       // 주석 처리 풀어야 서버로 부터 받아옴
-      // widgetList.value = await profile.value.profilePlannerSet.split(',');
+      widgetList.value = await profile.value.profilePlannerSet.split(',');
 
       nextTick(() => {
         masonryLayout();

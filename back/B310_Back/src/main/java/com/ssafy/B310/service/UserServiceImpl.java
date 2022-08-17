@@ -63,7 +63,6 @@ public class UserServiceImpl implements UserService{
 		
 		// 올바른 이메일 형식이 아닐 경우
 		if(!user.getUserEmail().contains("@")) {
-			System.out.println("올바른 이메일 형식이 아님");
 			return 0;
 		}
 
@@ -210,8 +209,6 @@ public class UserServiceImpl implements UserService{
         
         User user = myPage(userId);
         
-        System.out.println(user);
-        
 		String hashPw = hashPw(pwd);
 		
         user.setUserPw(hashPw);
@@ -219,8 +216,6 @@ public class UserServiceImpl implements UserService{
         
         //메일 생성
         Mail mail = mailService.createMail(pwd, user.getUserEmail());
-        
-        System.out.println("mail is " + mail);
         
         //메일 보내기
         mailService.sendMail(mail);
@@ -266,8 +261,6 @@ public class UserServiceImpl implements UserService{
 		EmailConfirm confirm = new EmailConfirm();
 		confirm.setConfirmCode(num);
 		confirm.setEmail(email);
-		System.out.println(num);
-		System.out.println(email);
 
 		emailConfirmRepository.save(confirm);
 

@@ -45,7 +45,6 @@ public class ParticipationHistoryServiceImpl implements ParticipationHistoryServ
 			}
 			participationHistoryRepository.save(ph);
 		} catch (Exception e) {
-			System.out.println("히스토리 등록 에러");
 			return 0;
 		}
 		return 1;

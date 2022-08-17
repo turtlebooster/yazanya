@@ -26,11 +26,8 @@ public class FollowServiceImpl implements FollowService {
     @Override
     public Follow follow(String followToUserId, String followFromUserId) {
         Optional<User> oUser1 = userRepository.findByUserId(followToUserId);
-//        if (oUser1.isPresent()) {
-            User followToUser = oUser1.get();
-//        }
+        User followToUser = oUser1.get();
         Optional<User> oUser2 = userRepository.findByUserId(followFromUserId);
-//        if (oUser1.isPresent()) {
         User followFromUser = oUser2.get();
         Follow f = new Follow();
 
@@ -47,11 +44,8 @@ public class FollowServiceImpl implements FollowService {
     @Override
     public void deleteByFollowToUserAndFollowFromUser(String followToUserId, String followFromUserId) {
         Optional<User> oUser1 = userRepository.findByUserId(followToUserId);
-//        if (oUser1.isPresent()) {
         User followToUser = oUser1.get();
-//        }
         Optional<User> oUser2 = userRepository.findByUserId(followFromUserId);
-//        if (oUser1.isPresent()) {
         User followFromUser = oUser2.get();
         followRepository.deleteByFollowToUserAndFollowFromUser(followToUser, followFromUser);
     }

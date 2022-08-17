@@ -270,7 +270,7 @@
                 type="range"
                 min="10"
                 max="300"
-                step="10"
+                step="5"
               ></b-form-input>
 
               <label class="mt-2" for="range-1"
