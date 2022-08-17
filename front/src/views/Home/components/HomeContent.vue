@@ -55,7 +55,7 @@
                 style="height: 100px; object-fit: cover"
                 alt="logo"
               />
-              <router-link to="/account/login" style="text-decoration: none">
+              <router-link to="/account/login" style="text-decoration: none; z-index: 2;">
                 <div class="btn-login">시작하기</div>
               </router-link>
             </div>

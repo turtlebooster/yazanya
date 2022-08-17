@@ -27,7 +27,6 @@ import lombok.ToString;
 @Setter
 @DynamicInsert
 @Builder
-//@ToString
 @AllArgsConstructor
 public class User {
 	@Id
@@ -97,7 +96,7 @@ public class User {
 	private String profileBelongTo;
 	
 	// 플래너 배치 설정
-	@Column(columnDefinition = "varchar(20) default '0,1,2,3,4,5'")
+	@Column(columnDefinition = "varchar(20) default '0,1,2,3'")
 	private String profilePlannerSet;
 
 	@Column

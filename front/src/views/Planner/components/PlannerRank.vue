@@ -2,23 +2,53 @@
   <div>
     <div class="widget-component">
       <div class="widget-component-icon">
-        <span><i class="bi bi-trophy-fill"></i></span>
+        <img :src="require(`@/assets/img/rank/${user_rank}.png`)" style="height:1em; width:0.8em;"/>
       </div>
       <div class="widget-component-detail">
         <div>공부 티어</div>
-        <div style="font-size: 16pt">브론즈</div>
+        <div style="font-size: 0.8em">{{user_rank}}</div>
       </div>
     </div>
 
     <!-- modal -->
-    <b-modal id="modal-planner-rank" centered title="공부 티어">
-      <p class="my-4">대충 v-if 훈장 띄워주면 됨</p>
-    </b-modal>
+    <!-- <b-modal id="modal-planner-rank" centered title="미구현">
+      <p class="my-4">미구현</p>
+    </b-modal> -->
   </div>
 </template>
 
 <script>
-export default {};
+import { onBeforeMount, ref, computed } from '@vue/runtime-core';
+import { useStore } from 'vuex';
+import rest_user from '@/rest/user';
+export default {
+  setup() {
+    onBeforeMount(async ()=> {
+      let profile = await rest_user.getProfile(useStore().getters.getUserID);
+
+      if(profile.profileRank)  {
+        user_rank.value = profile.profileRank;
+      } else {
+        user_rank.value = '브론즈';
+      }
+    })
+
+    let user_rank = ref("브론즈");
+    return {
+      user_rank,
+      user_rank_color : computed(()=> {
+        // currently not used
+        if(user_rank.value === '마스터') return '#ff0062';
+        if(user_rank.value === '다이아') return '#00b4fc';
+        if(user_rank.value === '플레') return '#27e2a4';
+        if(user_rank.value === '골드') return '#ec9a00';
+        if(user_rank.value === '실버') return '#435f7a';
+        if(user_rank.value === '브론즈') return '#ad5600';
+        else return;
+      })
+    }
+  }
+};
 </script>
 
 <style scoped>

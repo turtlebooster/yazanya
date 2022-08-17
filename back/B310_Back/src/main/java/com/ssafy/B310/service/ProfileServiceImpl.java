@@ -24,8 +24,6 @@ public class ProfileServiceImpl implements ProfileService{
         if (oUser.isPresent()) {
             User u = oUser.get();
             u.setProfileSelfIntroduce(user.getProfileSelfIntroduce());
-            // 유저 닉네임 변경시 중복 검사 해 줄 것.
-//            u.setUserNickname(user.getUserNickname());
             userRepository.save(u);
             return 1;
         }
@@ -50,7 +48,6 @@ public class ProfileServiceImpl implements ProfileService{
         Optional<User> oUser = userRepository.findByUserId(userId);
         if (oUser.isPresent()) {
             User u = oUser.get();
-            System.out.println(imgPath);
             u.setProfilePictureLink(imgPath);
             userRepository.save(u);
             return 1;
