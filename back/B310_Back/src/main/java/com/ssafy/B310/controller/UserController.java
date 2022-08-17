@@ -471,5 +471,35 @@ public class UserController {
         }
         return new ResponseEntity<String>(FAIL, HttpStatus.OK);
     }
+    
+    @GetMapping("/restStudyTime/{userId}")
+    public ResponseEntity<?> getRestStudyTime(@PathVariable String userId) throws SQLException {
+    	User user = userService.myPage(userId);
+    	String rank = user.getProfileRank();
+    	int studyTime = user.getProfileTotalStudyTime();
+    	
+    	int restTime = 0;
+    	switch(rank) {
+    	case "마스터" : 
+    		break;
+    	case "다이아몬드" : 
+    		restTime = 500 - studyTime;
+    		break;
+    	case "플래티넘" : 
+    		restTime = 400 - studyTime;
+    		break;
+    	case "골드" :
+    		restTime = 300 - studyTime;
+    		break;
+    	case "실버" :
+    		restTime = 200 - studyTime;
+    		break;
+    	case "브론즈" :
+    		restTime = 100 - studyTime;
+    		break;
+    	}
+    	
+    	return new ResponseEntity<Integer> (restTime, HttpStatus.OK);
+    }
 }
 
