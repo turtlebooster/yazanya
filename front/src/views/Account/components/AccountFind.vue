@@ -114,6 +114,7 @@
 
 <script>
 import { ref } from 'vue';
+import Swal from 'sweetalert2';
 import rest_user from '@/rest/user';
 
 export default {
@@ -124,6 +125,15 @@ export default {
     let hasId = ref(false);
     let isMove = ref(false);
 
+    // for alert
+    function warn(message) {
+      Swal.fire({
+          icon: 'warning',
+          title: message,
+          timer: 2200,
+      });
+    }
+
     async function findId() {
       if (isMove.value) return;
 
@@ -132,14 +142,15 @@ export default {
         .then((response) => {
           if (response == 'fail') {
             hasId.value = false;
-            return alert('회원이 아닙니다.');
+            warn('회원이 아닙니다');
+            return;
           }
           id.value = response;
           hasId.value = true;
         })
         .catch((error) => {
           console.log(error);
-          alert('다시 시도해 주세요.');
+          warn('다시 시도해 주세요.');
         });
     }
 
@@ -149,14 +160,15 @@ export default {
       rest_user
         .findPw({ id: id.value, email: email.value })
         .then((response) => {
-          return alert(response.data);
+          warn(response.data);
+          return;
 
           // id.value = response;
           // hasId.value = true;
         })
         .catch((error) => {
           console.log(error);
-          alert('다시 시도해 주세요.');
+          warn('다시 시도해 주세요.');
         });
     }
 

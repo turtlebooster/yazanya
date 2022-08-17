@@ -209,6 +209,7 @@
 import { ref } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
+import Swal from 'sweetalert2';
 
 import rest_user from '@/rest/user';
 
@@ -248,7 +249,7 @@ export default {
         }
       } catch (error) {
         console.error(error);
-        alert(error);
+        warn_alert(error);
       }
     }
 
@@ -257,12 +258,12 @@ export default {
 
       if (isMove.value) return;
 
-      if (id.value == '') return alert('아이디를 기입해주세요.');
-      if (pw.value == '') return alert('비밀번호를 기입해주세요.');
-      if (email.value == '') return alert('이메일을 기입해주세요.');
-      if (!isConfirm.value) return alert('이메일 인증을 진행해주세요.');
-      if (name.value == '') return alert('이름을 기입해주세요');
-      if (nickname.value == '') return alert('닉네임을 기입해주세요');
+      if (id.value == '') return warn_alert('아이디를 기입해주세요.');
+      if (pw.value == '') return warn_alert('비밀번호를 기입해주세요.');
+      if (email.value == '') return warn_alert('이메일을 기입해주세요.');
+      if (!isConfirm.value) return warn_alert('이메일 인증을 진행해주세요.');
+      if (name.value == '') return warn_alert('이름을 기입해주세요');
+      if (nickname.value == '') return warn_alert('닉네임을 기입해주세요');
 
       rest_user
         .signUp({
@@ -273,19 +274,18 @@ export default {
           nickname: nickname.value,
         })
         .then((response) => {
-          console.log(response);
-
           if (response.data === 'success') {
+            success_alert('회원가입이 완료되었습니다.');
             change();
           } else {
-            alert(
+            warn_alert(
               '회원가입 중 문제가 발생하였습니다. 나중에 다시 시도해주세요'
             );
           }
         })
         .catch((error) => {
           console.log(error);
-          alert('회원가입 중 문제가 발생하였습니다. 나중에 다시 시도해주세요');
+          warn_alert('회원가입 중 문제가 발생하였습니다. 나중에 다시 시도해주세요');
         });
     }
 
@@ -304,16 +304,16 @@ export default {
         .confirmEmail(email.value)
         .then((response) => {
           if (response === 'alreadyRegistEmail') {
-            alert(
+            warn_alert(
               '이메일 인증번호가 이미 발송되었습니다. 이메일을 확인해주세요.'
             );
           } else {
-            alert('이메일 인증번호를 발송하였습니다.');
+            success_alert('이메일 인증번호를 발송하였습니다.');
           }
         })
         .catch((error) => {
           console.log(error);
-          alert(
+          warn_alert(
             '이메일 인증 중 문제가 발생하였습니다. 나중에 다시 시도해주세요'
           );
         });
@@ -329,13 +329,30 @@ export default {
             alert('이메일이 인증되었습니다.');
             isConfirm.value = true;
           } else {
-            alert('코드나, 이메일이 잘못되었습니다.');
+            warn_alert('코드나, 이메일이 잘못되었습니다.');
           }
         })
         .catch((error) => {
           console.log(error);
-          alert('회원가입 중 문제가 발생하였습니다. 나중에 다시 시도해주세요');
+          warn_alert('회원가입 중 문제가 발생하였습니다. 나중에 다시 시도해주세요');
         });
+    }
+
+    // for alert
+    function warn_alert(message) {
+      Swal.fire({
+          icon: 'warning',
+          title: message,
+          timer: 2200,
+      });
+    }
+
+    function success_alert(message) {
+      Swal.fire({
+          icon: 'success',
+          title: message,
+          timer: 2200,
+      });
     }
 
     return {
