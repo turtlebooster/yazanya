@@ -47,7 +47,7 @@
 
         <div class="spacer"></div>
 
-        <button class="submit" type="button" @click="login">
+        <button class="submit" type="button" @click="findPw">
           임시 비밀번호 발급
         </button>
 
@@ -97,7 +97,11 @@
 
           <div class="spacer"></div>
 
-          <button type="button" class="submit" @click="signup">
+          <div class="spacer"></div>
+          <div v-if="hasId">당신의 ID는 {{ id }} 입니다.</div>
+          <div v-if="hasId" class="spacer"></div>
+
+          <button type="button" class="submit" @click="findId">
             아이디 조회
           </button>
         </div>
@@ -110,85 +114,49 @@
 
 <script>
 import { ref } from 'vue';
-import { useStore } from 'vuex';
-import { useRouter } from 'vue-router';
-
 import rest_user from '@/rest/user';
 
 export default {
   setup() {
-    const store = useStore();
-    const router = useRouter();
-
     let id = ref('');
-    let pw = ref('');
     let email = ref('');
-    let code = ref('');
 
-    let name = ref('');
-    let nickname = ref('');
-
-    let hasCode = ref(false);
-    let isConfirm = ref(false);
+    let hasId = ref(false);
     let isMove = ref(false);
 
-    async function login() {
+    async function findId() {
       if (isMove.value) return;
-      try {
-        let tokens = await rest_user.login({ id: id.value, pw: pw.value });
-        await store.dispatch('login', {
-          'access-token': tokens.access_TOKEN,
-          'refresh-token': tokens.refresh_TOKEN,
-          'id': id.value,
-        });
-
-        console.log(store.state.Account.nextRoom);
-        if (store.state.Account.nextRoom != '') {
-          // move to room
-          router.replace(store.state.Account.nextRoom);
-        } else {
-          router.replace('/main');
-        }
-      } catch (error) {
-        console.error(error);
-        alert(error);
-      }
-    }
-
-    function signup() {
-      // TODO : 빈칸 체크, 입력값 검증, ID, EMAIL, PW, 중복 검사
-
-      if (isMove.value) return;
-
-      if (id.value == '') return alert('아이디를 기입해주세요.');
-      if (pw.value == '') return alert('비밀번호를 기입해주세요.');
-      if (email.value == '') return alert('이메일을 기입해주세요.');
-      if (!isConfirm.value) return alert('이메일 인증을 진행해주세요.');
-      if (name.value == '') return alert('이름을 기입해주세요');
-      if (nickname.value == '') return alert('닉네임을 기입해주세요');
 
       rest_user
-        .signUp({
-          id: id.value,
-          pw: pw.value,
-          email: email.value,
-          name: name.value,
-          nickname: nickname.value,
-        })
+        .findId(email.value)
         .then((response) => {
-          console.log(response);
-
-          if (response.data === 'success') {
-            change();
-          } else {
-            alert(
-              '회원가입 중 문제가 발생하였습니다. 나중에 다시 시도해주세요'
-            );
+          if (response == 'fail') {
+            hasId.value = false;
+            return alert('회원이 아닙니다.');
           }
+          id.value = response;
+          hasId.value = true;
         })
         .catch((error) => {
           console.log(error);
-          alert('회원가입 중 문제가 발생하였습니다. 나중에 다시 시도해주세요');
+          alert('다시 시도해 주세요.');
+        });
+    }
+
+    async function findPw() {
+      if (isMove.value) return;
+
+      rest_user
+        .findPw({ id: id.value, email: email.value })
+        .then((response) => {
+          return alert(response.data);
+
+          // id.value = response;
+          // hasId.value = true;
+        })
+        .catch((error) => {
+          console.log(error);
+          alert('다시 시도해 주세요.');
         });
     }
 
@@ -200,60 +168,13 @@ export default {
       }, 1200);
     }
 
-    function emailCheck() {
-      // TODO : 빈칸 체크, 입력값 검증, ID, EMAIL, PW, 중복 검사
-      hasCode.value = true;
-      rest_user
-        .confirmEmail(email.value)
-        .then((response) => {
-          if (response === 'alreadyRegistEmail') {
-            alert(
-              '이메일 인증번호가 이미 발송되었습니다. 이메일을 확인해주세요.'
-            );
-          } else {
-            alert('이메일 인증번호를 발송하였습니다.');
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-          alert(
-            '이메일 인증 중 문제가 발생하였습니다. 나중에 다시 시도해주세요'
-          );
-        });
-    }
-
-    function codeCheck() {
-      // TODO : 빈칸 체크, 입력값 검증, ID, EMAIL, PW, 중복 검사
-      hasCode.value = true;
-      rest_user
-        .confirmCode({ email: email.value, code: code.value })
-        .then((response) => {
-          if (response === 'success') {
-            alert('이메일이 인증되었습니다.');
-            isConfirm.value = true;
-          } else {
-            alert('코드나, 이메일이 잘못되었습니다.');
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-          alert('회원가입 중 문제가 발생하였습니다. 나중에 다시 시도해주세요');
-        });
-    }
-
     return {
-      hasCode,
-      code,
       id,
-      pw,
       email,
-      name,
-      nickname,
-      login,
-      signup,
+      hasId,
+      findId,
+      findPw,
       change,
-      emailCheck,
-      codeCheck,
     };
   },
 };

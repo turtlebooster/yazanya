@@ -22,5 +22,4 @@ public interface UserService {
 	String hashPw(String userPw);
 	int confirmEmail(String email) throws SQLException;
 	int confirmCode(String code, String email);
-	
 }

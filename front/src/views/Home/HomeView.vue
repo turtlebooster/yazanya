@@ -6,15 +6,18 @@
 
     <div class="home-container d-flex flex-grow-1 flex-shrink-1">
       <!-- Contents -->
-      <div class="home-contents flex-grow-1">
-        <router-view />
-      </div>
+      <router-view />
+    </div>
+
+    <div class="home-footer">
+      <home-footer />
     </div>
   </div>
 </template>
 
 <script>
 import HomeNavbar from './components/HomeNavbar.vue';
+import HomeFooter from './components/HomeFooter.vue';
 import { useRouter } from 'vue-router';
 import { onBeforeMount } from 'vue';
 
@@ -22,6 +25,7 @@ export default {
   name: 'HomeView',
   components: {
     HomeNavbar,
+    HomeFooter,
   },
   setup() {
     let router = useRouter();
@@ -46,11 +50,7 @@ export default {
 };
 </script>
 
-<style scoped>
-* {
-  font-family: Koverwatch !important;
-}
-
+<style>
 .home-view {
   height: 100vh;
   width: 100vw;
@@ -70,11 +70,16 @@ export default {
 .home-header {
   /* background: var(--sub-color-r); */
   /* visibility: hidden; */
-  min-height: var(--size-h-header);
+  min-height: 52px;
 }
 
-.home-contents {
-  /* background: var(--sub-color-o); */
+.home-container {
+  visibility: auto;
+}
+
+.home-footer {
+  /* background: var(--sub-color-r); */
   /* visibility: hidden; */
+  min-height: 52px;
 }
 </style>
