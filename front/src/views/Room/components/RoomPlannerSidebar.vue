@@ -1,7 +1,7 @@
 <template>
   <div class="room-plannersidebar d-flex flex-column">
-    <b-card class="m-3">
-      <room-pomodoro v-if="isUsingPomodoro" />
+    <b-card class="m-3" v-if="isUsingPomodoro">
+      <room-pomodoro/>
     </b-card>
   </div>
   <div class="room-plannersidebar">
