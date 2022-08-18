@@ -67,7 +67,6 @@ public class UserSession implements Closeable {
     this.name = name;
     this.session = session;
     this.roomName = roomName;
-//    this.outgoingMedia = new WebRtcEndpoint.Builder(pipeline).build();
     this.outgoingMedia = new WebRtcEndpoint.Builder(pipeline).useDataChannels()
             .build();
 
@@ -156,7 +155,6 @@ public class UserSession implements Closeable {
     WebRtcEndpoint incoming = incomingMedia.get(sender.getName());
     if (incoming == null) {
       log.debug("PARTICIPANT {}: creating new endpoint for {}", this.name, sender.getName());
-//      incoming = new WebRtcEndpoint.Builder(pipeline).build();
       incoming = new WebRtcEndpoint.Builder(pipeline).useDataChannels()
               .build();
 
@@ -188,11 +186,7 @@ public class UserSession implements Closeable {
     	// Media logic
 	    FaceOverlayFilter faceOverlayFilter = new FaceOverlayFilter.Builder(pipeline).build();
 
-	    //String appServerUrl = System.getProperty("app.server.url",
-	    //    MagicMirrorApp.DEFAULT_APP_SERVER_URL);
-	    String appServerUrl = "http://files.openvidu.io";
-	    faceOverlayFilter.setOverlayedImage(appServerUrl + "/img/mario-wings.png", -0.35F, -1.2F,
-	        1.6F, 1.6F);
+	    faceOverlayFilter.setOverlayedImage("https://raw.githubusercontent.com/turtlebooster/WebRtc-test/main/src/main/resources/fox.png", -0.35F, -0.6F, 2.0F, 2.0F);
 	    
 	    sender.getOutgoingWebRtcPeer().connect(faceOverlayFilter);
 	    
