@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import rest_todo from '@/rest/todo';
+//import rest_todo from '@/rest/todo';
 import { onBeforeMount, ref } from 'vue';
 
 export default {
@@ -37,7 +37,7 @@ export default {
     const todoList = ref();
 
     async function init() {
-      todoList.value = await rest_todo.getTodo();
+      //todoList.value = await rest_todo.getTodo();
     }
 
     onBeforeMount(() => {
