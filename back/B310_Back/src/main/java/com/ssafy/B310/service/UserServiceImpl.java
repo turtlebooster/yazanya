@@ -280,6 +280,16 @@ public class UserServiceImpl implements UserService{
 		return 0;
 	}
 	
-
+	@Override
+	public int setPlayList(String userId, String musicPlayList) throws SQLException {
+		User user = myPage(userId);
+		
+		user.setMusicPlayList(musicPlayList);
+		
+		User savedUser = userRepository.save(user);
+		
+		if(savedUser != null) return 1;
+		return 0;
+	}
 
 }

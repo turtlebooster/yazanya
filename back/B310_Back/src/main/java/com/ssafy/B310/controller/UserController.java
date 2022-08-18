@@ -498,5 +498,30 @@ public class UserController {
     	
     	return new ResponseEntity<Integer> (restTime, HttpStatus.OK);
     }
+    
+    //유저 플레이리스트 설정하기
+    @PostMapping("/playList")
+    @ApiOperation(value = "유저 플레이 리스트 설정하기. " , notes = "url주소,url주소,url주소 형태로 세팅 저장\r\n{\r\n\"musicPlayList\" : \"aa,bb,cc\"\r\n}")
+    public ResponseEntity<?> setPlayList(@RequestBody User user, HttpServletRequest request) throws SQLException {
+    	String userId = jwtTokenProvider.getUserID(request.getHeader("access-token"));
+    	int cnt = userService.setPlayList(userId, user.getMusicPlayList());
+    	
+    	if (cnt == 1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+    	else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
+    }
+    
+    //유저 플레이리스트 가져오기
+    @GetMapping("/playList")
+    @ApiOperation(value = "유저 플레이 리스트 가져오기")
+    public ResponseEntity<?> getPlayList(HttpServletRequest request) throws SQLException {
+    	String userId = jwtTokenProvider.getUserID(request.getHeader("access-token"));
+
+    	User user = userService.myPage(userId);
+    	
+    	String result = user.getMusicPlayList();
+    	
+    	if (result != null) return new ResponseEntity<String>(result, HttpStatus.OK);
+    	else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
+    }
 }
 
