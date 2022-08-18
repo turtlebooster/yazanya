@@ -55,7 +55,10 @@
                 style="height: 100px; object-fit: cover"
                 alt="logo"
               />
-              <router-link to="/account/login" style="text-decoration: none; z-index: 2;">
+              <router-link
+                to="/account/login"
+                style="text-decoration: none; z-index: 2"
+              >
                 <div class="btn-login">시작하기</div>
               </router-link>
             </div>
@@ -120,12 +123,11 @@
                   </h2>
                   <div class="spacer"></div>
                   <p>
-                    실시간으로 <span>모두</span>와 함께 <span>공부</span>할 수
-                    있어요
+                    <span>어떤</span> 화면에서도 자연스러운 <span>화면</span>
                   </p>
                   <p>
-                    오른쪽의 플래너를 <span>드래그 & 드롭</span>하여
-                    <br />여러분의 학습계획을 커스터마이징해보세요
+                    <span>어떤</span> 장소라도 버튼 한 번이면 <br />공부방이
+                    됩니다
                   </p>
                 </div>
 
@@ -174,6 +176,7 @@
         type="button"
         data-bs-target="#carouselExampleCaptions"
         data-bs-slide="prev"
+        style="width: 4%"
       >
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Previous</span>
@@ -183,6 +186,7 @@
         type="button"
         data-bs-target="#carouselExampleCaptions"
         data-bs-slide="next"
+        style="width: 4%"
       >
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Next</span>
