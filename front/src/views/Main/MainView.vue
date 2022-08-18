@@ -26,17 +26,17 @@ import MainSidebar from './components/MainSidebar.vue';
 import { onBeforeMount } from 'vue';
 
 export default {
+  components: {
+    MainNavbar,
+    MainSidebar,
+  },
+
   setup() {
     onBeforeMount(() => {
       // setting
       document.documentElement.style.setProperty('--size-h-header', '40px');
       document.documentElement.style.setProperty('--size-w-side', '64px');
     });
-  },
-
-  components: {
-    MainNavbar,
-    MainSidebar,
   },
 };
 </script>

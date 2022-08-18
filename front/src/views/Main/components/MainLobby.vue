@@ -165,7 +165,7 @@
           :state="validation.roomPw"
         >
         </b-form-input>
-        <b-form-invalid-feedback :state="validation.roomPw">
+        <b-form-invalid-feedback v-if="newRoom.roomHasPw" :state="validation.roomPw">
           비밀번호는 최소 4글자의 영문/숫자여야 해요
         </b-form-invalid-feedback>
 
