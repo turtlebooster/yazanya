@@ -30,8 +30,8 @@ public class TodoServiceImpl implements TodoService {
 		
 		if (oUser.isPresent()) {
 			todo.setUser(oUser.get());
-			todoRepository.save(todo);
-			return 1;			
+			Todo nTodo = todoRepository.save(todo);
+			return nTodo.getTodoNum();			
 		}
 		return 0;
 	}

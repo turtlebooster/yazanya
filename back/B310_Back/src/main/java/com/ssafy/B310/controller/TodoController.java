@@ -53,8 +53,8 @@ public class TodoController {
     @PostMapping()
     public ResponseEntity<?> createTodo(@RequestBody Todo todo, HttpServletRequest request) throws SQLException{
 		String userId = jwtService.getUserID(request.getHeader("access-token"));
-    	int cnt = todoService.createTodo(todo, userId);
-    	if (cnt == 1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+    	int todoNum = todoService.createTodo(todo, userId);
+    	if (todoNum != 0) return new ResponseEntity<Integer>(todoNum, HttpStatus.OK);
     	else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
     }
     
