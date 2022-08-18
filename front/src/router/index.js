@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 
 // true : 로그인을 해야 이동 가능
 // false : 로그인을 하면 이동 불가능
-const beforeAuth = (needAuth) => (from, to, next) => {
+const beforeAuth = (needAuth) => async (from, to, next) => {
   const isLogined = store.getters['isAuthenticated'];
   if (needAuth && !isLogined) {
     if (from.path.includes('studyroom')) {
@@ -13,7 +13,7 @@ const beforeAuth = (needAuth) => (from, to, next) => {
     }
 
     // 로그인 필요
-    Swal.fire({
+    await Swal.fire({
       icon: 'warning',
       title: '로그인이 필요한 서비스 입니다',
       timer: 3000,
