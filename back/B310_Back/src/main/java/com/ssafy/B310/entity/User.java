@@ -98,6 +98,10 @@ public class User {
 	// 플래너 배치 설정
 	@Column(columnDefinition = "varchar(20) default '0,1,2,3'")
 	private String profilePlannerSet;
+	
+	//플레이리스트
+	@Column
+	private String musicPlayList;
 
 	@Column
 	@ColumnDefault("false")
