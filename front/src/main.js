@@ -1,4 +1,4 @@
-import { createApp } from 'vue';
+import { createApp, nextTick } from 'vue';
 import App from './App.vue';
 import router from './router';
 import store from './store';
@@ -13,6 +13,15 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 
 import 'v-calendar/dist/style.css';
 import VCalendar from 'v-calendar';
+
+// for setting site title
+router.afterEach((to, from) => {
+  const title = to.meta.title === undefined ? 'YaZanya' : to.meta.title;
+  nextTick(() => {
+    console.debug(from);
+    document.title = title;
+  });
+});
 
 createApp(App)
   .use(router)
