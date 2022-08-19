@@ -141,8 +141,6 @@ export default {
     function startTodo(todo) {
       todo.flag = true;
 
-      console.log(todo);
-      
       let timer = setInterval(() => {
         todo.todoTime -= 1;
 
@@ -156,9 +154,16 @@ export default {
       }, 1000);
     }
 
-    function completeTodo(todo) {
+    async function completeTodo(todo) {
       todo.flag = false;
       todo.todoTime = -1;
+      todo.todoProgress = -1;
+
+      try {
+        await rest_todo.updateTodo(todo);
+      } catch(error) {
+        warning(error);
+      }
     }
 
     async function eraseTodo(todo) {
@@ -185,7 +190,6 @@ export default {
       todo_time,
 
       add_todo,
-
       startTodo,
       completeTodo,
       eraseTodo,
