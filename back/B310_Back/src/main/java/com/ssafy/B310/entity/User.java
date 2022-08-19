@@ -96,7 +96,7 @@ public class User {
 	private String profileBelongTo;
 	
 	// 플래너 배치 설정
-	@Column(columnDefinition = "varchar(20) default '0,1,2,3'")
+	@Column(columnDefinition = "varchar(20) default '0,1,2,3,4'")
 	private String profilePlannerSet;
 	
 	//플레이리스트
