@@ -1,29 +1,46 @@
 import { createWebHistory, createRouter } from 'vue-router';
 import store from '../store';
+import Swal from 'sweetalert2';
 
 // true : 로그인을 해야 이동 가능
 // false : 로그인을 하면 이동 불가능
-const beforeAuth = (needAuth) => (from, to, next) => {
-  const isLogined = store.getters['isAuthenticated']; // is logined
-  console.log(isLogined);
-
+const beforeAuth = (needAuth) => async (from, to, next) => {
+  const isLogined = store.getters['isAuthenticated'];
   if (needAuth && !isLogined) {
+    if (from.path.includes('studyroom')) {
+      // save last room info for using after login
+      store.commit('SET_NEXT_ROOM', from.path);
+    }
+
     // 로그인 필요
-    alert('로그인이 필요한 서비스 입니다');
-    next('/account');
+    await Swal.fire({
+      icon: 'warning',
+      title: '로그인이 필요한 서비스 입니다',
+      timer: 3000,
+    });
+    next('/account/login');
     // 로그인 필요 없음
   } else if (!needAuth && isLogined) {
     next('/main');
+  } else {
+    next();
   }
-  next();
 };
 
 const routes = [
   {
     path: '/',
     name: 'home',
+    redirect: '/home',
     beforeEnter: beforeAuth(false),
     component: () => import('../views/Home/HomeView.vue'),
+    children: [
+      {
+        path: '/home',
+        name: 'home.content', // default page
+        component: () => import('../views/Home/components/HomeContent.vue'),
+      },
+    ],
   },
   {
     path: '/main',
@@ -42,8 +59,8 @@ const routes = [
           import('../views/Setting/components/SettingProfile.vue'),
       },
       {
-        path: 'Planner',
-        name: 'main.Planner',
+        path: 'planner',
+        name: 'main.planner',
         component: () => import('../views/Planner/PlannerView.vue'),
       },
       {
@@ -62,28 +79,18 @@ const routes = [
     path: '/account',
     name: 'account',
     redirect: '/account/login',
-    component: () => import('../views/User/UserView.vue'),
+    component: () => import('../views/Account/AccountView.vue'),
     beforeEnter: beforeAuth(false),
     children: [
       {
         path: 'login',
-        name: 'user.login',
-        component: () => import('../views/User/components/UserLogin.vue'),
+        name: 'account.login',
+        component: () => import('../views/Account/components/AccountLogin.vue'),
       },
       {
-        path: 'signup',
-        name: 'user.signup',
-        component: () => import('../views/User/components/UserSignup.vue'),
-      },
-      {
-        path: 'findid',
-        name: 'user.findid',
-        component: () => import('../views/User/components/UserFindid.vue'),
-      },
-      {
-        path: 'findpw',
-        name: 'user.findpw',
-        component: () => import('../views/User/components/UserFindpw.vue'),
+        path: 'find',
+        name: 'account.find',
+        component: () => import('../views/Account/components/AccountFind.vue'),
       },
     ],
   },

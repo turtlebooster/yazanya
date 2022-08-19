@@ -20,19 +20,17 @@ export function Participant(name) {
     return video;
   };
 
-  this.setWidth = function (width) {
-    video.setAttribute('width', width);
+  // managing peer audio and video
+  this.handleAudio = function (flag) {
+    if (this.rtcPeer) {
+      this.rtcPeer.audioEnabled = flag;
+    }
   };
-
-  this.setHeight = function (height) {
-    video.setAttribute('width', height);
-  };
-
-  // managing peer
-  this.pauseVideo = function () {
-    // if (rtcPeer) {
-    //   rtcPeer.stream.
-    // }
+  this.handleVideo = function (flag) {
+    if (this.rtcPeer) {
+      console.log('videoEnagled');
+      this.rtcPeer.videoEnabled = flag;
+    }
   };
 
   this.offerToReceiveVideo = function (error, offerSdp) {
@@ -61,10 +59,4 @@ export function Participant(name) {
     console.log('Disposing participant ' + this.name);
     this.rtcPeer.dispose();
   };
-
-  // function sendMessage(message) {
-  //   var jsonMessage = JSON.stringify(message);
-  //   console.log("Sending message: " + jsonMessage);
-  //   ws.send(jsonMessage);
-  // }
 }

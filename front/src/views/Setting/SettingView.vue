@@ -1,5 +1,5 @@
 <template>
-  <div class="setting-view">
+  <div class="setting-view main">
     <div class="app-header">
       <!-- <header-nav style="display: none" /> -->
       <header-nav />
@@ -24,33 +24,24 @@
 <script>
 import HeaderNav from '../Main/components/MainNavbar.vue';
 import SideBar from '../Main/components/MainSidebar.vue';
-
+import { onBeforeMount } from 'vue';
 export default {
   components: {
     HeaderNav,
     SideBar,
-  },  
-    setup() {
-      var toggle = localStorage.getItem('toggle')
-      function fix(toggle) {
-        if (toggle) {
-          window.getComputedStyle(
-            document.querySelector('side-bar'), ':hover'
-          ).setProperty('width', '40px');
-        }
-        else {
-          window.getComputedStyle(
-            document.querySelector('side-bar'), ':hover'
-          ).setProperty('width', '160px');
-        }
-        console.log(toggle)
-      }
-      return {
-        fix,
-        toggle,
-      }
-    }
+  },
+  setup() {
+    onBeforeMount(() => {
+      // setting
+      document.documentElement.style.setProperty('--size-h-header', '40px');
+      document.documentElement.style.setProperty('--size-w-side', '64px');
+    });
+  },
 };
 </script>
 
-<style></style>
+<style scoped>
+.setting-view {
+  height: 100vh;
+}
+</style>

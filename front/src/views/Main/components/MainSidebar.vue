@@ -1,36 +1,38 @@
 <template>
-  <div class="main-sidebar">
-    <router-link to="/main/setting/profile">
-      <img
-        src="@/assets/avatar/3.jpg"
-        alt="profile"
-        class="image icon"
-        style="padding: 8px; object-fit: cover; border-radius: 50%"
-      />
-      <span class="title">홍 길동</span>
-    </router-link>
+  <div class="main-sidebar main">
+    <img
+      :src="`${server_link}/showImg/profile/number/${userNum}`"
+      alt="profile"
+      class="image icon"
+      style="padding: 8px; object-fit: cover; border-radius: 50%"
+    />
 
     <router-link to="/main">
       <span class="icon"><i class="bi bi-house"></i></span>
-      <span class="title">로비</span>
+      <span class="title">메인</span>
+    </router-link>
+
+    <router-link to="/main/setting/profile">
+      <span class="icon"><i class="bi bi-people"></i></span>
+      <span class="title">내 프로필</span>
     </router-link>
 
     <router-link to="/main/planner">
       <span class="icon"
         ><i class="bi bi-layout-text-sidebar-reverse"></i
       ></span>
-      <span class="title">플래너</span>
+      <span class="title">내 플래너</span>
     </router-link>
 
-    <router-link to="/main/friends">
+    <!-- <router-link to="/main/friends">
       <span class="icon"><i class="bi bi-people"></i></span>
       <span class="title">친구 목록</span>
-    </router-link>
+    </router-link> -->
 
-    <router-link to="/main/alarm">
+    <!-- <router-link to="/main/alarm">
       <span class="icon"><i class="bi bi-bell"></i></span>
       <span class="title">알림</span>
-    </router-link>
+    </router-link> -->
 
     <div style="flex-grow: 1"></div>
 
@@ -47,28 +49,49 @@
 </template>
 
 <script>
+import { ref, onBeforeMount } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 
+import rest_user from '@/rest/user';
+
 export default {
   setup() {
+    let userNum = ref(0);
+    let userName = ref(0);
+
     const store = useStore();
     const router = useRouter();
 
     function logout() {
-      store.dispatch('logout')
-      .then(() => {
+      store.dispatch('logout').then(() => {
         router.replace('/');
-      })
+      });
     }
-    
-    return { logout }
-  }
-}
 
+    async function init() {
+      let userData = await rest_user.getProfile(store.getters.getUserID);
+      userNum.value = userData.userNum;
+      userName.value = userData.userName;
+    }
+
+    onBeforeMount(() => {
+      init();
+    });
+
+    // for profile image
+    const server_link = ref(process.env.VUE_APP_SERVER);
+    return { userNum, userName, logout, server_link };
+  },
+};
 </script>
 
 <style scoped>
+* {
+  font-family: NanumSquareRoundEB;
+  color: var(--light-main-color);
+}
+
 .main-sidebar {
   z-index: 20;
   position: fixed;
@@ -93,9 +116,14 @@ export default {
   white-space: nowrap;
 }
 
-.main-sidebar:hover {
-  width: calc(var(--size-w-side) * 2.5);
-  box-shadow: 8px 0px 8px white;
+.dark .main-sidebar:hover {
+  width: calc(var(--size-w-side-hover) - 16px);
+  box-shadow: 8px 0px 8px var(--dark-main-color);
+}
+
+.light .main-sidebar:hover {
+  width: calc(var(--size-w-side-hover) - 16px);
+  box-shadow: 8px 0px 8px var(--light-main-color);
 }
 
 .main-sidebar a {
@@ -104,19 +132,23 @@ export default {
   width: 100%;
 
   text-decoration: none;
-  color: var(--light-main-color);
   font-size: 12pt;
+
+  margin-bottom: 8px;
 
   border-bottom-left-radius: calc(var(--size-w-side) / 2);
   border-top-left-radius: calc(var(--size-w-side) / 2);
 }
 
-.main-sidebar a.router-link-exact-active {
+.light .main-sidebar a.router-link-exact-active {
   background: var(--light-main-color);
-  color: var(--theme-color);
 }
 
-.main-sidebar a.router-link-exact-active::before {
+.dark .main-sidebar a.router-link-exact-active {
+  background: var(--dark-main-color);
+}
+
+.light .main-sidebar a.router-link-exact-active::before {
   content: '';
   position: absolute;
   top: -30px;
@@ -129,7 +161,7 @@ export default {
   z-index: -1;
 }
 
-.main-sidebar a.router-link-exact-active::after {
+.light .main-sidebar a.router-link-exact-active::after {
   content: '';
   position: absolute;
   bottom: -30px;
@@ -140,6 +172,36 @@ export default {
   border-radius: 50%;
   box-shadow: 15px -15px 0 var(--light-main-color);
   z-index: -1;
+}
+
+.dark .main-sidebar a.router-link-exact-active::before {
+  content: '';
+  position: absolute;
+  top: -30px;
+  right: 0;
+  width: 30px;
+  height: 30px;
+  background: var(--theme-color);
+  border-radius: 50%;
+  box-shadow: 15px 15px 0 var(--dark-main-color);
+  z-index: -1;
+}
+
+.dark .main-sidebar a.router-link-exact-active::after {
+  content: '';
+  position: absolute;
+  bottom: -30px;
+  right: 0;
+  width: 30px;
+  height: 30px;
+  background: var(--theme-color);
+  border-radius: 50%;
+  box-shadow: 15px -15px 0 var(--dark-main-color);
+  z-index: -1;
+}
+
+.main-sidebar a.router-link-exact-active * {
+  color: var(--theme-color) !important;
 }
 
 .main-sidebar a .icon {
@@ -160,8 +222,10 @@ export default {
   position: relative;
   display: block;
 
+  margin-left: 8px;
+
   height: calc(var(--size-w-side) - 16px);
   line-height: calc(var(--size-w-side) - 16px);
-  font-size: 1.2em;
+  font-size: 1.5em;
 }
 </style>

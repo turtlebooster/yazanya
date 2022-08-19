@@ -1,25 +1,20 @@
-<!-- opgg 나 오버워치 친구창 참고할 것 -->
-
 <template>
   <div class="main-friends">
-    <div class="container d-flex flex-column align-items-center">
-      <div v-for="friend in state.friendList" :key="friend.userNum">
-        <div class="friend-form">
-          <div>
-            {{ friend.userNum }}
-          </div>
-          <div>
-            <img
-              :src="require(`@/assets/avatar/${friend.userNum}.jpg`)"
-              alt="profile"
-              class="image icon"
-              style="
-                height: 40px;
-                width: 40px;
-                object-fit: cover;
-                border-radius: 50%;
-              "
-            />
+    <div class="d-flex flex-column align-items-center" style="padding: 8px">
+      <div class="container-fluid" style="border-radius: 24px; width: 90%">
+        <div class="row">
+          <div
+            v-for="user in userList"
+            :key="user.userNum"
+            class="user outer col-12 col-sm-6 col-md-4 col-lg-3"
+          >
+            <b-avatar
+              :src="`${server_link}/showImg/profile/number/${user.userNum}`"
+              size="5em"
+            ></b-avatar>
+            <div>
+              {{ user }}
+            </div>
           </div>
         </div>
       </div>
@@ -28,35 +23,23 @@
 </template>
 
 <script>
-import { reactive } from 'vue';
+import { ref, onBeforeMount } from 'vue';
+import rest_user from '@/rest/user';
 
 export default {
   setup() {
-    const state = reactive({
-      testNum: 1,
-      friendList: [
-        {
-          userNum: 1,
-        },
-        {
-          userNum: 2,
-        },
-        {
-          userNum: 3,
-        },
-        {
-          userNum: 4,
-        },
-        {
-          userNum: 5,
-        },
-        {
-          userNum: 6,
-        },
-      ],
+    const server_link = ref(process.env.VUE_APP_SERVER);
+    const userList = ref();
+
+    async function init() {
+      userList.value = await rest_user.getUserList();
+    }
+
+    onBeforeMount(() => {
+      init();
     });
 
-    return { state };
+    return { userList, server_link };
   },
 };
 </script>
@@ -68,10 +51,8 @@ export default {
 
 .friend-form {
   margin: 10px;
-  background: white;
   height: 100px;
   width: 50vw;
   border-radius: 16px;
-  box-shadow: 1px 1px 8px gray;
 }
 </style>
