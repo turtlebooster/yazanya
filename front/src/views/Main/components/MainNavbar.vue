@@ -1,9 +1,5 @@
 <template>
-  <nav
-    v-if="main_nav_on"
-    class="main-nav"
-    :class="[$root.theme ? 'light' : 'dark']"
-  >
+  <nav v-if="main_nav_on" class="main-nav main">
     <div>
       <router-link to="/main">
         <!-- Main Nav -->

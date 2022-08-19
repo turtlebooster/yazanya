@@ -1,6 +1,5 @@
 package com.ssafy.B310.entity;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,7 +8,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Getter;
@@ -25,12 +23,12 @@ public class RoomHashtag {
 	private int roomHashtagNum;
 	
 	@JsonIgnore
-	@ManyToOne(cascade = CascadeType.PERSIST)
+	@ManyToOne
 	@JoinColumn(name = "ROOM_NUM")
 	private Room room;
 	
 	@JsonIgnore
-	@ManyToOne(cascade = CascadeType.PERSIST)
+	@ManyToOne
 	@JoinColumn(name = "HASHTAG_NUM")
 	private Hashtag hashtag;
 	

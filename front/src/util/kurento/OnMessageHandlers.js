@@ -2,7 +2,14 @@ import { Participant } from './Participant';
 import { WebRtcPeer } from 'kurento-utils';
 import store from '@/store';
 
-export function onExistingParticipants(msg, participants, userName, roomName) {
+export function onExistingParticipants(
+  msg,
+  participants,
+  userName,
+  roomName,
+  roomVideo = true,
+  roomAudio = true
+) {
   var constraints = {
     audio: true,
     video: {
@@ -36,11 +43,13 @@ export function onExistingParticipants(msg, participants, userName, roomName) {
       return console.error(error);
     }
     this.generateOffer(participant.offerToReceiveVideo.bind(participant));
+    participant.handleVideo(roomVideo);
+    participant.handleAudio(roomAudio);
   });
 
-  msg.data.forEach((element) => receiveVideo(element, participants));
-
-  console.log(participants);
+  msg.data.forEach((element) =>
+    receiveVideo(element, participants, roomVideo, roomAudio)
+  );
 }
 
 export function onNewParticipant(request, participants) {
@@ -48,7 +57,12 @@ export function onNewParticipant(request, participants) {
   receiveVideo(request.name, participants);
 }
 
-function receiveVideo(sender, participants) {
+function receiveVideo(
+  sender,
+  participants,
+  roomVideo = true,
+  roomAudio = true
+) {
   var participant = new Participant(sender);
   participants[sender] = participant;
   var video = participant.getVideoElement();
@@ -71,11 +85,13 @@ function receiveVideo(sender, participants) {
       return console.error(error);
     }
     this.generateOffer(participant.offerToReceiveVideo.bind(participant));
+    participant.handleVideo(roomVideo);
+    participant.handleAudio(roomAudio);
   });
 }
 
 function onDataChanelMessage(event) {
-  store.commit('addChat', event.data);
+  store.commit('recieveData', event.data);
 }
 
 export function onParticipantLeft(request, participants) {

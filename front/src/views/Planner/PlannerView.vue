@@ -1,133 +1,208 @@
-<!--https://getbootstrap.com/docs/5.2/examples/ 좀 보고와라-->
-<!--https://getbootstrap.com/docs/5.2/examples/masonry/ 좀 보고와라-->
-
 <template>
-  <div class="main-planner">
-    <div class="d-flex flex-column align-items-center" style="padding: 8px">
-      <div class="spacer"></div>
+  <div class="planner-view d-flex flex-column align-items-center main">
+    <div class="spacer"></div>
 
-      <!-- search -->
-      <div class="search outer d-flex align-items-center">
-        <input
-          class="search_input"
-          type="text"
-          placeholder="플래너 템플릿 검색"
-        />
-        <a href="#" class="search_icon"><i class="bi bi-search"></i></a>
-      </div>
-      <div class="spacer"></div>
-      <div class="spacer"></div>
+    <!-- search -->
+    <!-- <div class="search outer d-flex align-items-center">
+      <input
+        class="search_input"
+        type="text"
+        placeholder="플래너 템플릿 검색"
+      />
+      <a href="#" class="search_icon sub"><i class="bi bi-search"></i></a>
+    </div> -->
 
-      <!-- widget -->
-      <div class="container-fluid" style="border-radius: 24px; width: 90%">
-        <div class="row">
-          <div
-            v-for="(widget, index) in widgetList"
-            :key="index"
-            :class="`widget col-${widget.column}`"
-          >
-            <div
-              class="widget-template outer"
-              v-b-modal="`modal-${widget.type}`"
-            >
-              <component
-                :is="componentList[widget.type]"
-                class="widget-component"
-              ></component>
-            </div>
-          </div>
-        </div>
+    <!-- <div>받아오는 값</div>
+    <div>{{ profile }}</div>
+
+    <div>현재 리스트 순서</div>
+    <div>{{ widgetList.toString() }}</div> -->
+
+    <!-- <div class="spacer"></div> -->
+    <div class="spacer"></div>
+
+    <!-- planner masonry & draggable layout -->
+    <div
+      class="masonry-container drag-container"
+      style="width: 90%; display: grid; column-gap: 10px; grid-auto-rows: 10px"
+    >
+      <div
+        class="masonry-item drag-item"
+        v-for="(widgetNum, index) in widgetList"
+        :id="`dragItem-${index}-widget-${widgetNum}`"
+        :key="index"
+      >
+        <component
+          :is="componentList[widgetNum]"
+          class="widget outer main"
+          v-b-modal="`modal-${componentNameList[widgetNum]}`"
+        ></component>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { reactive, toRefs } from 'vue';
+/* still in progress */
 import PlannerCalender from './components/PlannerCalendar.vue';
 import PlannerProgress from './components/PlannerProgress.vue';
-import PlannerTode from './components/PlannerTodo.vue';
+import PlannerTodo from './components/PlannerTodo.vue';
 import PlannerTotal from './components/PlannerTotal.vue';
 import PlannerRank from './components/PlannerRank.vue';
 import PlannerStatus from './components/PlannerStatus.vue';
+import PlannerTimer from './components/PlannerTimer.vue';
+
+import rest_user from '@/rest/user';
+// import rest_todo from '@/rest/todo';
+import { ref, nextTick, onMounted } from 'vue';
+import { useStore } from 'vuex';
 
 export default {
   setup() {
+    const store = useStore();
+
+    // 테스트 용
+    const widgetList = ref([0, 1, 4, 3, 5, 2]);
+
     const componentList = [
-      PlannerCalender,
-      PlannerProgress,
-      PlannerTode,
       PlannerTotal,
       PlannerRank,
-      PlannerStatus,
+      PlannerStatus, // 5
+      PlannerCalender, // 0
+      PlannerProgress,
+      PlannerTodo,
+      PlannerTimer,
     ];
-    const state = reactive({
-      widgetList: [
-        {
-          type: 3,
-          column: 4,
-        },
-        {
-          type: 4,
-          column: 4,
-        },
-        {
-          type: 5,
-          column: 4,
-        },
-        {
-          type: 2,
-          column: 6,
-        },
-        {
-          type: 1,
-          column: 4,
-        },
-        {
-          type: 0,
-          column: 12,
-        },
-      ],
+
+    const componentNameList = [
+      'planner-total',
+      'planner-rank',
+      'planner-status',
+      'planner-calendar',
+      'planner-progress',
+      'planner-todo',
+      'planner-timer',
+    ];
+
+    const profile = ref({
+      profileTotalStudyTime: null,
+      profileRank: null,
+      profilePlannerSet: null,
     });
 
-    return { componentList, ...toRefs(state) };
+    async function init() {
+      profile.value = await rest_user.getProfile(store.getters.getUserID);
+      // 주석 처리 풀어야 서버로 부터 받아옴
+      widgetList.value = await profile.value.profilePlannerSet.split(',');
+
+      nextTick(() => {
+        masonryLayout();
+        window.addEventListener('resize', masonryLayout);
+        dragLayout(document.querySelector('.drag-container'));
+      });
+    }
+
+    function masonryLayout() {
+      const masonryContainer = document.querySelector('.masonry-container');
+      if (!masonryContainer) {
+        return;
+      }
+
+      const masonryContainerStyle = getComputedStyle(masonryContainer);
+
+      const containerWidth = parseInt(
+        masonryContainerStyle.getPropertyValue('width')
+      );
+
+      if (containerWidth > 1440) {
+        masonryContainer.style.gridTemplateColumns = `repeat(4, calc(${containerWidth}px / 4)`;
+      } else if (containerWidth > 960) {
+        masonryContainer.style.gridTemplateColumns = `repeat(3, calc(${containerWidth}px / 3)`;
+      } else if (containerWidth > 560) {
+        masonryContainer.style.gridTemplateColumns = `repeat(2, calc(${containerWidth}px / 2)`;
+      } else {
+        masonryContainer.style.gridTemplateColumns = `repeat(1, ${containerWidth}px)`;
+      }
+
+      const columnGap = parseInt(
+        masonryContainerStyle.getPropertyValue('column-gap')
+      );
+      const autoRows = parseInt(
+        masonryContainerStyle.getPropertyValue('grid-auto-rows')
+      );
+
+      document.querySelectorAll('.masonry-item').forEach((el) => {
+        el.style.gridRowEnd = `span ${Math.ceil(
+          el.querySelector('.widget').scrollHeight / autoRows +
+            columnGap / autoRows
+        )}`;
+      });
+    }
+
+    function dragLayout(list) {
+      let currNum = null;
+      let currIndex = null;
+
+      let nextNum = null;
+      let nextIndex = null;
+
+      [...list.children].map((item) => {
+        item.draggable = true;
+      });
+
+      function _onDragOver(e) {
+        e.preventDefault();
+        if (e.target.closest('.widget')) {
+          const nextData = e.target.closest('.drag-item').id.split('-');
+          nextNum = nextData[3];
+          nextIndex = nextData[1];
+        }
+      }
+
+      function _onDragEnd(e) {
+        e.preventDefault();
+        e.target.style.visibility = 'visible';
+        if (nextNum != null) {
+          widgetList.value.splice(currIndex, 1);
+          widgetList.value.splice(nextIndex, 0, currNum);
+
+          nextTick(() => {
+            masonryLayout();
+          });
+        }
+      }
+
+      list.addEventListener('dragstart', function (e) {
+        const currData = e.target.closest('.drag-item').id.split('-');
+        currIndex = currData[1];
+        currNum = currData[3];
+
+        e.target.style.visibility = 'hidden';
+        list.addEventListener('dragover', _onDragOver, false);
+        list.addEventListener('dragend', _onDragEnd, false);
+      });
+    }
+
+    onMounted(() => {
+      init();
+    });
+
+    return {
+      componentList,
+      componentNameList,
+      widgetList,
+      profile,
+      masonryLayout,
+    };
   },
 };
 </script>
 
 <style scoped>
-.main-lobby {
-  background-color: var(--light-main-color);
-  height: 100%;
-}
-
-.outer {
-  box-shadow: 4px 4px 10px -1px rgba(0, 0, 0, 0.25),
-    -4px -4px 10px -1px rgba(255, 255, 255, 0.25);
-}
-
-.inner {
-  box-shadow: inset 4px 4px 10px -1px rgba(0, 0, 0, 0.25),
-    inset -4px -4px 10px -1px rgba(255, 255, 255, 0.25);
-}
-
-.liner {
-  height: 2px;
-  width: 80%;
-  border-radius: 1px;
-  background: var(--light-sub-color);
-}
-
-.spacer {
-  height: 24px;
-}
-
 .search {
   height: 40px;
   width: 80%;
   flex-wrap: nowrap;
-
-  background-color: var(--light-main-color);
   border-radius: 24px;
   padding: 10px;
 }
@@ -135,7 +210,6 @@ export default {
 .search_input {
   width: 100px;
   height: 32px;
-  color: black;
   /* color: white; */
   border: 0;
   outline: 0;
@@ -151,7 +225,6 @@ export default {
 
 .search:hover > .search_icon {
   background: var(--theme-color);
-  color: white;
 }
 
 .search_icon {
@@ -163,48 +236,46 @@ export default {
   align-items: center;
   border-radius: 50%;
   color: white;
-  background-color: black;
 }
 
-a:link {
-  text-decoration: none;
+.drag-container {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  transition-duration: 0.2s;
 }
 
-.widget-template * {
-  /* text-decoration: none; */
-  color: #000000;
+.blank {
+  border: 1px dashed #000;
+  border-radius: 16px;
+}
 
+.widget {
+  z-index: 1;
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  transition-duration: 0.2s;
+}
+
+.widget-component {
+  width: 100%;
+  padding: 16px;
+  display: block;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.widget-template {
-  background: white;
-  border-radius: 16px;
+.widget-component * {
+  /* text-decoration: none; */
+  display: block;
+  color: #000000;
   overflow: hidden;
-  position: relative;
-  margin-bottom: 32px;
-  margin-left: auto;
-  margin-right: auto;
-  height: 200px;
-
-  transition-duration: 0.2s;
-}
-
-.widget-template:hover {
-  /* padding-bottom: 10%; */
-  z-index: 10;
-  transform: scale(1.1); /*  default */
-  -webkit-transform: scale(1.1); /*  크롬 */
-  -moz-transform: scale(1.1); /* FireFox */
-  -o-transform: scale(1.1); /* Opera */
-}
-
-.widget-component {
-  padding: 8px;
-  position: absolute;
-  width: 100%;
-  height: 100%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>

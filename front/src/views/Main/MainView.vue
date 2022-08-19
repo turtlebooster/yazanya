@@ -6,14 +6,14 @@
     </div>
 
     <!-- Container -->
-    <div class="main-container d-flex flex-grow-1 flex-shrink-1">
+    <div class="main-container main d-flex flex-grow-1 flex-shrink-1">
       <!-- Side -->
-      <div class="main-side">
+      <div class="main-side main">
         <main-sidebar />
       </div>
 
       <!-- Contents -->
-      <div class="main-contents flex-grow-1">
+      <div class="main-contents main flex-grow-1">
         <router-view />
       </div>
     </div>
@@ -26,6 +26,11 @@ import MainSidebar from './components/MainSidebar.vue';
 import { onBeforeMount } from 'vue';
 
 export default {
+  components: {
+    MainNavbar,
+    MainSidebar,
+  },
+
   setup() {
     onBeforeMount(() => {
       // setting
@@ -33,19 +38,14 @@ export default {
       document.documentElement.style.setProperty('--size-w-side', '64px');
     });
   },
-
-  components: {
-    MainNavbar,
-    MainSidebar,
-  },
 };
 </script>
 
 <style scoped>
 * {
-  font-family: Koverwatch !important;
+  /* font-family: Koverwatch !important; */
+  font-family: NanumSquareRoundEB;
 }
-
 .main-view {
   height: 100vh;
   width: 100vw;
