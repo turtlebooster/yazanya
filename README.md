@@ -117,18 +117,10 @@
 
 ---
 
-| 박서은 | 박성현 | 박준혁 | 👑 우상욱 | 양지호 | 최진호 |
+| 박서은 | [박성현](https://github.com/giftanchovy) | [박준혁](https://github.com/inte99ral) | 👑 [우상욱](https://github.com/YeoUlFox) | [양지호](https://github.com/jihoyangKR) | [최진호](https://github.com/turtlebooster) |
 | --- | --- | --- | --- | --- | --- |
 | Back-End | Front-End | Front-End | Front-End | Back-End | Back-End |
-| REST API
-Database | Vue | UI/UX
-Vue | Vue
-Kurento client
-REST API | REST API
-Database
- | REST API
-WebRTC
-Infra |
+| REST API  Database | Vue | UI/UX  Vue | Vue  Kurento client  REST API | REST API  Database | REST API  WebRTC  Infra |
 
 # 프로젝트 기간
 
