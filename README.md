@@ -1,6 +1,6 @@
 # B310 야자냐
 
-![title_logo_green.png](B310%20%E1%84%8B%E1%85%A3%E1%84%8C%E1%85%A1%E1%84%82%E1%85%A3%20e478c515f54748188788ac8ab65c32e9/title_logo_green.png)
+![title_logo_green.png](image/title_logo_green.png)
 
 # 프로젝트 소개
 
@@ -38,7 +38,7 @@
 
 ---
 
-![Untitled](B310%20%E1%84%8B%E1%85%A3%E1%84%8C%E1%85%A1%E1%84%82%E1%85%A3%20e478c515f54748188788ac8ab65c32e9/Untitled.png)
+![Untitled](image/Untitled.png)
 
 # 구현 기능
 
@@ -47,28 +47,28 @@
 - UI/UX
     - 라이트 모드 / 다크 모드
     
-    ![3.png](B310%20%E1%84%8B%E1%85%A3%E1%84%8C%E1%85%A1%E1%84%82%E1%85%A3%20e478c515f54748188788ac8ab65c32e9/3.png)
+    ![3.png](image/3.png)
     
     - 사이드 바 확장 / 고정
     
-    ![11.png](B310%20%E1%84%8B%E1%85%A3%E1%84%8C%E1%85%A1%E1%84%82%E1%85%A3%20e478c515f54748188788ac8ab65c32e9/11.png)
+    ![11.png](image/11.png)
     
 - 회원 관리
     - 로그인 / 로그아웃
     
-    ![Untitled](B310%20%E1%84%8B%E1%85%A3%E1%84%8C%E1%85%A1%E1%84%82%E1%85%A3%20e478c515f54748188788ac8ab65c32e9/Untitled%201.png)
+    ![Untitled](image/Untitled%201.png)
     
     - 회원가입 / 탈퇴
     
     SMTP를 사용한 이메일 인증기능을 활용한 회원가입 기능 구현
     
-    ![Untitled](B310%20%E1%84%8B%E1%85%A3%E1%84%8C%E1%85%A1%E1%84%82%E1%85%A3%20e478c515f54748188788ac8ab65c32e9/Untitled%202.png)
+    ![Untitled](image/Untitled%202.png)
     
-    ![Untitled](B310%20%E1%84%8B%E1%85%A3%E1%84%8C%E1%85%A1%E1%84%82%E1%85%A3%20e478c515f54748188788ac8ab65c32e9/Untitled%203.png)
+    ![Untitled](image/Untitled%203.png)
     
     - 정보 조회 및 수정
     
-    ![Untitled](B310%20%E1%84%8B%E1%85%A3%E1%84%8C%E1%85%A1%E1%84%82%E1%85%A3%20e478c515f54748188788ac8ab65c32e9/Untitled%204.png)
+    ![Untitled](image/Untitled%204.png)
     
 - 스터디 플래너
     - 드래그 앤 드롭이 가능한 컴포넌트로 구현
@@ -76,9 +76,9 @@
     - 지금까지의 공부 시간, 시간에 따른 티어 확인 가능
     - 공부에 도움이 되는 달력 및 TODO 기능 지원
     
-    ![Untitled](B310%20%E1%84%8B%E1%85%A3%E1%84%8C%E1%85%A1%E1%84%82%E1%85%A3%20e478c515f54748188788ac8ab65c32e9/Untitled%205.png)
+    ![Untitled](image/Untitled%205.png)
     
-    ![Untitled](B310%20%E1%84%8B%E1%85%A3%E1%84%8C%E1%85%A1%E1%84%82%E1%85%A3%20e478c515f54748188788ac8ab65c32e9/Untitled%206.png)
+    ![Untitled](image/Untitled%206.png)
     
 - 공부방
     - 방 검색 기능
@@ -86,31 +86,31 @@
     키워드 검색 및 해쉬 태그로 검색 가능
     사용자 프로필에서 지정한 태그로 방을 추천
     
-    ![Untitled](B310%20%E1%84%8B%E1%85%A3%E1%84%8C%E1%85%A1%E1%84%82%E1%85%A3%20e478c515f54748188788ac8ab65c32e9/Untitled%207.png)
+    ![Untitled](image/Untitled%207.png)
     
-    ![Untitled](B310%20%E1%84%8B%E1%85%A3%E1%84%8C%E1%85%A1%E1%84%82%E1%85%A3%20e478c515f54748188788ac8ab65c32e9/Untitled%208.png)
+    ![Untitled](image/Untitled%208.png)
     
     - 공부방 생성 및 참여
         - 비밀번호 / 해쉬태그 / 마이크&카메라 OnOff / 정원 / 쉬는 시간&공부시간
         
-        ![Untitled](B310%20%E1%84%8B%E1%85%A3%E1%84%8C%E1%85%A1%E1%84%82%E1%85%A3%20e478c515f54748188788ac8ab65c32e9/Untitled%209.png)
+        ![Untitled](image/Untitled%209.png)
         
     - 쿠렌토 데이터 채널을 이용한 실시간 채팅 기능 구현
     
-    ![Untitled](B310%20%E1%84%8B%E1%85%A3%E1%84%8C%E1%85%A1%E1%84%82%E1%85%A3%20e478c515f54748188788ac8ab65c32e9/Untitled%2010.png)
+    ![Untitled](image/Untitled%2010.png)
     
     - 깨우기 기능
     
-    ![Untitled](B310%20%E1%84%8B%E1%85%A3%E1%84%8C%E1%85%A1%E1%84%82%E1%85%A3%20e478c515f54748188788ac8ab65c32e9/Untitled%2011.png)
+    ![Untitled](image/Untitled%2011.png)
     
     - 사생활 보호를 위한 쿠렌토 필터 기능 지원
     
-    ![Untitled](B310%20%E1%84%8B%E1%85%A3%E1%84%8C%E1%85%A1%E1%84%82%E1%85%A3%20e478c515f54748188788ac8ab65c32e9/Untitled%2012.png)
+    ![Untitled](image/Untitled%2012.png)
     
     - 공부 시간 / 쉬는 시간 알람 기능지원
     - 왼쪽 사이드 바에서 스터디 도우미 기능 활용 가능
     
-    ![KakaoTalk_20220819_113334844.gif](B310%20%E1%84%8B%E1%85%A3%E1%84%8C%E1%85%A1%E1%84%82%E1%85%A3%20e478c515f54748188788ac8ab65c32e9/KakaoTalk_20220819_113334844.gif)
+    ![KakaoTalk_20220819_113334844.gif](image/KakaoTalk_20220819_113334844.gif)
     
 
 # 개발 멤버 소개
