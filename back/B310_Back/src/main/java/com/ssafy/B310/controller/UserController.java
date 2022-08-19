@@ -6,24 +6,22 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 
 import com.ssafy.B310.entity.*;
-import com.ssafy.B310.service.*;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
+import com.ssafy.B310.repository.EmailConfirmRepository;
+import com.ssafy.B310.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,19 +32,23 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.ssafy.B310.annotation.NoJwt;
-import com.ssafy.B310.entity.Hashtag;
-import com.ssafy.B310.entity.User;
-import com.ssafy.B310.entity.UserHashtag;
+import com.ssafy.B310.dto.TokenResponse;
+import com.ssafy.B310.jwt.JwtTokenProvider;
+import com.ssafy.B310.repository.AuthRepository;
+import com.ssafy.B310.service.FollowService;
 import com.ssafy.B310.service.HashtagService;
-import com.ssafy.B310.service.JwtService;
+import com.ssafy.B310.service.ProfileService;
 import com.ssafy.B310.service.UserHashtagService;
 import com.ssafy.B310.service.UserService;
 
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 
 
 @RestController
@@ -54,17 +56,16 @@ import org.springframework.web.multipart.MultipartFile;
 @CrossOrigin("*")
 public class UserController {
 
-
     public static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     private static final String SUCCESS = "success";
     private static final String FAIL = "fail";
 
     @Autowired
-    JwtService jwtService;
+    UserService userService;
 
     @Autowired
-    UserService userService;
+    UserRepository userRepository;
 
     @Autowired
     UserHashtagService userHashtagService;
@@ -77,25 +78,76 @@ public class UserController {
 
     @Autowired
     FollowService followService;
+    
+    @Autowired
+    AuthRepository authRepository;
+    
+    @Autowired
+    JwtTokenProvider jwtTokenProvider;
+
+
+
+    @Autowired
+    EmailConfirmRepository emailConfirmRepository;
+
+    @Value("${profileImg.path}")
+    String profileImgPath;
+    
+    //Access Token 재발급
+    @NoJwt
+    @PostMapping("/auth")
+    public ResponseEntity<?> issueAccessToken(HttpServletRequest request) throws Exception {	
+    	TokenResponse response =  jwtTokenProvider.issueAccessToken(request);
+    	
+    	//Refresh Token은 유효해서 새로 Access Token을 발급한 경우
+    	if(response != null) {
+    		return new ResponseEntity<String>(response.getACCESS_TOKEN(), HttpStatus.OK);   
+    	}
+    	//Refresh Token도 유통기한 지났음
+    	return new ResponseEntity<String>(FAIL, HttpStatus.OK);   	
+    }
 
     // 로그인 요청 처리 - POST /user/login
     @NoJwt
     @PostMapping("/login")
-    @ApiOperation(value = "로그인", notes = "{\\n\\\"userId\\\" : {String}, \\n \\\"userPw\\\": {String} \n}")
+//    @ApiOperation(value = "로그인", notes = "{\\n\\\"userId\\\" : {String}, \\n \\\"userPw\\\": {String} \n}")
     public ResponseEntity<Map<String, Object>> login(@RequestBody User user) {
+    	    	
         Map<String, Object> resultMap = new HashMap<>();
         HttpStatus status = null;
+        String id = user.getUserId();
         try {
-            User loginUser = userService.login(user);
-            if (loginUser != null) {
-                String token = jwtService.create("userId", loginUser.getUserId(), "access-token");
-                logger.debug("로그인 토큰정보 : {}", token);
-                resultMap.put("access-token", token);
+            String result = userService.login(user);
+            if (result.equals(id)) {
+                User loginUser = userRepository.findByUserId(result).get();
+                String accessToken = jwtTokenProvider.createAccessToken(user.getUserId());
+                String refreshToken = jwtTokenProvider.createRefreshToken(user.getUserId());
+                
+                Auth auth = Auth.builder()
+            			.user(loginUser)
+            			.refreshToken(refreshToken)
+            			.build();
+                
+                if(authRepository.findByuser_userId(user.getUserId()).isPresent()) {
+                	Auth alreadyAuth = authRepository.findByuser_userId(user.getUserId()).get();
+                	authRepository.delete(alreadyAuth);
+                }
+            	authRepository.save(auth);
+    
+                resultMap.put("token", TokenResponse.builder()
+                		.ACCESS_TOKEN(accessToken)
+                		.REFRESH_TOKEN(refreshToken)
+                		.build());
+                
                 resultMap.put("message", SUCCESS);
                 status = HttpStatus.ACCEPTED;
-            } else {
-                resultMap.put("message", FAIL);
+            } else if (result.equals("pwErr")){
+                resultMap.put("message", "pwErr");
                 status = HttpStatus.ACCEPTED;
+            } else if (result.equals("noId")) {
+                resultMap.put("message", "noId");
+                status = HttpStatus.ACCEPTED;
+
             }
         } catch (Exception e) {
             logger.error("로그인 실패 : {}", e);
@@ -104,17 +156,17 @@ public class UserController {
         }
         return new ResponseEntity<Map<String, Object>>(resultMap, status);
     }
-
+    
     // 유저리스트 조회 - GET
     @GetMapping
-    @ApiOperation(value = "유저 리스트 조회")
+//    @ApiOperation(value = "유저 리스트 조회")
     public ResponseEntity<List<User>> selectUserList() throws Exception {
         return new ResponseEntity<List<User>>(userService.selectUserList(), HttpStatus.OK);
     }
 
     // 수정하기
     @PutMapping("/update")
-    @ApiOperation(value = "유저 정보 수정", notes = "{\n\"userPw\" : {String: 유저비밀번호}, \n \"userNickName\": {String: 유저닉네임} \n} \n을 수정한다.")
+    @ApiOperation(value = "유저 정보 수정", notes = "{\n\"userPw\" : {String: 유저비밀번호}, \n \"userNickname\": {String: 유저닉네임} \n} \n을 수정한다.")
     public ResponseEntity<?> updateUser(@RequestBody User user) throws SQLException {
         int cnt = userService.updateUser(user);
 
@@ -132,8 +184,8 @@ public class UserController {
         int cnt = userService.checkId(userId);
 
         // 상태 코드만으로 구분
-        if (cnt != 0) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK); //중복된 것이므로 사용 불가능
-        else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
+        if (cnt != 0) return new ResponseEntity<String>(FAIL, HttpStatus.OK); //중복된 것이므로 사용 불가능
+        else return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
     }
 
     // 닉네임 중복체크
@@ -145,19 +197,21 @@ public class UserController {
         int cnt = userService.checkNickname(userNickname);
 
         // 상태 코드만으로 구분
-        if (cnt != 0) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK); //중복된 것이므로 사용 불가능
-        else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
+        if (cnt != 0) return new ResponseEntity<String>(FAIL, HttpStatus.OK); //중복된 것이므로 사용 불가능
+        else return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
     }
 
     // 회원가입
     @NoJwt
     @PostMapping("/regist")
     @ApiOperation(value = "회원가입", notes = "{\n \"userId\": {String:유저아이디},\n \"userPw\":{String:유저비밀번호},\n \"userEmail\":{String:유저이메일},\n \"userName\":{String:유저이름},\n \"userNickName\":{String:유저닉네임}\n}")
-    public ResponseEntity<?> registUser(@RequestBody User user) throws SQLException {
+    public ResponseEntity<?> registUser(@RequestBody User user) throws SQLException {    	
         int cnt = userService.registUser(user);
-
+        
         // 상태 코드만으로 구분
-        if (cnt == 1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+        if (cnt == 1) 
+        	return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+        
         else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
     }
 
@@ -236,16 +290,11 @@ public class UserController {
     @ApiOperation(value = "해쉬태그 추가")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", value = "유저아이디"),
-            @ApiImplicitParam(name = "hashtagNum", value = "해쉬태그 NUM", dataType = "int")
     })
-    public ResponseEntity<?> addUserHashtag(@RequestParam String userId, @RequestParam int hashtagNum) throws SQLException {
-        User user = userService.myPage(userId);
-        Hashtag hashtag = hashtagService.getHashtag(hashtagNum);
-
-        UserHashtag userHashtag = new UserHashtag(user, hashtag);
-
-        int cnt = userHashtagService.addUserHashtag(userHashtag);
-
+    public ResponseEntity<?> addUserHashtag(@RequestParam String userId, @RequestBody List<String> hashtagNameList) throws SQLException {
+        
+    	int cnt = hashtagService.addUserHashtagList(hashtagNameList, userId);
+    	
         if (cnt == 1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
         else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
     }
@@ -273,19 +322,22 @@ public class UserController {
     @ApiImplicitParam(name = "userId", value = "유저 아이디")
     public ResponseEntity<?> getUserHashtagList(@RequestParam String userId) throws SQLException {
         User user = userService.myPage(userId);
-
+        
+        System.out.println(user.getUserId());
         List<UserHashtag> list = userHashtagService.getUserHashtag(user);
 
         if (list.isEmpty()) {
-            System.out.println("해당 user는 해쉬태그가 없음");
+        	// list result in none
             return new ResponseEntity<String>(FAIL, HttpStatus.OK);
         }
 
+        // convert to string list
+        List<String> ret_list = new ArrayList<>();
         for (UserHashtag uht : list) {
-            System.out.println(uht.getHashtag().getHashtagName());
+            ret_list.add(uht.getHashtag().getHashtagName());
         }
-
-        return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+        
+        return new ResponseEntity<List<String>>(ret_list, HttpStatus.OK);
     }
 
     // 유저 프로필 페이지
@@ -293,12 +345,11 @@ public class UserController {
     @PutMapping("/profile/{userId}")
     @ApiOperation(value = "프로필 항목을 수정한다.", notes = "\"{\n\\\"profileSelfIntroduce\\\" : {String: 자기소개}\n}")
     public ResponseEntity<?> updateProfile(HttpServletRequest request, @RequestBody User user, @PathVariable("userId") String userId) throws SQLException {
-        String requestUserId = jwtService.getUserID(request.getHeader("access-token"));
+        String requestUserId = jwtTokenProvider.getUserID(request.getHeader("access-token"));
         if (requestUserId.equals(userId)) {
             int cnt = profileService.updateProfile(userId, user);
 
             if (cnt == 1) {
-                System.out.println(user);
                 return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
             } else {
                 return new ResponseEntity<String>(FAIL, HttpStatus.OK);
@@ -317,46 +368,53 @@ public class UserController {
     }
 
     // 프로필 이미지 추가
-    @PostMapping("/profile/{userId}/profileImg")
-    @ApiOperation(value = "유저 프로필 이미지 추가")
+    @PostMapping("/profile/{userId}")
+    @ApiOperation(value = "유저 프로필 이미지 추가/수정/삭제", notes = "사진을 보낼 경우 - 프로필 사진 업로드&수정 \n null을 보낼 경우 - 프로필 사진 삭제")
     public ResponseEntity<?> addProfileImage(@PathVariable("userId") String userId, @RequestPart MultipartFile pic) throws IOException, SQLException {
         UUID uuid = UUID.randomUUID();
         String profileImg = uuid.toString();
 
-//		String path = "C:/Users/multicampus/Desktop/yazanya/S07P12B310/back/B310_Back/src/main/resources/static/userImg/";
-
-        String path = "C:/image/profileImg/";
+        String path = profileImgPath;
 
         File makeFolder = new File(path);
 
         if (!makeFolder.exists()) {
             makeFolder.mkdir();
-            System.out.println(path + "에 폴더 생성");
-            System.out.println(("폴더가 존재하는지 체크 true/false : " + makeFolder.exists()));
         } else {
             System.out.println("폴더 이미 존재함");
         }
-        Path imagePath = Paths.get(path + profileImg + '_' + userId);
+        
+        String imageName = profileImg + '_' + userId + "." + pic.getContentType().split("/")[1];
+        Path imagePath = Paths.get(path + imageName);
+        
+        Files.write(imagePath, pic.getBytes());
 
-        Path p = Files.write(imagePath, pic.getBytes());
-
-//		try {
-//			Files.write(imagePath, pic.getBy	tes());
-//		} catch (Exception e) {
-//
-//		}
-        profileService.updateProfileImg(userId, imagePath.toString());
+        if(!pic.isEmpty()) {
+        	profileService.uploadProfileImg(userId, imageName);
+        } else {
+        	profileService.uploadProfileImg(userId, "profile.png");
+        }
 
         return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 
     }
-
+    
+    @PutMapping("/profile/planner")
+    @ApiOperation(value = "플래너 순서 세팅 변경", notes = "숫자,숫자,숫자 형태로 세팅 저장\r\n{\r\n\"profilePlannerSet\" : \"0,1,2\"\r\n}")
+    public ResponseEntity<?> updatePlannerSet(@RequestBody User user, HttpServletRequest request) throws SQLException{
+    	String userId = jwtTokenProvider.getUserID(request.getHeader("access-token"));
+    	int cnt = profileService.updatePlannerSet(userId, user.getProfilePlannerSet());
+    	
+    	if (cnt == 1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+    	else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
+    }
+    
     // 팔로우
     // 팔로우 추가
-    @PostMapping("/profile/{userId}")
+    @PostMapping("/follow/{userId}")
     @ApiOperation("팔로우 추가")
     public ResponseEntity<?> userFollow(HttpServletRequest request, @PathVariable("userId") String followToUserId) throws SQLException {
-        String followFromUserId = jwtService.getUserID(request.getHeader("access-token"));
+        String followFromUserId = jwtTokenProvider.getUserID(request.getHeader("access-token"));
 
         Follow follow = followService.follow(followToUserId, followFromUserId);
 
@@ -364,20 +422,106 @@ public class UserController {
     }
 
     // 팔로우 취소
-    @DeleteMapping("/profile/{userId}")
+    @DeleteMapping("/follow/{userId}")
     @ApiOperation(value = "팔로우 취소")
     public ResponseEntity<?> userUnFollow(HttpServletRequest request, @PathVariable("userId") String followToUserId) throws SQLException {
-        String followFromUserId = jwtService.getUserID(request.getHeader("access-token"));
+        String followFromUserId = jwtTokenProvider.getUserID(request.getHeader("access-token"));
 
         followService.deleteByFollowToUserAndFollowFromUser(followToUserId, followFromUserId);
         return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
     }
 
     // 유저 팔로우 목록
-//	@GetMapping("/profile/{userId}/follow")
-//	public ResponseEntity<?> followList (@PathVariable("userId") String userId) throws SQLException {
-//
-//		return new ResponseEntity<List<User>>(followService.followList(userId), HttpStatus.OK);
-//	}
+	@GetMapping("/profile/{userId}/follow")
+	public ResponseEntity<?> followList (@PathVariable("userId") String userId) throws SQLException {
+
+		return new ResponseEntity<List<User>>(followService.followList(userId), HttpStatus.OK);
+	}
+
+    @GetMapping("/profile/{userId}/follower")
+    public ResponseEntity<?> followerList (@PathVariable("userId") String userId) throws SQLException {
+
+        return new ResponseEntity<List<User>>(followService.followerList(userId), HttpStatus.OK);
+    }
+
+    @NoJwt
+    @GetMapping("/confirmEmail")
+    public ResponseEntity<?> confirmEmail(@RequestParam String email) throws SQLException {
+        int cnt = userService.confirmEmail(email);
+        if (cnt == 1) {
+            return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+        } else if (cnt == 2) {
+            return new ResponseEntity<String >("alreadyRegistEmail", HttpStatus.OK);
+
+        }
+        return new ResponseEntity<String>(FAIL,HttpStatus.OK);
+    }
+
+    @NoJwt
+    @PostMapping("/confirmCode")
+    public ResponseEntity<?> confirmCode (@RequestBody Map<String, String> params) throws SQLException {
+        String code = params.get("code");
+        String email = params.get("email");
+        int cnt = userService.confirmCode(code, email);
+        if (cnt == 1){
+            return new ResponseEntity<String> (SUCCESS, HttpStatus.OK);
+        }
+        return new ResponseEntity<String>(FAIL, HttpStatus.OK);
+    }
+    
+    @GetMapping("/restStudyTime/{userId}")
+    public ResponseEntity<?> getRestStudyTime(@PathVariable String userId) throws SQLException {
+    	User user = userService.myPage(userId);
+    	String rank = user.getProfileRank();
+    	int studyTime = user.getProfileTotalStudyTime();
+    	
+    	int restTime = 0;
+    	switch(rank) {
+    	case "마스터" : 
+    		break;
+    	case "다이아몬드" : 
+    		restTime = 500 - studyTime;
+    		break;
+    	case "플래티넘" : 
+    		restTime = 400 - studyTime;
+    		break;
+    	case "골드" :
+    		restTime = 300 - studyTime;
+    		break;
+    	case "실버" :
+    		restTime = 200 - studyTime;
+    		break;
+    	case "브론즈" :
+    		restTime = 100 - studyTime;
+    		break;
+    	}
+    	
+    	return new ResponseEntity<Integer> (restTime, HttpStatus.OK);
+    }
+    
+    //유저 플레이리스트 설정하기
+    @PostMapping("/playList")
+    @ApiOperation(value = "유저 플레이 리스트 설정하기. " , notes = "url주소,url주소,url주소 형태로 세팅 저장\r\n{\r\n\"musicPlayList\" : \"aa,bb,cc\"\r\n}")
+    public ResponseEntity<?> setPlayList(@RequestBody User user, HttpServletRequest request) throws SQLException {
+    	String userId = jwtTokenProvider.getUserID(request.getHeader("access-token"));
+    	int cnt = userService.setPlayList(userId, user.getMusicPlayList());
+    	
+    	if (cnt == 1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+    	else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
+    }
+    
+    //유저 플레이리스트 가져오기
+    @GetMapping("/playList")
+    @ApiOperation(value = "유저 플레이 리스트 가져오기")
+    public ResponseEntity<?> getPlayList(HttpServletRequest request) throws SQLException {
+    	String userId = jwtTokenProvider.getUserID(request.getHeader("access-token"));
+
+    	User user = userService.myPage(userId);
+    	
+    	String result = user.getMusicPlayList();
+    	
+    	if (result != null) return new ResponseEntity<String>(result, HttpStatus.OK);
+    	else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
+    }
 }
 

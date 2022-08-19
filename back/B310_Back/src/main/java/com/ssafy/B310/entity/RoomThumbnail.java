@@ -15,7 +15,7 @@ import lombok.ToString;
 @Entity
 @Getter
 @Setter
-@ToString
+//@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class RoomThumbnail {

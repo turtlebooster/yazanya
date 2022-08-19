@@ -2,20 +2,22 @@ package com.ssafy.B310.entity;
 
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -24,7 +26,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @DynamicInsert
-@ToString
+@Builder
 @AllArgsConstructor
 public class User {
 	@Id
@@ -43,27 +45,37 @@ public class User {
 	@Column(nullable = false, unique = true)
 	private String userEmail;
 
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	private String userNickname;
 
 	@Column(nullable = false)
 	private int userStatusNum;
-	
-	@OneToMany(mappedBy = "user")
+
+	@OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
 	@JsonIgnore
 	private Set<Participation> participationList;
+	
+	@OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+	@JsonIgnore
+	private Set<ParticipationHistory> participationHistoryList;
 
-	@OneToMany(mappedBy = "user")
+	@OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
 	@JsonIgnore
 	private Set<Todo> todo;
 	
-	@OneToOne
-	@JoinColumn(name="room_num")
+	@OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
 	@JsonIgnore
-	private Room room;
+	private Set<UserHashtag> userHashtag;
 	
-	// 자기소개
+	@OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
+	@JsonIgnore
+	private Auth auth;
 
+	@Column
+	@ColumnDefault("0")
+	private int userRoomCount;
+
+	// 자기소개
 	@Column
 	private String profileSelfIntroduce;
 
@@ -72,20 +84,31 @@ public class User {
 	private String profilePictureLink;
 
 	// 총 공부 시간(분 기준)
-
 	@Column
 	private int profileTotalStudyTime;
 
 	// 랭크
-	@Column
-	private int profileRank;
+	@Column(columnDefinition = "varchar(20) default '아이언'")
+	private String profileRank;
 
 	// 소속
 	@Column
 	private String profileBelongTo;
+	
+	// 플래너 배치 설정
+	@Column(columnDefinition = "varchar(20) default '0,1,2,3,4'")
+	private String profilePlannerSet;
+	
+	//플레이리스트
+	@Column
+	private String musicPlayList;
+
+	@Column
+	@ColumnDefault("false")
+	private boolean emailConfirm;
 
 	public User(String userId, String userPw, String userName, String userEmail, String userNickname,
-			int userStatusNum) {
+				int userStatusNum) {
 		this.userId = userId;
 		this.userPw = userPw;
 		this.userName = userName;
@@ -93,7 +116,7 @@ public class User {
 		this.userNickname = userNickname;
 		this.userStatusNum = userStatusNum;
 	}
-	
+
 	public User() {
 	}
 

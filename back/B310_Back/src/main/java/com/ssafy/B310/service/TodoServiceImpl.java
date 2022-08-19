@@ -30,8 +30,8 @@ public class TodoServiceImpl implements TodoService {
 		
 		if (oUser.isPresent()) {
 			todo.setUser(oUser.get());
-			todoRepository.save(todo);
-			return 1;			
+			Todo nTodo = todoRepository.save(todo);
+			return nTodo.getTodoNum();			
 		}
 		return 0;
 	}
@@ -72,6 +72,7 @@ public class TodoServiceImpl implements TodoService {
 			if (todo.getTodoEndTime() != null) t.setTodoEndTime(todo.getTodoEndTime());
 			if (todo.getTodoName() != null) t.setTodoName(todo.getTodoName());
 			if (todo.getTodoStartTime() != null) t.setTodoStartTime(todo.getTodoStartTime());
+			t.setTodoProgress(todo.getTodoProgress());
 			todoRepository.save(t);
 			return 1;
 		}
@@ -93,11 +94,11 @@ public class TodoServiceImpl implements TodoService {
 	public double calAchievement(List<Todo> todoList) {
 		int doneCnt = 0;
 		for (Todo todo : todoList) {
-			if (todo.getTodoProgress() == 1) {
+			if (todo.getTodoProgress() == 2) {
 				doneCnt++;
 			}
 		}
-		return (doneCnt * 100.0) / todoList.size();
+		return Math.floor(((doneCnt * 100.0) / todoList.size()*100)/100.0);
 	}
 
 	@Override

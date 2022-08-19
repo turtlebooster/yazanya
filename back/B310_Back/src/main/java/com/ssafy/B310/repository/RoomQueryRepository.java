@@ -31,6 +31,19 @@ public class RoomQueryRepository {
 							.where(roomHashtag.hashtag.hashtagNum.in(hashtagNumList))))
 				.fetch();
 	}
+
+	
+	//해쉬태그 이름으로 검색한 방 목록 전달
+	public List<Room> searchRoomByHashtag(List<String> hashtagNameList) {
+		return 	queryFactory
+				.selectFrom(room)
+				.where(room.roomNum.in(
+						JPAExpressions
+								.select(roomHashtag.room.roomNum)
+								.from(roomHashtag)
+								.where(roomHashtag.hashtag.hashtagName.in(hashtagNameList))))
+				.fetch();
+	}
 	
 	//participation count + 1
 	@Transactional
@@ -63,4 +76,12 @@ public class RoomQueryRepository {
 			.set(room.roomThumbnail, filename)
 			.execute();
 	}
+	
+	public List<Room> searchRoomByName(String search) {
+		return 	queryFactory
+				.selectFrom(room)
+				.where(room.roomName.contains(search))
+				.fetch();
+	}
+
 }

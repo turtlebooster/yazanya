@@ -23,7 +23,7 @@ import lombok.ToString;
 @Entity
 @Getter
 @Setter
-@ToString
+//@ToString
 public class Participation {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
