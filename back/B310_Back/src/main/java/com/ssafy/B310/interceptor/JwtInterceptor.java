@@ -9,26 +9,36 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import com.ssafy.B310.annotation.NoJwt;
-import com.ssafy.B310.service.JwtService;
+import com.ssafy.B310.dto.TokenResponse;
+import com.ssafy.B310.jwt.JwtTokenProvider;
 
 @Component
 public class JwtInterceptor implements HandlerInterceptor {
 	
 	@Autowired
-	JwtService jwtService;
+	JwtTokenProvider jwtService;
 	
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
+		if(request.getMethod().equals("OPTIONS")) {
+    		return true;
+    	}
 
 		boolean check = checkAnnotation(handler, NoJwt.class);
         if(check) return true;
+       
+        String accessToken = request.getHeader("access-token"); 
         
-        return jwtService.isUsable(request.getHeader("access-token"));
+        if (accessToken != null && jwtService.isValidAccessToken(accessToken)) {
+            return true;
+        }
+        response.setStatus(401);
+    	return false;
 	}
 	
-    private boolean checkAnnotation(Object handler,Class cls){
-        HandlerMethod handlerMethod=(HandlerMethod) handler;
+    private boolean checkAnnotation(Object handler, Class cls){
+        HandlerMethod handlerMethod = (HandlerMethod) handler;
       //해당 어노테이션이 존재하면 true.
         if(handlerMethod.getMethodAnnotation(cls) != null){ 
             return true;

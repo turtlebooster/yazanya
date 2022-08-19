@@ -1,20 +1,49 @@
 <template>
-  <div id="app" class="d-flex flex-column flex-nowrap">
+  <div
+    id="app"
+    class="d-flex flex-column flex-nowrap"
+    :class="[$root.theme ? 'light' : 'dark']"
+  >
     <router-view />
   </div>
+  <b-container
+    :toast="{ root: true }"
+    fluid="sm"
+    position="position-fixed"
+    style="top: 50px; left: -200px"
+  >
+  </b-container>
 </template>
 
 <script>
 export default {
   setup() {
     // get theme flag from local
-    let theme = JSON.parse(localStorage.getItem('yaza_theme')) || true;
-    return { theme };
+    let theme =
+      JSON.parse(localStorage.getItem('theme')) == undefined
+        ? true
+        : JSON.parse(localStorage.getItem('theme'));
+    let sidebar = JSON.parse(
+      localStorage.getItem('sidebar') == undefined
+        ? false
+        : JSON.parse(localStorage.getItem('sidebar'))
+    );
+    sidebar
+      ? document.documentElement.style.setProperty(
+          '--size-w-side-hover',
+          '64px'
+        )
+      : document.documentElement.style.setProperty(
+          '--size-w-side-hover',
+          '200px'
+        );
+    return { theme, sidebar };
   },
 };
 </script>
 
 <style>
+@import url('https://hangeul.pstatic.net/hangeul_static/css/nanum-square-round.css');
 @font-face {
   /* 여기어때 잘난체 */
   font-family: 'Jalnan';
@@ -40,6 +69,7 @@ export default {
   /* 비율 */
   --size-h-header: 48px;
   --size-w-side: 80px;
+  --size-w-side-hover: 64px;
 
   /* 메인 테마색 */
   --theme-color: #009e73;
@@ -53,38 +83,107 @@ export default {
   /* 다크모드 */
   --dark-main-color: #404040;
   --dark-sub-color: #000000;
+  --dark-reverser-color: #f4f4f4;
 
   /* 라이트모드 */
   --light-main-color: #ffffff;
-  --light-sub-color: #d9d9d9;
-
-  --main-color: #ffffff;
-  --sub-color: #d9d9d9;
+  --light-sub-color: #f4f4f4;
+  --light-reverse-color: #404040;
 }
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+
+  font-family: NanumSquareRoundEB;
 }
 
 /* ---- for light and dark mode ---- */
-.light {
+.light * {
+  color: #404040;
+}
+
+.dark * {
+  color: #f4f4f4;
+}
+
+.light .main {
   background: #ffffff;
 }
 
-.dark {
+.light .sub {
+  background: #f4f4f4;
+}
+
+.light .reverse {
   background: #404040;
 }
+
+.dark .main {
+  background: #404040;
+}
+
+.dark .sub {
+  background: #000000;
+}
+
+.dark .reverse {
+  background: #f4f4f4;
+}
+
+.light .main-color {
+  background: #ffffff;
+}
+
+.light .sub-color {
+  background: #f4f4f4;
+}
+
+.light .reverse-color {
+  background: #404040;
+}
+
+.dark .main-color {
+  background: #404040;
+}
+
+.dark .sub-color {
+  background: #000000;
+}
+
+.dark .reverse-color {
+  background: #f4f4f4;
+}
+
 /* --------------------------------- */
 
+.outer {
+  box-shadow: 4px 4px 10px -1px rgba(0, 0, 0, 0.25),
+    -4px -4px 10px -1px rgba(255, 255, 255, 0.25);
+}
+
+.inner {
+  box-shadow: inset 4px 4px 10px -1px rgba(0, 0, 0, 0.25),
+    inset -4px -4px 10px -1px rgba(255, 255, 255, 0.25);
+}
+
+.liner {
+  height: 2px;
+  width: 80%;
+  border-radius: 1px;
+  background: var(--light-sub-color);
+}
+
+.spacer {
+  height: 24px;
+}
+
 #app {
-  /* background: var(--sub-color-p); */
   height: 100vh;
   width: 100vw;
   max-height: 100vh;
 
-  /* font-family: Jalnan, Avenir, Helvetica, Arial, sans-serif; */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;

@@ -17,7 +17,6 @@ import com.ssafy.B310.interceptor.JwtInterceptor;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-
 	@Autowired
 	JwtInterceptor jwtInterceptor;
 
@@ -32,9 +31,15 @@ public class WebConfig implements WebMvcConfigurer {
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(jwtInterceptor)
 				.order(1)
-				.addPathPatterns("/**");
+				.addPathPatterns("/**")
+				.excludePathPatterns(uploadPath,
+									 "/v2/api-docs",
+									 "/swagger-resources/**",
+									 "/swagger-ui.html",
+									 "/webjars/**");
+				
 	}
-	
+//	
 	@Value("${resource.path}")
 	private String resourcePath;
 
@@ -45,11 +50,13 @@ public class WebConfig implements WebMvcConfigurer {
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		WebMvcConfigurer.super.addResourceHandlers(registry);
 		
-		registry
-        .addResourceHandler("/swagger-ui.html")
-        .addResourceLocations("classpath:/META-INF/resources/");
-		
 		registry.addResourceHandler(uploadPath)
 				.addResourceLocations(resourcePath);
+		
+		registry.addResourceHandler("swagger-ui.html")
+                .addResourceLocations("classpath:/META-INF/resources/");
+
+        registry.addResourceHandler("/webjars/**")
+                .addResourceLocations("classpath:/META-INF/resources/webjars/");
 	}
 }

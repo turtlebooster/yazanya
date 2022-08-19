@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +13,10 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
+import io.swagger.models.auth.In;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,13 +34,16 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.ssafy.B310.annotation.NoJwt;
 import com.ssafy.B310.entity.Hashtag;
 import com.ssafy.B310.entity.Room;
+import com.ssafy.B310.entity.RoomForcedExit;
 import com.ssafy.B310.entity.RoomHashtag;
 import com.ssafy.B310.entity.RoomThumbnail;
 import com.ssafy.B310.entity.User;
+import com.ssafy.B310.jwt.JwtTokenProvider;
+import com.ssafy.B310.repository.RoomForceExitRepository;
 import com.ssafy.B310.service.HashtagService;
-import com.ssafy.B310.service.JwtService;
 import com.ssafy.B310.service.ParticipationHistoryService;
 import com.ssafy.B310.service.ParticipationService;
 import com.ssafy.B310.service.RoomHashtagService;
@@ -74,10 +81,16 @@ public class RoomController {
     RoomHashtagService roomHashtagService;
     
     @Autowired
-    JwtService jwtService;
+    JwtTokenProvider jwtService;
     
     @Autowired
     ThumbnailService thumbnailService;
+
+	@Autowired
+	RoomForceExitRepository roomForceExitRepository;
+	
+	@Value("${thumbnailImg.path}")
+    String thumbnailImgPath;
 
     @PostMapping
     @ApiOperation(value = "방 생성", 
@@ -91,12 +104,16 @@ public class RoomController {
 	    		  		"  \"roomVideo\" : (전체 비디오 true/false),\r\n" + 
 	    		  		"  \"roomStudyTime\" : (공부시간 알람 간격),\r\n" + 
 	    		  		"  \"roomRestTime\" : (휴식시간 알람 간격),\r\n" + 
+	    		  		"  \"roomHasPw\" : (방 비밀번호 유무 true/false),\r\n" +
 	    		  		"  \"roomPw\" : (방 비밀번호),\r\n" + 
 	    		  		"  \"roomActive\" : (방 활성화 여부 true/false)\r\n" + 
 	    		  		" }")
     public ResponseEntity<?> createRoom(@RequestBody Room room, HttpServletRequest request) throws SQLException{
-    	String userId = jwtService.getUserID(request.getHeader("access-token"));    	
-        int cnt = roomservice.createRoom(room, userId);
+    	int userNum = jwtService.getUserNum(request.getHeader("access-token"));
+        int cnt = 0;
+        if (userNum != -1) {
+        	cnt = roomservice.createRoom(room, userNum);
+        }
 
         if(cnt!=0) return new ResponseEntity<Integer>(cnt, HttpStatus.OK);
         else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
@@ -145,10 +162,13 @@ public class RoomController {
     @DeleteMapping("/{roomNum}")
     @ApiOperation(value = "방 삭제", 
     			  notes = "전달된 방 번호에 해당하는 방을 삭제")	
-    public ResponseEntity<?> removeRoom(@PathVariable int roomNum) throws SQLException{
-
-        int cnt = roomservice.removeRoom(roomNum);
-
+    public ResponseEntity<?> removeRoom(HttpServletRequest request, @PathVariable int roomNum) throws SQLException{
+		int userNum = jwtService.getUserNum(request.getHeader("access-token"));
+        int cnt = 0;
+        if (userNum != -1) {
+        	cnt = roomservice.removeRoom(roomNum, userNum);
+        }
+		
         if(cnt==1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
         else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
     }
@@ -190,41 +210,66 @@ public class RoomController {
     @Transactional
     @PostMapping("/{roomNum}")
     @ApiOperation(value = "방 입장", 
-    			  notes = "방 비밀번호가 일치할 경우 success\n" +
-    					  "방 비밀번호가 다를 경우 fail \n" +
+    			  notes = "방 자리가 남아있고, 강퇴 유저가 아니며, 방 비밀번호가 일치하거나 비밀번호가 없는 경우 success\n" +
+    					  "방 비밀번호가 다를 경우 failToPw \n" +
+						  "방이 풀방일 경우 failToFullRoom \n" +
+						  "강퇴 당한 유저일 경우 failToForcedExitUser \n" +
+						  "이미 다른 방에 입장해 있는 유저일 경우 alreadyParticipateUser\n" +
+
     					  "{\r\n" + 
-    					  "  	roomPw : (방 비밀번호 / 없을경우(0))\r\n" + 
+    					  "  	roomPw : (방 비밀번호 / 없을경우(입력x))\r\n" +
     					  "}")	
     public ResponseEntity<?> joinRoom(@RequestBody Room room, @PathVariable int roomNum, HttpServletRequest request) throws SQLException {
-    	String userId = jwtService.getUserID(request.getHeader("access-token"));
-    	Room r = roomservice.getRoom(roomNum);
+		String userId = jwtService.getUserID(request.getHeader("access-token"));
+		Room r = roomservice.getRoom(roomNum);
+		int statusCode = 0;
+		int cnt = 0;
+		List<RoomForcedExit> fList = roomForceExitRepository.findByRoom_roomName(r.getRoomName());
+		if (r.isRoomHasPw()) {
+			if (!BCrypt.checkpw(room.getRoomPw(), r.getRoomPw())) {
+				statusCode = 2;
+			}
+		}
+		if (!(roomservice.enableJoinRoom(roomNum))) {
+			System.out.println(!(roomservice.enableJoinRoom(roomNum)));
+			statusCode = 3;
+		}
+		for (RoomForcedExit f : fList) {
+			if (f.getUserId().equals(userId)) {
+				statusCode = 1;
+			}
+		}
+		switch (statusCode) {
+			case 1:
+				return new ResponseEntity<String>("failToForcedExitUser", HttpStatus.OK);
+			case 3:
+				return new ResponseEntity<String>("failToFullRoom", HttpStatus.OK);
+			case 2:
+				return new ResponseEntity<String>("failToPw", HttpStatus.OK);
+			default:
+				break;
+		}
+		cnt = participationservice.joinRoom(userId, r);
+		if (cnt == 1) {
+			roomservice.addParticipation(r);
+			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+		}
+		return new ResponseEntity<String>("alreadyParticipateUser", HttpStatus.OK);
+	}
 
-        int cnt = 0;
-        if((r.getRoomPw() == room.getRoomPw()) && roomservice.enableJoinRoom(roomNum)) {
-        	cnt = participationservice.joinRoom(userId, r);
-        }
 
-        if(cnt==1) {
-        	roomservice.addParticipation(r);
-        	return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
-        }
-        else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
-
-    }
-    
     @PostMapping("/hashtag")
-    @ApiOperation(value = "방에 대한 해쉬태그 정보 추가")
+    @ApiOperation(value = "방에 대한 해쉬태그 정보 추가", 
+				    notes = "[\r\n" + 
+				    		"    \"해시태그1\",\r\n" + 
+				    		"    \"해시태그2\",\r\n" + 
+				    		"    \"해시태그3\"\r\n" + 
+				    		"]")
     @ApiImplicitParams({
     	@ApiImplicitParam(name = "roomNum", value = "방 번호", dataType = "int"),
-    	@ApiImplicitParam(name = "hashtagNum", value = "해쉬태그 번호", dataType = "int")
     })
-    public ResponseEntity<?> addHashtag(@RequestParam int roomNum, @RequestParam int hashtagNum) throws SQLException {
-    	Hashtag hashtag = hashtagService.getHashtag(hashtagNum);
-    	Room room = roomservice.getRoom(roomNum);
-   
-    	RoomHashtag roomHt = new RoomHashtag(room, hashtag);
-    	
-    	int cnt = roomHashtagService.addRoomHashtag(roomHt);
+    public ResponseEntity<?> addHashtag(@RequestParam int roomNum, @RequestBody List<String> hashtagNameList) throws SQLException {
+    	int cnt = hashtagService.addRoomHashtagList(hashtagNameList, roomNum);
 		if(cnt == 1) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 	    else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
     }
@@ -235,17 +280,13 @@ public class RoomController {
     public ResponseEntity<?> getHashtagList(@RequestParam int roomNum) throws SQLException {
     	Room room = roomservice.getRoom(roomNum);
     	
-    	List<RoomHashtag> set = roomHashtagService.getRoomHashtagBy(room);
-    	if(set.isEmpty()) {
-    		System.out.println("list 비어있음");
-    		return new ResponseEntity<String>(FAIL, HttpStatus.OK);
+    	List<RoomHashtag> roomHashtagList = roomHashtagService.getRoomHashtagBy(room);
+    	List<Hashtag> list = new ArrayList<Hashtag>();
+    	for (RoomHashtag rht : roomHashtagList) {
+    		list.add(rht.getHashtag());
     	}
-    	
-    	for(RoomHashtag tag : set) {
-    		System.out.println(tag.getHashtag().getHashtagName());
-    	}
-    	
-    	return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+    	    	
+    	return new ResponseEntity<List<Hashtag>>(list, HttpStatus.OK);
     }
     
     @DeleteMapping("/hashtag")
@@ -269,21 +310,43 @@ public class RoomController {
     			  notes = "해쉬태그 번호들을 받아 관련된 방 목록 전달\r\n"
     				+ "hashtagNum=1,2,3,4,5")
     @ApiImplicitParam(name = "hashtagNum", value = "해쉬태그 번호")
-    public ResponseEntity<?> recommendRoom(@RequestParam(value="hashtagNum", required=false, defaultValue="") List<Integer> hashtagNumList) {
-    	return new ResponseEntity<List<Room>>(roomservice.getRecommendHashtagList(hashtagNumList), HttpStatus.OK);
-    }
+	public ResponseEntity<?> recommendRoom(@RequestParam(value="hashtagName", required=false, defaultValue="") List<String> hashtagNameList) {
+		return new ResponseEntity<Map<String, Object>>(roomservice.getRecommendHashtagList(hashtagNameList), HttpStatus.OK);
+	}
+
+
+	@GetMapping("/searchByTags")
+	@ApiOperation(value = "해쉬태그로 방 검색",
+			notes = "해쉬태그 이름을 받아서 검색\r\n")
+	@ApiImplicitParam(name = "hashtagName", value = "해쉬태그 이름")
+	public ResponseEntity<?> searchRoom(@RequestParam(value="hashtagName", required=false, defaultValue="") List<String> hashtagNameList) {
+		return new ResponseEntity<Map<String, Object>>(roomservice.searchHashtagList(hashtagNameList), HttpStatus.OK);
+	}
     
     @PatchMapping("/exit/{roomNum}")
     @ApiOperation(value = "유저 퇴장", 
     			  notes = "해당 방의 유저 목록에서 유저 제거\r\n" + 
     			  		"{\r\n" + 
     			  		"  userId : (유저 아이디)\r\n" + 
-    			  		"}")	
+    			  		"}")
     public ResponseEntity<?> exitRoom(@RequestBody Map<String, String> params , @PathVariable int roomNum ) throws SQLException {
         String userId = params.get("userId");
         int cnt = participationservice.exitRoom(userId, roomNum);
 
-        System.out.println(userId);
+        Room room = roomservice.getRoom(roomNum);
+        if(cnt==1)  {
+        	roomservice.decreaseParticipation(room);
+        	return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+        }
+        else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
+    }
+    
+    @NoJwt
+    @PostMapping("/exit/{roomNum}/{userId}")
+    @ApiOperation(value = "유저 퇴장")
+    public ResponseEntity<?> abnormalExitRoom(@PathVariable int roomNum, @PathVariable String userId) throws SQLException {
+        int cnt = participationservice.exitRoom(userId, roomNum);
+
         Room room = roomservice.getRoom(roomNum);
         if(cnt==1)  {
         	roomservice.decreaseParticipation(room);
@@ -299,52 +362,92 @@ public class RoomController {
         List<User> joinedUserList = participationservice.joinedUser(roomNum);
 
         return new ResponseEntity<List<User>>(joinedUserList, HttpStatus.OK);
-
     }
-    
+
+//	@Transactional
     @GetMapping("/history")
     @ApiOperation(value = "이전에 방문했던 방",
     			  notes = "이전에 방문했던 방 목록 전달")
     public ResponseEntity<?> getRoomHistory(HttpServletRequest request) throws SQLException {
         String userId = jwtService.getUserID(request.getHeader("access-token"));
-        System.out.println(userId);
-        return new ResponseEntity<List<Room>>(participationHistoryService.getRoomHistoryList(userId), HttpStatus.OK);
+        return new ResponseEntity<>(participationHistoryService.getRoomHistoryList(userId), HttpStatus.OK);
     }
 
-    @PostMapping("/addThumbnail/{roomNum}")
+    @PostMapping("/Thumbnail/{roomNum}")
     @ApiOperation(value = "방 썸네일 추가", notes = "방 썸네일 이미지 저장")
     public ResponseEntity<?> addThumbnail(@PathVariable int roomNum, @RequestPart MultipartFile thumbnail) throws Exception {
-    	
+    	System.out.println("들어왔니??");
     	UUID uuid = UUID.randomUUID();
-    	String fileId = uuid.toString();
+    	String thumbnailImg = uuid.toString();
     	
-    	String path = "C:/image/";
+    	String path = thumbnailImgPath;
     	
     	File makeFolder = new File(path);
     	
     	if(!makeFolder.exists()) {
-    		makeFolder.mkdir(); 
-    		System.out.println(path + "에 폴더 생성");
-    		System.out.println(("폴더가 존재하는지 체크 true/false : "+ makeFolder.exists()));
+    		makeFolder.mkdir();
     	} else {
     		System.out.println("폴더 이미 존재함");
     	}
-    	
-    	Path imagePath = Paths.get(path + fileId);
+    	String imageName = thumbnailImg + "." + thumbnail.getContentType().split("/")[1];
+    	Path imagePath = Paths.get(path + imageName);
     	
     	Files.write(imagePath, thumbnail.getBytes());
     	
     	RoomThumbnail tn = new RoomThumbnail();
-    	tn.setThumbnailId(fileId);
+    	tn.setThumbnailId(thumbnailImg);
     	tn.setThumbnailName(thumbnail.getOriginalFilename());
-    	tn.setThumnailPath(imagePath.toString());
+    	tn.setThumnailPath(imageName);
     	
     	thumbnailService.saveFile(tn);
     	
-    	long result = roomservice.addThumbnail(roomNum, fileId);
+    	long result = roomservice.addThumbnail(roomNum, imageName);
     	
     	if(result != 0) return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
     	else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
 
     }
+    
+    @GetMapping("/hasPw/{roomNum}")
+    @ApiOperation(value = "방이 비밀번호 유무", notes = "방 번호에 해당하는 방이 비밀번호를 가졌는지 여부 전달\r\n 비밀번호 있을경우 true \r\n 비밀번호 없을경우 false \r\n 오류 fail")
+    public ResponseEntity<?> getRoomHistory(@PathVariable int roomNum) throws SQLException {
+    	int cnt = roomservice.hasPw(roomNum);
+    	
+    	if (cnt == 1) return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+    	else if (cnt == 2) return new ResponseEntity<Boolean>(false, HttpStatus.OK);
+    	else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
+        
+    }
+
+
+	@ApiOperation(value = "유저 강제퇴장",
+			notes = "해당 방의 유저 목록에서 유저 제거 및 강제퇴장목록에 기록\r\n" +
+					"{\r\n" +
+					"  userId : (유저 아이디)\r\n" +
+					" roomNum: (방 번호) (문자열로 보내야함)\r\n" +
+					"}")
+	@PostMapping("/forceExit")
+	public ResponseEntity<?> forceExit(HttpServletRequest request, @RequestBody Map<String, String> params) throws SQLException {
+		String userNickname = params.get("userNickname");
+		int roomNum = Integer.parseInt(params.get("roomNum"));
+		String reqUserId = jwtService.getUserID(request.getHeader("access-token"));
+		
+		
+		int cnt = roomservice.forcedExitUser(reqUserId, userNickname, roomNum);
+		if (cnt == 1) {return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);}
+		else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
+	}
+    
+	@GetMapping("/searchByName/{search}")
+    @ApiOperation(value = "방 검색", notes = "특정 단어를 포함하는 방 리스트 전달")
+    public ResponseEntity<?> searchRoom(@PathVariable String search) throws Exception {
+    	Map<String ,Object> roomList = roomservice.searchRoomByName(search);
+    	
+    	if(!roomList.isEmpty()) {
+    		return new ResponseEntity<Map<String ,Object>>(roomList, HttpStatus.OK);
+    	}
+    	else
+    		return new ResponseEntity<String>(FAIL, HttpStatus.OK); 
+    }
+
 }

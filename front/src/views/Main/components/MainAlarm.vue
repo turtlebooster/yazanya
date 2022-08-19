@@ -1,8 +1,11 @@
 <template>
-  <div class="main-alarm">
+  <div class="main-alarm" :class="[$root.theme ? 'light' : 'dark']">
+    <div style="width: 300px; height: 1200px">
+      <planner-view />
+    </div>
     <div class="container d-flex flex-column align-items-center">
       <div v-for="alarm in state.alarmList" :key="alarm.alarmNum">
-        <div class="alarm-form">
+        <div class="alarm-form outer">
           <div>
             {{ alarm.alarmDetail }}
           </div>
@@ -14,6 +17,8 @@
 </template>
 
 <script>
+// import PlannerView from '@/views/Room/components/RoomPlanner.vue';
+import PlannerView from '@/views/Planner/PlannerView.vue';
 import { reactive } from 'vue';
 
 export default {
@@ -87,6 +92,10 @@ export default {
 
     return { state };
   },
+
+  components: {
+    PlannerView,
+  },
 };
 </script>
 
@@ -100,6 +109,5 @@ export default {
   height: 100px;
   width: 80vw;
   border-radius: 16px;
-  box-shadow: 1px 1px 8px gray;
 }
 </style>
